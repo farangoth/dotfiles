@@ -6,6 +6,27 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
+;; Package support
+(require 'package)
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+;; Package list
+(defvar package-myPackages
+  '(
+    magit
+    ))
+
+;; Download packages if not installed yet
+(mapc  #'(lambda (package)
+	  (unless(package-installed-p package)
+	    (package-install package)))
+       package-myPackages)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+
 ;; basic configuration
 (setq inhibit-startup-message t)
 (when (fboundp 'scroll-bar-mode)
@@ -16,8 +37,15 @@
   (tool-bar-mode -1))
 (show-paren-mode 1)
 (global-linum-mode t)
+(column-number-mode t)
+(global-font-lock-mode t)
+(setq x-select-enable-clipboard t)
+(setq frame-title-format "%b - emacs")
 (setq visible-bell 1)
 (setq show-trailing-whitespace t)
+(setq backup-by-copying-when-mismatch t) ; preserve ownership of files
+
+;; Theme
 
 ;; Better naming for homonymous buffers
 (require 'uniquify)
@@ -32,25 +60,8 @@
       kept-old-versions      5 ; and how many of the old
 )
 
-;; Package support
-(require 'package)
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-;; Package list
-(defvar package-myPackages
-  '(
-    
-    ))
-
-;; Download packages if not installed yet
-(mapc  #'(lambda (package)
-	  (unless(package-installed-p package)
-	    (package-install package)))
-       package-myPackages)
+;; Git integration
+(require 'magit)
 
 (provide 'init)
 ;;; init.el ends here
