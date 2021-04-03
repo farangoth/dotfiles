@@ -1,0 +1,8 @@
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -c -a emacs"
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/dev
+
+export PATH=$HOME/bin:/usr/local/bin:$PATH
