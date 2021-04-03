@@ -16,6 +16,7 @@
 (defvar package-myPackages
   '(
     magit
+    exec-path-from-shell
     ))
 
 ;; Download packages if not installed yet
@@ -62,6 +63,10 @@
 
 ;; Git integration
 (require 'magit)
+; SSH Agent
+(require 'exec-path-from-shell)
+(exec-path-from-shell-copy-env "SSH_AGENT_PID")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
 (provide 'init)
 ;;; init.el ends here
