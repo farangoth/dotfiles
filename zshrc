@@ -9,9 +9,9 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-. ~/.shell/aliases
-. ~/.shell/functions
-. ~/.shell/variables
+source ~/.shell/aliases
+source ~/.shell/functions
+source ~/.shell/variables
 
 plugins=(
 	sudo
