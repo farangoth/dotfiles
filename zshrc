@@ -93,7 +93,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-EDITOR='nano'
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -c -a emacs"
 
 plugins=(
 	git
@@ -104,3 +106,7 @@ plugins=(
 	pip
 	virtualenvwrapper
 )
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/dev
+source /usr/bin/virtualenvwrapper.sh
