@@ -26,6 +26,5 @@ plugins=(
 	virtualenvwrapper
 )
 
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/dev
+# Virtual envs
 source /usr/bin/virtualenvwrapper.sh
