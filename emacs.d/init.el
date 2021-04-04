@@ -70,5 +70,16 @@
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
+;; Python
+(require 'virtualenvwrapper)
+;(venv-initialize-interactive-shells) ;; if you want interactive shell support
+;(venv-initialize-eshell) ;; if you want eshell support
+;; note that setting `venv-location` is not necessary if you
+;; use the default location (`~/.virtualenvs`), or if the
+;; the environment variable `WORKON_HOME` points to the right
+					; (setq venv-location "~/.virtualenvs")
+(setq-default mode-line-format (cons '(:exec venv-current-name) mode-line-format))
+
+
 (provide 'init)
 ;;; init.el ends here
