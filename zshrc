@@ -9,10 +9,6 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-source ~/.shell/aliases
-source ~/.shell/functions
-source ~/.shell/variables
-
 plugins=(
 	sudo
 	systemd
@@ -25,6 +21,10 @@ plugins=(
 	pip
 	virtualenvwrapper
 )
+
+source ~/.shell/aliases
+source ~/.shell/functions
+source ~/.shell/variables
 
 # Virtual envs
 source /usr/bin/virtualenvwrapper.sh
