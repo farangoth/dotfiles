@@ -8,24 +8,26 @@
 
 ;; Package support
 (require 'package)
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
 
 ;; Package list
 (defvar package-myPackages
   '(
     magit
     exec-path-from-shell
+    virtualenvwrapper
     ))
 
-;; Download packages if not installed yet
-(mapc  #'(lambda (package)
-	  (unless(package-installed-p package)
-	    (package-install package)))
-       package-myPackages)
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
+
+;; Download packages if not installed yet
+(dolist (package package-myPackages)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 
 
 ;; basic configuration
