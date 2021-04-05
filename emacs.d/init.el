@@ -43,6 +43,7 @@
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (show-paren-mode 1)
+(electric-pair-mode t)
 (global-linum-mode t)
 (column-number-mode t)
 (global-font-lock-mode t)
