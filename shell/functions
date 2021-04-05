@@ -19,3 +19,10 @@ extract () {
         echo "'$1' is not a valid file"
     fi
 }
+
+jupyter_install_kernel () {
+    workon $1
+    pip install ipython jupyter ipykernel
+    python -m ipykernel install --user --name $1
+    deactivate
+}
