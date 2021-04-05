@@ -15,6 +15,10 @@
     magit
     exec-path-from-shell
     virtualenvwrapper
+    py-autopep8
+    flycheck
+    ein
+    elpy
     ))
 
 (add-to-list 'package-archives
@@ -46,10 +50,20 @@
 (setq frame-title-format "%b - emacs")
 (setq visible-bell 1)
 (setq show-trailing-whitespace t)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq backup-by-copying-when-mismatch t) ; preserve ownership of files
+(fset 'yes-or-no-p 'y-or-n-p)
 
+;; Because emacs is launched with systemd
+(when (daemonp)
+  (exec-path-from-shell-initialize))
+(exec-path-from-shell-copy-env "PATH")
+(exec-path-from-shell-copy-env "WORKON_HOME")
 ;; Theme
 
+;; Interactive buffer
+(require 'ido)
+(ido-mode t)
 ;; Better naming for homonymous buffers
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
@@ -71,14 +85,45 @@
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
 ;; Python
-(require 'virtualenvwrapper)
-;(venv-initialize-interactive-shells) ;; if you want interactive shell support
-;(venv-initialize-eshell) ;; if you want eshell support
-;; note that setting `venv-location` is not necessary if you
-;; use the default location (`~/.virtualenvs`), or if the
-;; the environment variable `WORKON_HOME` points to the right
-					; (setq venv-location "~/.virtualenvs")
-(setq-default mode-line-format (cons '(:exec venv-current-name) mode-line-format))
+(elpy-enable)
+;; Make pyenv working with virtualenvwrapper
+; Without, RPC gets stuck in his venv
+;(setq elpy-rpc-virtualenv-path 'default)
+(defadvice pyvenv-virtualenvwrapper-supported (around not-for-elpy-rpc-venv activate)
+  "Ensure no virtualenvwrapper support for the RPC virtualenv"
+  (if (string= pyvenv-virtual-env-name "rpc-venv")
+      nil
+    ad-do-it))
+
+
+;; Use IPython for REPL
+;; (setq python-shell-interpreter "jupyter"
+;;       python-shell-interpreter-args "console --simple-prompt"
+;;       python-shell-prompt-detect-failure-warning nil)
+;; (add-to-list 'python-shell-completion-native-disabled-interpreters
+;;              "jupyter")
+
+;; autoformat on save - using yapf
+(add-hook 'elpy-mode-hook (lambda ()
+                            (add-hook 'before-save-hook
+                                      'elpy-format-code nil t)))
+;; flycheck > flymake
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+(setq flycheck-python-flake8-executable "~/.local/bin/flake8")
+
+;; Keybindigns
+(global-set-key (kbd "C-x &") 'delete-other-windows)
+(global-set-key (kbd "C-x é") 'split-window-below)
+(global-set-key (kbd "C-x \"") 'split-window-right)
+(global-set-key (kbd "C-x à") 'delete-window)
+(global-unset-key (kbd "M-;"))
+(global-set-key (kbd "M-:") 'comment-dwim)
+(global-set-key (kbd "M-;") 'elpy-goto-definition)
+(global-unset-key (kbd "M-,"))
+(global-set-key (kbd "M-,") 'pop-tag-mark)
+
 
 
 (provide 'init)
