@@ -35,7 +35,6 @@
 
 
 ;; basic configuration
-(setq inhibit-startup-message t)
 ;; startup
 (setq inhibit-startup-message t
       initial-scratch-message nil
