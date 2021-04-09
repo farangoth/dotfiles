@@ -36,6 +36,11 @@
 
 ;; basic configuration
 (setq inhibit-startup-message t)
+;; startup
+(setq inhibit-startup-message t
+      initial-scratch-message nil
+      initial-major-mode 'org-mode)
+;; interface
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 (when (fboundp 'horizontal-scroll-bar-mode)
