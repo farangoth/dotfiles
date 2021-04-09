@@ -124,18 +124,5 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 (setq flycheck-python-flake8-executable "~/.local/bin/flake8")
 
-;; Keybindigns
-(global-set-key (kbd "C-x &") 'delete-other-windows)
-(global-set-key (kbd "C-x é") 'split-window-below)
-(global-set-key (kbd "C-x \"") 'split-window-right)
-(global-set-key (kbd "C-x à") 'delete-window)
-(global-unset-key (kbd "M-;"))
-(global-set-key (kbd "M-:") 'comment-dwim)
-(global-set-key (kbd "M-;") 'elpy-goto-definition)
-(global-unset-key (kbd "M-,"))
-(global-set-key (kbd "M-,") 'pop-tag-mark)
-
-
-
 (provide 'init)
 ;;; init.el ends here
