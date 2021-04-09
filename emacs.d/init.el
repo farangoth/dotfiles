@@ -67,7 +67,11 @@
   :demand t
   :init
   (setq exec-path-from-shell-variables
-	'("PATH" "MANPATH" "WORKON_HOME" "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
+	'("PATH"
+	  "MANPATH"
+	  "WORKON_HOME"
+	  ; "SSH_AGENT_PID"
+	  "SSH_AUTH_SOCK"))
   (exec-path-from-shell-initialize))
 
 ;; Better naming for homonymous buffers
