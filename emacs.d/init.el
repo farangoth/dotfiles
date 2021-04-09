@@ -72,6 +72,12 @@
 ;; Better naming for homonymous buffers
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
+;; scroll
+(setq scroll-step            1
+      scroll-conservatively  10000
+      mouse-wheel-scroll-amount '(1 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse 't)
 
 ;; Write backups to ~/.emacs.d/backup/
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
