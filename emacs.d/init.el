@@ -6,33 +6,21 @@
   (write-region "" nil custom-file))
 (load custom-file)
 
+;; use-package support
 ;; Package support
 (require 'package)
-
-;; Package list
-(defvar package-myPackages
-  '(
-    magit
-    exec-path-from-shell
-    virtualenvwrapper
-    py-autopep8
-    flycheck
-    ein
-    elpy
-    ))
-
+(package-initialize)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
+(add-to-list 'package-archives
+	     '("org" . "https://orgmode.org/elpa/") t)
 (when (not package-archive-contents)
   (package-refresh-contents))
-
-;; Download packages if not installed yet
-(dolist (package package-myPackages)
-  (unless (package-installed-p package)
-    (package-install package)))
-
-
+(unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+(eval-when-compile
+  (require 'use-package))
 
 ;; basic configuration
 ;; startup
@@ -58,20 +46,6 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq backup-by-copying-when-mismatch t) ; preserve ownership of files
 (fset 'yes-or-no-p 'y-or-n-p)
-
-;; Because emacs is launched with systemd
-(when (daemonp)
-  (exec-path-from-shell-initialize))
-(exec-path-from-shell-copy-env "PATH")
-(exec-path-from-shell-copy-env "WORKON_HOME")
-;; Theme
-
-;; Interactive buffer
-(require 'ido)
-(ido-mode t)
-;; Better naming for homonymous buffers
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
 ;; scroll
 (setq scroll-step            1
       scroll-conservatively  10000
@@ -88,41 +62,73 @@
       kept-old-versions      5 ; and how many of the old
       )
 
+(use-package exec-path-from-shell
+  :ensure t
+  :demand t
+  :init
+  (setq exec-path-from-shell-variables
+	'("PATH" "MANPATH" "WORKON_HOME" "SSH_AGENT_PID" "SSH_AUTH_SOCK"))
+  (exec-path-from-shell-initialize))
+
+;; Better naming for homonymous buffers
+;; (use-package uniquify
+;;   :ensure t
+;;   :custom
+;;   (uniquify-buffer-name-style 'forward))
+
 ;; Git integration
-(require 'magit)
-; SSH Agent
-(require 'exec-path-from-shell)
-(exec-path-from-shell-copy-env "SSH_AGENT_PID")
-(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+(use-package magit
+  :ensure t
+  :bind
+  ("C-x g" . magit-status))
+
+;; snippets
+(use-package yasnippet
+  :ensure t
+  :config
+  (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
+  (yas-global-mode 1))
 
 ;; Python
-(elpy-enable)
-;; Make pyenv working with virtualenvwrapper
-; Without, RPC gets stuck in his venv
-;(setq elpy-rpc-virtualenv-path 'default)
-(defadvice pyvenv-virtualenvwrapper-supported (around not-for-elpy-rpc-venv activate)
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable)
+  :config
+  ;; virtualenvwrapper needs this to handle the RPC properly
+  (defadvice pyvenv-virtualenvwrapper-supported (around not-for-elpy-rpc-venv activate)
   "Ensure no virtualenvwrapper support for the RPC virtualenv"
   (if (string= pyvenv-virtual-env-name "rpc-venv")
       nil
     ad-do-it))
-
-
-;; Use IPython for REPL
-;; (setq python-shell-interpreter "jupyter"
-;;       python-shell-interpreter-args "console --simple-prompt"
-;;       python-shell-prompt-detect-failure-warning nil)
-;; (add-to-list 'python-shell-completion-native-disabled-interpreters
-;;              "jupyter")
-
-;; autoformat on save - using yapf
-(add-hook 'elpy-mode-hook (lambda ()
+  ;; yapf on save
+  (add-hook 'elpy-mode-hook (lambda ()
                             (add-hook 'before-save-hook
-                                      'elpy-format-code nil t)))
+                                      'elpy-format-code nil t))))
+
 ;; flycheck > flymake
-(when (require 'flycheck nil t)
+(use-package flycheck
+  :ensure t
+  :init
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-(setq flycheck-python-flake8-executable "~/.local/bin/flake8")
+  (add-hook 'elpy-mode-hook 'flycheck-mode)
+  (setq flycheck-python-flake8-executable "~/.local/bin/flake8"))
+
+(use-package virtualenvwrapper
+  :ensure t)
+(use-package ein
+  :ensure t)
+
+(use-package org
+  :ensure t
+  :config
+  (setq org-log-done t)
+  :bind
+  ("C-c a" . org-agenda))
+
+(setq user-full-name "Clément Savalle"
+      user-mail-address "savalle.clement@gmail.com"
+      calendar-location-name "New Mills, England")
 
 (provide 'init)
 ;;; init.el ends here
