@@ -130,6 +130,9 @@
   :ensure t
   :config
   (setq org-log-done t)
+  (setq org-agenda-files (list "~/org/geek.org"
+			       "~/org/outdoor.org"
+			       "~/org/perso.org"))
   :bind
   ("C-c a" . org-agenda))
 
