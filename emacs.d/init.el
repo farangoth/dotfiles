@@ -39,6 +39,7 @@
 (global-linum-mode t)
 (column-number-mode t)
 (global-font-lock-mode t)
+(global-hl-line-mode t)
 (setq x-select-enable-clipboard t)
 (setq frame-title-format "%b - emacs")
 (setq visible-bell 1)
@@ -47,11 +48,12 @@
 (setq backup-by-copying-when-mismatch t) ; preserve ownership of files
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; scroll
-(setq scroll-step            1
+(setq scroll-step 1
       scroll-conservatively  10000
       mouse-wheel-scroll-amount '(1 ((shift) . 1))
       mouse-wheel-progressive-speed nil
       mouse-wheel-follow-mouse 't)
+(setq custom--inhibit-theme-enable nil)
 
 ;; Write backups to ~/.emacs.d/backup/
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
@@ -108,7 +110,8 @@
   ;; yapf on save
   (add-hook 'elpy-mode-hook (lambda ()
                             (add-hook 'before-save-hook
-                                      'elpy-format-code nil t))))
+                                      'elpy-format-code nil t)))
+  (setq highlight-indentation-blank-lines 1))
 
 ;; flycheck > flymake
 (use-package flycheck
@@ -134,5 +137,4 @@
       user-mail-address "savalle.clement@gmail.com"
       calendar-location-name "New Mills, England")
 
-(provide 'init)
-;;; init.el ends here
+(provide 'init) ;;; init.el ends here
