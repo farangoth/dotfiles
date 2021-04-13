@@ -136,6 +136,20 @@
   :bind
   ("C-c a" . org-agenda))
 
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t
+	doom-themes-enable-italic t)
+  (load-theme 'doom-vibrant t)
+  (doom-themes-org-config)
+  ;(set-face-attribute 'linum nil :background "bg")
+  (set-face-attribute 'fringe nil :background "bg-alt")
+  (set-face-attribute font-lock-doc-face nil :foreground "orange")
+  (set-face-attribute 'org-block nil :background "base7")
+  (set-face-attribute 'highlight-indentation-face nil :background "#151821")
+  )
+
 ;; (use-package po-mode
 ;;   :ensure t
 ;;   :config
