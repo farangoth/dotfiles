@@ -136,6 +136,50 @@
   :bind
   ("C-c a" . org-agenda))
 
+;; (use-package po-mode
+;;   :ensure t
+;;   :config
+;;    (autoload 'po-mode "po-mode"
+;;             "Major mode for translators to edit PO files" t)
+;;   (setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
+;;                               auto-mode-alist))
+;;   (autoload 'po-find-file-coding-system "po-compat")
+;;   (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
+;;                               'po-find-file-coding-system)
+;;   (defcustom po-wrap-width 79
+;;   "*Width to which to wrap msgstrs."
+;;   :type 'integer
+;;   :group 'po)
+;;   (defun po-my-validate ()
+;;   "Use 'msgfmt' for validating the current PO file contents."
+;;   (interactive)
+;;   ;; The 'compile' subsystem is autoloaded through a call to (compile ...).
+;;   ;; We need to initialize it outside of any binding. Without this statement,
+;;   ;; all defcustoms and defvars of compile.el would be undone when the let*
+;;   ;; terminates.
+;;   (require 'compile)
+;;   (defvar po-my-validation-program "padpo")
+;;   (let* ((dev-null
+;;           (cond ((boundp 'null-device) null-device) ; since Emacs 20.3
+;;                 ((memq system-type '(windows-nt windows-95)) "NUL")
+;;                 (t "/dev/null")))
+;;          (output
+;;           (if po-keep-mo-file
+;;               (concat (file-name-sans-extension buffer-file-name) ".mo")
+;;             dev-null))
+;;          (compilation-buffer-name-function
+;;           (function (lambda (mode-name)
+;;                       (concat "*" mode-name " validation*"))))
+;;          (compile-command (concat po-my-validation-program
+;;                                   " -i "
+;;                                   (shell-quote-argument output) " "
+;;                                   (shell-quote-argument buffer-file-name))))
+;;     (compile compile-command)))
+;;   (defun po-wrap ()
+;;     )
+;;   (define-key po-mode-map "V" 'po-my-validate)
+;;   )
+
 (setq user-full-name "Clément Savalle"
       user-mail-address "savalle.clement@gmail.com"
       calendar-location-name "New Mills, England")
