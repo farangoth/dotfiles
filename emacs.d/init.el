@@ -36,9 +36,10 @@
   (tool-bar-mode -1))
 (show-paren-mode 1)
 (electric-pair-mode t)
-(global-linum-mode t)
+(add-hook 'prog-mode-hook 'linum-mode)
 (column-number-mode t)
 (global-font-lock-mode t)
+(setq font-use-system-font t)
 (global-hl-line-mode t)
 (setq x-select-enable-clipboard t)
 (setq frame-title-format "%b - emacs")
@@ -101,7 +102,7 @@
 ;; snippets
 (use-package yasnippet
   :ensure t
-  :config
+  :init
   (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
   (yas-global-mode 1))
 
@@ -148,15 +149,15 @@
 
 (use-package doom-themes
   :ensure t
-  :config
+  :init
   (setq doom-themes-enable-bold t
 	doom-themes-enable-italic t)
+  :config
   (load-theme 'doom-vibrant t)
   (doom-themes-org-config)
   ;(set-face-attribute 'linum nil :background "bg")
-  (set-face-attribute 'fringe nil :background "bg-alt")
+  (set-face-attribute 'fringe nil :background "#242730")
   (set-face-attribute font-lock-doc-face nil :foreground "orange")
-  (set-face-attribute 'org-block nil :background "base7")
   (set-face-attribute 'highlight-indentation-face nil :background "#151821")
   )
 
