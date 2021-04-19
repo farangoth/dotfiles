@@ -88,6 +88,16 @@
   :bind
   ("C-x g" . magit-status))
 
+(use-package forge
+  :ensure t
+  :after magit
+  :init
+  (setq auth-sources '("~/.authinfo"))
+  )
+
+(use-package git-auto-commit-mode
+  :ensure t)
+
 ;; snippets
 (use-package yasnippet
   :ensure t
