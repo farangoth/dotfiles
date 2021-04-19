@@ -134,18 +134,21 @@
 
 (use-package virtualenvwrapper
   :ensure t)
+
 (use-package ein
   :ensure t)
 
 (use-package org
   :ensure t
-  :config
-  (setq org-log-done t)
-  (setq org-agenda-files (list "~/org/geek.org"
+  :init
+  (setq org-log-done t
+	org-adapt-indentation t)
+  (setq org-agenda-files (list "~/org/pro.org"
 			       "~/org/outdoor.org"
 			       "~/org/perso.org"))
   :bind
-  ("C-c a" . org-agenda))
+  ("C-c a" . org-agenda)
+  ("C-c l" . org-store-link))
 
 (use-package doom-themes
   :ensure t
