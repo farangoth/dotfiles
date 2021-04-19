@@ -21,8 +21,27 @@ extract () {
 }
 
 jupyter_install_kernel () {
-    workon $1
-    pip install ipython jupyter ipykernel
-    python -m ipykernel install --user --name $1
-    deactivate
+    if [ "$#" -eq 0 ] ; then
+	if [ -z $VENV_ACTIVATE_NAME ] ; then
+	    echo "No argument and no active virtual env."
+	    return 1
+	else
+	    echo "$VENV_ACTIVATE_NAME is active"
+	    echo "Do you want to install jupyter in this env? (y/n)"
+	    read -n 1 REPLY
+	    if [ $REPLY =~ ^[Yy]$ ] ; then
+		echo "Installing jupyter notebook in $VENV_ACTIVATE_NAME"
+		pip install ipython jupyter ipykernel
+		python -m ipykernel install --user --name $VENV_ACTIVATE_NAME
+	    else
+	        return 1
+	    fi
+	fi
+    else
+        workon $1
+   	echo "Installing jupyter notebook in $1"
+        pip install ipython jupyter ipykernel
+        python -m ipykernel install --user --name $1
+        deactivate
+    fi
 }
