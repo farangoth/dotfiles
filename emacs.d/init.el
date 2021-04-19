@@ -150,6 +150,37 @@
   (set-face-attribute 'highlight-indentation-face nil :background "#151821")
   )
 
+(use-package pdf-tools
+  :ensure t
+  :init
+  (pdf-tools-install)
+  :config
+  (add-hook 'pdf-view-mode-hook (lambda () (auto-revert-mode 1)))
+  )
+
+
+(use-package tex
+  :ensure auctex
+  :init
+  (setq TeX-auto-save t
+	TeX-parse-self t
+	TeX-PDF-mode t)
+  (setq-default TeX-master nil)
+  :config
+  (add-hook 'LaTeX-mode-hook 'linum-mode)
+  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
+  (add-hook 'TeX-mode-hook
+	    (lambda ()
+              (setq TeX-command-default "Make")))
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer)
+  )
+
+(use-package auctex-latexmk
+  :ensure t)
+
 ;; (use-package po-mode
 ;;   :ensure t
 ;;   :config
