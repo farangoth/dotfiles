@@ -206,11 +206,14 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+def sep():
+    return widget.TextBox("|")
 
 def create_bar():
     return bar.Bar(
         [
             widget.CurrentLayout(foreground=colors["text"]),
+            sep(),
             widget.GroupBox(
                 hide_unused=True,
                 highlight_method="line",
@@ -222,6 +225,7 @@ def create_bar():
                 other_current_screen_border=colors["subtext0"],
                 other_screen_border=colors["overlay0"],
             ),
+            sep(),
             widget.Prompt(),
             widget.WindowName(),
             widget.StatusNotifier(),
@@ -236,6 +240,17 @@ def create_bar():
                 charging_foreground=colors["green"],
                 low_foreground=colors["red"],
             ),
+            widget.Backlight(
+                backlight_name="intel_backlight",
+                fmt="\uf522 {}",
+                brightness_file="/sys/class/backlight/intel_backlight/brightness",
+                max_brightness_file="/sys/class/backlight/intel_backlight/max_brightness",
+                foreground=colors["sky"],
+            ),
+            sep(),
+            widget.Clock(
+                format="%a %d %b %H:%M",
+                ),
         ],
         size=36,
         background=colors["surface0"],
