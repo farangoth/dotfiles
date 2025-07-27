@@ -1,4 +1,6 @@
-from libqtile import bar, layout, qtile, widget 
+import os
+import subprocess
+from libqtile import bar, layout, qtile, widget, hook
 from libqtile.widget import backlight
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -200,6 +202,16 @@ layouts = [
     # layout.Zoomy(),
 ]
 
+def get_volume():
+    """Get the current volume level."""
+    try:
+        output = qtile.cmd_spawn("wpctl get-volume 47")
+        return output.split()[1]
+    except Exception as e:
+        print(f"Error getting volume: {e}")
+        return "0%"
+    
+
 widget_defaults = dict(
     font=myfont,
     foreground=colors["text"],
@@ -341,3 +353,13 @@ auto_minimize = True
 # xcursor theme (string or None) and size (integer) for Wayland backend
 wl_xcursor_theme = None
 wl_xcursor_size = 24
+
+@hook.subscribe.startup_once
+def autostart():
+    """Run autostart applications."""
+    home = os.path.expanduser("~")
+    autostart_script = os.path.join(home, ".config", "qtile", "autostart.sh")
+    if os.path.exists(autostart_script):
+        subprocess.call([autostart_script])
+    else:
+        print(f"Autostart script not found: {autostart_script}")
