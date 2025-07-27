@@ -126,7 +126,7 @@ groups = [
     Group("2", label="\uf269", matches=[Match(wm_class="firefox_firefox")]),
 ]
 
-groups.extend([Group(i, label=i + " | \ueaae") for i in "3456"])
+groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "3456"])
 
 for i in groups:
     keys.extend(
