@@ -16,5 +16,18 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+prompt_virtualenv() {
+  if [ -n "$CONDA_DEFAULT_ENV" ]; then
+    prompt_segment magenta $CURRENT_FG "🐍 $CONDA_DEFAULT_ENV"
+  fi
+  if [[ -n "$VIRTUAL_ENV" && -n "$VIRTUAL_ENV_DISABLE_PROMPT" ]]; then
+    local venv_path=$(dirname "$VIRTUAL_ENV")
+    local project_name=$(basename "$venv_path")
+
+
+    prompt_segment "$AGNOSTER_VENV_BG" "$AGNOSTER_VENV_FG" "(${project_name:t:gs/%/%%})"
+  fi
+}
+
 alias neovim="nvim"
 alias startqtile="qtile start -b wayland"
