@@ -35,11 +35,12 @@ return {
                     },
                 }
             },
+
             sections = {
                 lualine_a = {'mode'},
                 lualine_b = {'branch', 'diff', 'diagnostics'},
                 lualine_c = {'filename'},
-                lualine_x = {{'copilot'}, {'lsp_status', ignore_lsp={'null-ls'}}, 'filetype'},
+                lualine_x = {{'lsp_status', ignore_lsp={'null-ls'}}, 'filetype'},
                 lualine_y = {'progress'},
                 lualine_z = {'location'}
             },
