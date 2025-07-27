@@ -1,7 +1,6 @@
 import os
 import subprocess
 from libqtile import bar, layout, qtile, widget, hook
-from libqtile.widget import backlight
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -90,13 +89,13 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-        lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.UP),
+        lazy.widget["backlight"].change_backlight(widget.Backlight.ChangeDirection.UP),
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
         lazy.widget["backlight"].change_backlight(
-            widget.backlight.ChangeDirection.DOWN
+            widget.Backlight.ChangeDirection.DOWN
         ),
     ),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume 58 5%+")),
@@ -155,14 +154,14 @@ for i in groups:
     )
 
 layout_defaults = dict(
-        border_focus_stack=[colors["lavender"], colors["overlay0"]],
-        border_normal=RoundedCorners(colour=colors["overlay0"]),
-        border_focus=RoundedCorners(colour=colors["lavender"]),
-        border_width=2,
-        margin=8,
-        margin_on_single=8,
-        single_border_width=2,
-        )
+    border_focus_stack=[colors["lavender"], colors["overlay0"]],
+    border_normal=RoundedCorners(colour=colors["overlay0"]),
+    border_focus=RoundedCorners(colour=colors["lavender"]),
+    border_width=2,
+    margin=8,
+    margin_on_single=8,
+    single_border_width=2,
+)
 
 
 layouts = [
@@ -202,6 +201,7 @@ layouts = [
     # layout.Zoomy(),
 ]
 
+
 def get_volume():
     """Get the current volume level."""
     try:
@@ -210,7 +210,7 @@ def get_volume():
     except Exception as e:
         print(f"Error getting volume: {e}")
         return "0%"
-    
+
 
 widget_defaults = dict(
     font=myfont,
@@ -220,8 +220,10 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+
 def sep():
     return widget.TextBox("|")
+
 
 def create_bar():
     return bar.Bar(
@@ -255,16 +257,25 @@ def create_bar():
                 low_foreground=colors["red"],
             ),
             widget.Backlight(
+                name="backlight",
                 backlight_name="intel_backlight",
                 fmt="\uf522 {}",
                 brightness_file="/sys/class/backlight/intel_backlight/brightness",
                 max_brightness_file="/sys/class/backlight/intel_backlight/max_brightness",
                 foreground=colors["sky"],
+                mouse_callbacks={
+                    "Button4": lambda: qtile.widgets_map["backlight"].change_backlight(
+                        5
+                    ),
+                    "Button5": lambda: qtile.widgets_map["backlight"].change_backlight(
+                        -5
+                    ),
+                },
             ),
             sep(),
             widget.Clock(
                 format="%a %d %b %H:%M",
-                ),
+            ),
         ],
         size=36,
         background=colors["surface0"],
@@ -274,28 +285,29 @@ def create_bar():
         border_color=colors["overlay0"],
     )
 
+
 screen_params = dict(
-        wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
-        wallpaper_mode="fill",
-        )
+    wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
+    wallpaper_mode="fill",
+)
 
 screens = [
-        Screen(
-            top=create_bar(),
-            **screen_params,
-            ),
-        Screen(
-            top=create_bar(),
-            **screen_params,
-            )
-        ]
+    Screen(
+        top=create_bar(),
+        **screen_params,
+    ),
+    Screen(
+        top=create_bar(),
+        **screen_params,
+    ),
+]
 
 
 # @hook.subscribe.screens_reconfigured
 # def setup_screens():
 #     qtile.screens = []
 #     outputs = wl_core.get_enabled_outputs()
-# 
+#
 #     for _ in outputs:
 #         qtile.screens.append(
 #             Screen(
@@ -303,7 +315,6 @@ screens = [
 #                 wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
 #             )
 #         )
-
 
 
 mouse = [
@@ -353,6 +364,7 @@ auto_minimize = True
 # xcursor theme (string or None) and size (integer) for Wayland backend
 wl_xcursor_theme = None
 wl_xcursor_size = 24
+
 
 @hook.subscribe.startup_once
 def autostart():
