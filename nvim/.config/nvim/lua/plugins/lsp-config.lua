@@ -20,6 +20,9 @@ return {
             vim.keymap.set("n", "<leader>gc", vim.diagnostic.open_float, { desc = "(LSP) Show Diagnostics" })
             vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "(LSP) Go to Definition" })
             vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "(LSP) Go to Implementation" })
+            vim.keymap.set("n", "<leader>gk", vim.lsp.buf.hover, { desc = "(LSP) Show description" })
+            vim.keymap.set({"i","n"}, "<C-k>", vim.lsp.buf.signature_help, { desc = "(LSP) Go to Type Definition" })
+
 
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
