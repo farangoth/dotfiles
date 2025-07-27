@@ -10,6 +10,8 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 plugins=(
 	git
 	colored-man-pages
+    virtualenv
+    python
 )
 
 source $ZSH/oh-my-zsh.sh
