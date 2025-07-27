@@ -90,15 +90,13 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-# If you come from bash you might have to change your $PATH.
+        # If you come from bash you might have to change your $PATH.
         lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.UP),
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
-        lazy.widget["backlight"].change_backlight(
-            backlight.ChangeDirection.DOWN
-        ),
+        lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.DOWN),
     ),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume 58 5%+")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("wpctl set-volume 58 5%-")),
@@ -125,8 +123,8 @@ wl_input_rules = {
 }
 
 groups = [
-    Group("1", label="\uf120"),
-    Group("2", label="\uf269", matches=[Match(wm_class="firefox_firefox")]),
+    Group("1", label="\uf120", init=True, persist=True),
+    Group("2", label="\uf269", matches=[Match(wm_class="firefox_firefox")], init=True, persist=True),
 ]
 
 groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "3456"])
@@ -164,7 +162,6 @@ layout_defaults = dict(
     margin_on_single=8,
     single_border_width=2,
 )
-
 
 layouts = [
     layout.MonadTall(
