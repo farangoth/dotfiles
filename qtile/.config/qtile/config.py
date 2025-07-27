@@ -5,6 +5,7 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.backend.wayland.inputs import InputConfig
+from libqtile.widget import backlight
 from qtile_extras import widget as extra_widget
 from qtile_extras.layout.decorations import RoundedCorners
 
@@ -89,13 +90,14 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-        lazy.widget["backlight"].change_backlight(widget.Backlight.ChangeDirection.UP),
+# If you come from bash you might have to change your $PATH.
+        lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.UP),
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
         lazy.widget["backlight"].change_backlight(
-            widget.Backlight.ChangeDirection.DOWN
+            backlight.ChangeDirection.DOWN
         ),
     ),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume 58 5%+")),
