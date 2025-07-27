@@ -152,8 +152,7 @@ for i in groups:
         ]
     )
 
-layouts = [
-    layout.MonadTall(
+layout_defaults = dict(
         border_focus_stack=[colors["lavender"], colors["overlay0"]],
         border_normal=RoundedCorners(colour=colors["overlay0"]),
         border_focus=RoundedCorners(colour=colors["lavender"]),
@@ -161,13 +160,16 @@ layouts = [
         margin=8,
         margin_on_single=8,
         single_border_width=2,
+        )
+
+
+layouts = [
+    layout.MonadTall(
+        **layout_defaults,
         ratio=0.66,
     ),
     layout.Max(
-        margin=8,
-        border_width=2,
-        border_normal=RoundedCorners(colour=colors["overlay0"]),
-        border_focus=RoundedCorners(colour=colors["lavender"]),
+        **layout_defaults,
     ),
     # layout.TreeTab(
     # font=myfont,
