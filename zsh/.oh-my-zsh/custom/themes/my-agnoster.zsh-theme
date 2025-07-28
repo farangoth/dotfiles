@@ -84,6 +84,8 @@ esac
   # escape sequence with a single literal character.
   # Do not change this! Do not make it '\u2b80'; that is the old, wrong code point.
   SEGMENT_SEPARATOR=$'\ue0b0'
+  SEGMENT_END=$'\ue0b4'
+  ARROW_NL=$'\uf061'
 }
 
 # Begin a segment
@@ -105,7 +107,7 @@ prompt_segment() {
 # End the prompt, closing any open segments
 prompt_end() {
   if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_END"
   else
     echo -n "%{%k%}"
   fi
@@ -131,6 +133,8 @@ git_toplevel() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USERNAME" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+    prompt_segment "$AGNOSTER_CONTEXT_BG" "$AGNOSTER_CONTEXT_FG" "%(!.%{%F{$AGNOSTER_STATUS_ROOT_FG}%}.)%n"
+else
     prompt_segment "$AGNOSTER_CONTEXT_BG" "$AGNOSTER_CONTEXT_FG" "%(!.%{%F{$AGNOSTER_STATUS_ROOT_FG}%}.)%n@%m"
   fi
 }
@@ -287,7 +291,7 @@ prompt_virtualenv() {
     local venv_path=$(dirname "$VIRTUAL_ENV")
     local project_name=$(basename "$venv_path")
 
-    prompt_segment "$AGNOSTER_VENV_BG" "$AGNOSTER_VENV_FG" "(${project_name:t:gs/%/%%})"
+    prompt_segment "$AGNOSTER_VENV_BG" "$AGNOSTER_VENV_FG" "\ue73c $project_name:t:gs/%/%%}"
   fi
 }
 # Status:
@@ -300,12 +304,12 @@ prompt_status() {
   if [[ $AGNOSTER_STATUS_RETVAL_NUMERIC == 'true' ]]; then
     [[ $RETVAL -ne 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_RETVAL_FG}%}$RETVAL"
   else
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_RETVAL_FG}%}✘"
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_RETVAL_FG}%}[$RETVAL]"
   fi
   [[ $UID -eq 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_ROOT_FG}%}⚡"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_JOB_FG}%}⚙"
 
-  [[ -n "$symbols" ]] && prompt_segment "$AGNOSTER_STATUS_BG" "$AGNOSTER_STATUS_FG" "$symbols"
+  [[ -n "$symbols" ]] && prompt_segment "$CURRENT_BG" "$AGNOSTER_STATUS_FG" "$symbols"
 }
 
 #AWS Profile:
@@ -328,18 +332,27 @@ prompt_terraform() {
 }
 
 ## Main prompt
-build_prompt() {
+build_line1() {
   RETVAL=$?
-  prompt_status
-  prompt_aws
-  prompt_terraform
   prompt_context
-  prompt_virtualenv
-  prompt_dir
-  prompt_git
   prompt_bzr
+  prompt_terraform
   prompt_hg
+  prompt_virtualenv
+  prompt_git
   prompt_end
 }
 
-PROMPT='%{%f%b%k%}$(build_prompt) '
+build_line2() {
+    prompt_dir
+    prompt_end
+    }
+
+right_prompt() {
+    RETVAL=$?
+    prompt_status
+}
+
+NEWLINE=$'\n'
+PROMPT='${NEWLINE}%{%f%b%k%}$(build_line1)${NEWLINE}$(build_line2)${NEWLINE} ${ARROW_NL} '
+RPROMPT='$(right_prompt)'
