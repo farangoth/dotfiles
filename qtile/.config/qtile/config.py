@@ -91,7 +91,6 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-        # If you come from bash you might have to change your $PATH.
         lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.UP),
     ),
     Key(
@@ -99,24 +98,19 @@ keys = [
         "XF86MonBrightnessDown",
         lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.DOWN),
     ),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume 58 5%+")),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("wpctl set-volume 58 5%-")),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"),
+    ),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"),
+    ),
     Key([], "XF86AudioMute", lazy.spawn("wpctl set-mute 58 toggle")),
     Key([mod, "control"], "l", lazy.spawn("physlock -m")),
 ]
-
-# Add key bindings to switch VTs in Wayland.
-# We can't check qtile.core.name in default config as it is loaded before qtile is started
-# We therefore defer the check until the key binding is run by using .when(func=...)
-for vt in range(1, 8):
-    keys.append(
-        Key(
-            ["control", "mod1"],
-            f"f{vt}",
-            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
-            desc=f"Switch to VT{vt}",
-        )
-    )
 
 wl_input_rules = {
     "type:touchpad": InputConfig(tap=True, dwt=True),
@@ -138,27 +132,23 @@ groups = [
 
 groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "3456"])
 
-for i in groups:
+for grp in groups:
     keys.extend(
         [
             # mod + group number = switch to group
             Key(
                 [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc=f"Switch to group {i.name}",
+                grp.name,
+                lazy.group[grp.name].toscreen(),
+                desc=f"Switch to group {grp.name}",
             ),
             # mod + shift + group number = switch to & move focused window to group
             Key(
                 [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc=f"Switch to & move focused window to group {i.name}",
+                grp.name,
+                lazy.window.togroup(grp.name, switch_group=True),
+                desc=f"Switch to & move focused window to group {grp.name}",
             ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod + shift + group number = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
@@ -213,7 +203,7 @@ layouts = [
 def get_volume():
     """Get the current volume level."""
     try:
-        output = qtile.cmd_spawn("wpctl get-volume 47")
+        output = qtile.cmd_spawn("wpctl get-volume @DEFAULT_AUDIO_SINK@ ")
         return output.split()[1]
     except Exception as e:
         print(f"Error getting volume: {e}")
@@ -256,8 +246,9 @@ def create_bar():
             widget.Wlan(fmt="\uf1eb  {}", format="{essid}", foreground=colors["mauve"]),
             widget.Battery(
                 fmt="{}",
-                charge_char="󰂄",
-                discharge_char="󰁽",
+                full_char="\U000f17e2",
+                charge_char="\U000f0088",
+                discharge_char="\U000f007d",
                 low_percentage=0.15,
                 format="{char} {percent:2.0%}",
                 foreground=colors["yellow"],
@@ -271,12 +262,13 @@ def create_bar():
                 brightness_file="/sys/class/backlight/intel_backlight/brightness",
                 max_brightness_file="/sys/class/backlight/intel_backlight/max_brightness",
                 foreground=colors["sky"],
+                change_command="light -S {0}",
                 mouse_callbacks={
-                    "Button4": lambda: qtile.widgets_map["backlight"].change_backlight(
-                        5
+                    "Button5": lazy.widget["backlight"].change_backlight(
+                        backlight.ChangeDirection.UP
                     ),
-                    "Button5": lambda: qtile.widgets_map["backlight"].change_backlight(
-                        -5
+                    "Button5": lazy.widget["backlight"].change_backlight(
+                        backlight.ChangeDirection.DOWN
                     ),
                 },
             ),
@@ -309,21 +301,6 @@ screens = [
         **screen_params,
     ),
 ]
-
-
-# @hook.subscribe.screens_reconfigured
-# def setup_screens():
-#     qtile.screens = []
-#     outputs = wl_core.get_enabled_outputs()
-#
-#     for _ in outputs:
-#         qtile.screens.append(
-#             Screen(
-#                 top=create_bar(),
-#                 wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
-#             )
-#         )
-
 
 mouse = [
     Drag(
@@ -365,9 +342,6 @@ reconfigure_screens = True
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
 auto_minimize = True
-
-# When using the Wayland backend, this can be used to configure input devices.
-# wl_input_rules = None
 
 # xcursor theme (string or None) and size (integer) for Wayland backend
 wl_xcursor_theme = None
