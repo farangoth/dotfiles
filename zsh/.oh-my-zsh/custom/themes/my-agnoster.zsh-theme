@@ -331,10 +331,15 @@ prompt_terraform() {
   prompt_segment magenta yellow "TF: $terraform_info"
 }
 
+prompt_time() {
+    prompt_segment yellow black "%T"
+}
+
 ## Main prompt
 build_line1() {
   RETVAL=$?
   prompt_context
+  prompt_dir
   prompt_bzr
   prompt_terraform
   prompt_hg
@@ -344,6 +349,7 @@ build_line1() {
 }
 
 build_line2() {
+   # prompt_time
     prompt_dir
     prompt_end
     }
@@ -354,5 +360,5 @@ right_prompt() {
 }
 
 NEWLINE=$'\n'
-PROMPT='${NEWLINE}%{%f%b%k%}$(build_line1)${NEWLINE}$(build_line2)${NEWLINE} ${ARROW_NL} '
+PROMPT='${NEWLINE}%{%f%b%k%}$(build_line1)${NEWLINE} ${ARROW_NL} '
 RPROMPT='$(right_prompt)'
