@@ -1,5 +1,6 @@
 import os
 import subprocess
+import re
 from libqtile import bar, layout, qtile, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -124,7 +125,15 @@ wl_input_rules = {
 
 groups = [
     Group("1", label="\uf120", init=True, persist=True),
-    Group("2", label="\uf269", matches=[Match(wm_class="firefox_firefox")], init=True, persist=True),
+    Group(
+        "2",
+        label="\uf269",
+        matches=[Match(wm_class=re.compile("firefox"))],
+        init=True,
+        persist=True,
+        spawn="firefox",
+        layout="max",
+    ),
 ]
 
 groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "3456"])
