@@ -12,5 +12,6 @@ return {
         vim.api.nvim_set_hl(0, "LineNrAbove", { fg = colors["overlay0"] })
         vim.api.nvim_set_hl(0, "CursorLineNr", { fg =  colors["lavender"] })
         vim.api.nvim_set_hl(0, "LineNrBelow", { fg = colors["overlay0"]  })
+        vim.api.nvim_set_hl(0, "FloatBorder", { fg =  colors["lavender"] })
     end,
 }
