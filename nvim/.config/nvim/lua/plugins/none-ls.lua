@@ -9,6 +9,6 @@ return {
                 null_ls.builtins.formatting.black,
             },
         })
-        vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {}, { desc = "(null_ls) Format file" })
+        vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "(null_ls) Format file" })
     end,
 }
