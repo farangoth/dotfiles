@@ -17,6 +17,12 @@ return {
                     hide_gitignored = true,
                 },
             },
+            sources = {
+                "filesystem",
+                "buffers",
+                "git_status",
+                "document_symbols",
+            },
         })
         vim.keymap.set(
             "n",
@@ -34,7 +40,13 @@ return {
             "n",
             "<leader>tg",
             ":Neotree git_status reveal left toggle<CR>",
-            {desc = "(neo-tree) Toggle git explorer"}
+            { desc = "(neo-tree) Toggle git explorer" }
+        )
+        vim.keymap.set(
+            "n",
+            "<leader>ts",
+            ":Neotree document_symbols reveal left toggle<CR>",
+            { desc = "(neo-tree) Toggle symbols explorer" }
         )
     end,
 }
