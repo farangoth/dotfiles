@@ -1,14 +1,14 @@
 import os
 import subprocess
 import re
-from libqtile import bar, layout, qtile, widget, hook
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.backend.wayland.inputs import InputConfig
 from libqtile.widget import backlight
 from qtile_extras import widget as extra_widget
-from qtile_extras.layout.decorations import RoundedCorners
+from qtile_extras.layout.decorations.borders import RoundedCorners
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -92,24 +92,33 @@ keys = [
         [],
         "XF86MonBrightnessUp",
         lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.UP),
+        desc="Increase screen backlight",
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
         lazy.widget["backlight"].change_backlight(backlight.ChangeDirection.DOWN),
+        desc="Lower screen backlight",
     ),
     Key(
         [],
         "XF86AudioRaiseVolume",
-        lazy.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"),
+        lazy.widget["volume"].increase_vol(),
+        lazy.widget["volume"].update(),
     ),
     Key(
         [],
         "XF86AudioLowerVolume",
-        lazy.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"),
+        lazy.widget["volume"].decrease_vol(),
+        lazy.widget["volume"].update(),
     ),
-    Key([], "XF86AudioMute", lazy.spawn("wpctl set-mute 58 toggle")),
-    Key([mod, "control"], "l", lazy.spawn("physlock -m")),
+    Key(
+        [],
+        "XF86AudioMute",
+        lazy.widget["volume"].mute(),
+        lazy.widget["volume"].update(),
+    ),
+    Key([mod, "control"], "e", lazy.spawn("physlock -m")),
 ]
 
 wl_input_rules = {
@@ -202,12 +211,13 @@ layouts = [
 
 def get_volume():
     """Get the current volume level."""
-    try:
-        output = qtile.cmd_spawn("wpctl get-volume @DEFAULT_AUDIO_SINK@ ")
-        return output.split()[1]
-    except Exception as e:
-        print(f"Error getting volume: {e}")
-        return "0%"
+    result = subprocess.run(
+        ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"], capture_output=True, text=True
+    )
+    if str(result).find("MUTED") == -1:
+        return str(int(float(result.stdout.split()[1]) * 100)) + "%"
+    else:
+        return "MUTE"
 
 
 widget_defaults = dict(
@@ -247,7 +257,7 @@ def create_bar():
             widget.Battery(
                 fmt="{}",
                 full_char="\U000f17e2",
-                charge_char="\U000f0088",
+                charge_char="\U000f1901",
                 discharge_char="\U000f007d",
                 low_percentage=0.15,
                 format="{char} {percent:2.0%}",
@@ -271,6 +281,21 @@ def create_bar():
                         backlight.ChangeDirection.DOWN
                     ),
                 },
+            ),
+            widget.Volume(
+                name="volume",
+                foreground=colors["flamingo"],
+                fmt="\uf028 {}",
+                mute_format="M",
+                unmute_format="{volume}%",
+                get_volume_command=get_volume(),
+                volume_app="wpctl",
+                volume_down_command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+                volume_up_command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
+                check_mute_command="get_volume",
+                check_mute_string="MUTE",
+                mute_command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+                update_interval=0.2,
             ),
             sep(),
             widget.Clock(
