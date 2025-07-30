@@ -18,3 +18,5 @@ source $ZSH/oh-my-zsh.sh
 
 alias neovim="nvim"
 alias startqtile="qtile start -b wayland"
+
+# eval "$(zellij setup --generate-auto-start zsh)"
