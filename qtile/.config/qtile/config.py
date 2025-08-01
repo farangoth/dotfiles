@@ -12,6 +12,7 @@ from qtile_extras.layout.decorations.borders import RoundedCorners
 
 mod = "mod4"
 terminal = guess_terminal()
+file_explorer = "thunar"
 
 colors_macchiato = {
     "text": "#cad3f5",
@@ -39,6 +40,7 @@ colors_macchiato = {
 
 colors = colors_macchiato
 myfont = "Fira Code Nerd Font Bold"
+
 
 keys = [
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -87,7 +89,15 @@ keys = [
     ),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "space", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
+    Key([mod], "space", lazy.spawn("rofi -show combi"), desc="Show launcher menu"),
+    Key([mod], "Escape", lazy.spawn("rofi -show power-menu"), desc="Show power menu"),
+    Key(
+        [mod],
+        "i",
+        lazy.spawn("rofi -show firefox-bookmarks"),
+        desc="Show firefox-bookmarks",
+    ),
     Key(
         [],
         "XF86MonBrightnessUp",
@@ -104,21 +114,15 @@ keys = [
         [],
         "XF86AudioRaiseVolume",
         lazy.widget["volume"].increase_vol(),
-        lazy.widget["volume"].update(),
+        desc="Raise volume",
     ),
     Key(
         [],
         "XF86AudioLowerVolume",
         lazy.widget["volume"].decrease_vol(),
-        lazy.widget["volume"].update(),
+        desc="Lower volume",
     ),
-    Key(
-        [],
-        "XF86AudioMute",
-        lazy.widget["volume"].mute(),
-        lazy.widget["volume"].update(),
-    ),
-    Key([mod, "control"], "e", lazy.spawn("physlock -m")),
+    Key([], "XF86AudioMute", lazy.widget["volume"].mute(), desc="Toggle mute"),
 ]
 
 wl_input_rules = {
@@ -127,9 +131,16 @@ wl_input_rules = {
 }
 
 groups = [
-    Group("1", label="\uf120", init=True, persist=True),
     Group(
-        "2",
+        "1",
+        label="\uf4f6",
+        spawn="foot -e nvim ~/git/gitjournal/",
+        init=True,
+        persist=True,
+    ),
+    Group("2", label="\uf120", spawn="foot", init=True, persist=True),
+    Group(
+        "3",
         label="\uf269",
         matches=[Match(wm_class=re.compile("firefox"))],
         init=True,
@@ -137,9 +148,10 @@ groups = [
         spawn="firefox",
         layout="max",
     ),
+    Group("4", label="\U000f06a9", spawn="foot -e gemini"),
 ]
 
-groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "3456"])
+groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "56"])
 
 for grp in groups:
     keys.extend(
@@ -179,16 +191,16 @@ layouts = [
     layout.Max(
         **layout_defaults,
     ),
-    # layout.TreeTab(
-    # font=myfont,
-    # active_bg=colors["surface0"],
-    # active_fg=colors["lavender"],
-    # bg_color=colors["surface0"],
-    # inactive_bg=colors["surface0"],
-    # inactive_fg=colors["text"],
-    # panel_width=200,
-    # margin=8,
-    # ),
+    layout.TreeTab(
+        font=myfont,
+        active_bg=colors["surface0"],
+        active_fg=colors["lavender"],
+        bg_color=colors["surface0"],
+        inactive_bg=colors["surface0"],
+        inactive_fg=colors["text"],
+        panel_width=200,
+        margin_y=8,
+    ),
     # layout.Columns(
     #   border_focus_stack = [colors["lavender"], colors["overlay0"]],
     #   border_normal = colors["overlay0"],
@@ -209,17 +221,6 @@ layouts = [
 ]
 
 
-def get_volume():
-    """Get the current volume level."""
-    result = subprocess.run(
-        ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"], capture_output=True, text=True
-    )
-    if str(result).find("MUTED") == -1:
-        return str(int(float(result.stdout.split()[1]) * 100)) + "%"
-    else:
-        return "MUTE"
-
-
 widget_defaults = dict(
     font=myfont,
     foreground=colors["text"],
@@ -233,13 +234,41 @@ def sep():
     return widget.TextBox("|")
 
 
+# def get_volume():
+#     try:
+#         output = subprocess.run(
+#             ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"],
+#             text=True,
+#             capture_output=True,
+#         )
+#         volume = str(int(float(output.stdout.split()[1]) * 100)) + "%"
+#     except:
+#         volume = "999%"
+#     (
+#         str(
+#             int(
+#                 float(
+#                     subprocess.run(
+#                         ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"],
+#                         text=True,
+#                         capture_output=True,
+#                     ).stdout.split()[1]
+#                 )
+#                 * 100
+#             )
+#         )
+#         + "%"
+#     )
+#     return volume
+#
+
+
 def create_bar():
     return bar.Bar(
         [
-            widget.CurrentLayout(foreground=colors["text"]),
-            sep(),
             widget.GroupBox(
                 hide_unused=True,
+                disable_drag=True,
                 highlight_method="line",
                 highlight_color=[colors["surface0"], colors["surface0"]],
                 active=colors["text"],
@@ -252,6 +281,8 @@ def create_bar():
             sep(),
             widget.Prompt(),
             widget.WindowName(),
+            widget.CurrentLayout(fmt="[{}]"),
+            sep(),
             widget.StatusNotifier(),
             widget.Wlan(fmt="\uf1eb  {}", format="{essid}", foreground=colors["mauve"]),
             widget.Battery(
@@ -284,16 +315,29 @@ def create_bar():
             ),
             widget.Volume(
                 name="volume",
-                foreground=colors["flamingo"],
+                foreground=colors["rosewater"],
                 fmt="\uf028 {}",
-                mute_format="M",
+                mute_format="Mute",
                 unmute_format="{volume}%",
-                get_volume_command=get_volume(),
+                get_volume_command="get_volume.sh",
+                # get_volume_command=str(
+                #     int(
+                #         float(
+                #             subprocess.run(
+                #                 ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"],
+                #                 text=True,
+                #                 capture_output=True,
+                #             ).stdout.split()[1]
+                #         )
+                #         * 100
+                #     )
+                # )
+                # + "%",
                 volume_app="wpctl",
-                volume_down_command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
-                volume_up_command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
-                check_mute_command="get_volume",
-                check_mute_string="MUTE",
+                volume_down_command="wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-",
+                volume_up_command="wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+",
+                check_mute_command="wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo Muted || echo Unmuted",
+                check_mute_string="Muted",
                 mute_command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
                 update_interval=0.2,
             ),
