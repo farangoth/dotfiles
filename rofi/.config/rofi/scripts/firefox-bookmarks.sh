@@ -1,19 +1,4 @@
-# Juliaviolet.dev | Sept 2023
-
 #!/bin/sh
-
-
-# UI states 'Shift+Return: new window', but expects ROFI_RETV == 11 to do so. which by default is 'Alt+1.'
-# To match the stated UI, add these lines to your config file.\
-#
-# configuration {
-# ...
-#    kb-custom-1:"Shift+Return";
-#    kb-accept-alt:"Alt+1";   
-# }
-#
-
-# ruthlessly modified from a dmenu script to be native to rofi. 
 
 gen_bookmark() {
     # search for profile folder if not specified
@@ -37,14 +22,14 @@ gen_bookmark() {
 
     # fetch all bookmark records from copy, show menu and open selected bookmark in browser
     sqlite3 "${bookmarks_folder}"/bookmarks_copy.sqlite 'SELECT i.title, u.url FROM items i, urls u WHERE (i.urlId = u.id)' \
-    | sed 's/|http/:http/' > TEMP
+    | sed 's/|http/:http/' > BOOKMARKS
 
     while read -r line; do
         LINK=$(echo -en "$line" | grep -Eo '(http|https)://.*') 
         TITLE=$(echo -en $line | cut -d: -f1)
 
         echo -en "${TITLE}\0info\x1f${LINK}\x1ficon\x1fbookmarks\n"
-    done < TEMP
+    done < BOOKMARKS
 }
 
 if [ -z $@ ]
