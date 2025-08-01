@@ -175,10 +175,10 @@ for grp in groups:
 
 layout_defaults = dict(
     border_focus_stack=[colors["lavender"], colors["overlay0"]],
-    border_normal=RoundedCorners(colour=colors["overlay0"]),
+    border_normal=RoundedCorners(colour=colors["overlay2"]),
     border_focus=RoundedCorners(colour=colors["lavender"]),
     border_width=2,
-    margin=8,
+    margin=12,
     margin_on_single=8,
     single_border_width=2,
 )
