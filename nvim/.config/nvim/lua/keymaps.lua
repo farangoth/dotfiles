@@ -1,3 +1,24 @@
+local transparent_background = false
+local function toggle_background_color()
+    if transparent_background then
+        vim.cmd.colorscheme("catppuccin")
+        transparent_background = false
+    else
+        local highlights = {
+            "Normal", "NormalNC", "NormalFloat", "FloatBorder", "EndOfBuffer",
+            "SignColumn", "ColorColumn", "CursorLine", "WinSeparator", "VertSplit",
+            "StatusLine", "StatusLineNC", "TabLine", "TabLineFill", "TabLineSel",
+            "NeoTreeNormal", "TelescopeNormal"
+        }
+        for _, group in ipairs(highlights) do
+            vim.api.nvim_set_hl(0, group, { bg = 'NONE' })
+        end
+        transparent_background = true
+    end
+end
+
+vim.keymap.set('n', '<leader>bg', toggle_background_color, {desc="Toggle background color"})
+
 -- Deactivate arrows to force Vim motion
 vim.keymap.set('n', '<Left>', '<Esc>:echoe "Use h!"<CR>', {desc="Enforce Vim motions"})
 vim.keymap.set('n', '<Right>', '<Esc>:echoe "Use l!"<CR>', {desc="Enforce Vim motions"})
