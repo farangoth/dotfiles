@@ -12,7 +12,7 @@ return {
             "hrsh7th/cmp-nvim-lsp",
         },
         opts = {
-            ensure_installed = { "lua_ls", "pyright" },
+            ensure_installed = { "lua_ls", "pyright" , "bashls"},
         },
         config = function()
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(LSP) Show Code Actions" })
@@ -43,6 +43,10 @@ return {
                         },
                     },
                 },
+            })
+            require("lspconfig")["bashls"].setup({
+                capabilities = capabilities,
+                settings = {}
             })
         end,
     },
