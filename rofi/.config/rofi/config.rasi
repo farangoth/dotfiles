@@ -1,7 +1,7 @@
 configuration {
- modi: "window,drun,power-menu,combi";
+ modi: "notes,drun,window,power,apps,combi";
  font: "FiraCodeNerdFontMono 14";
- combi-modi: "window,drun,power-menu";
+ combi-modi: "window,apps";
  drun-display-format: "{name} [<span weight='light' size='small'><i>({exec})</i></span>]";
  }
 @theme "catppuccin"

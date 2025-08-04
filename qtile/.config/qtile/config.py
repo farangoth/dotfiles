@@ -91,7 +91,8 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
     Key([mod], "space", lazy.spawn("rofi -show combi"), desc="Show launcher menu"),
-    Key([mod], "Escape", lazy.spawn("rofi -show power-menu"), desc="Show power menu"),
+    Key([mod], "Escape", lazy.spawn("rofi -show power"), desc="Show power menu"),
+    Key([mod], "n", lazy.spawn("rofi -show notes"), desc="Show notes menu"),
     Key(
         [mod],
         "i",
@@ -134,7 +135,7 @@ groups = [
     Group(
         "1",
         label="\uf4f6",
-        spawn="foot -e nvim ~/git/gitjournal/",
+        spawn="foot nvim ~/git/gitjournal/ :Neotree",
         init=True,
         persist=True,
     ),
@@ -156,7 +157,6 @@ groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "56"])
 for grp in groups:
     keys.extend(
         [
-            # mod + group number = switch to group
             Key(
                 [mod],
                 grp.name,
