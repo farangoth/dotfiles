@@ -135,7 +135,7 @@ groups = [
     Group(
         "1",
         label="\uf4f6",
-        spawn="foot nvim ~/git/gitjournal/ :Neotree",
+        spawn="foot nvim ~/git/gitjournal/ +:Neotree",
         init=True,
         persist=True,
     ),
