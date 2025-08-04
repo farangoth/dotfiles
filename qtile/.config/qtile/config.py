@@ -2,7 +2,7 @@ import os
 import subprocess
 import re
 from libqtile import bar, layout, widget, hook
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.backend.wayland.inputs import InputConfig
@@ -65,14 +65,13 @@ keys = [
     ),
     Key([mod, "control"], "j", lazy.layout.growdown(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod, "Shift"], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     Key(
         [mod, "shift"],
         "Return",
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod, "shift"], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key(
@@ -87,6 +86,8 @@ keys = [
         lazy.window.toggle_floating(),
         desc="Toggle floating on the focused window",
     ),
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod, "control"], "Return", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Launch terminal"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
@@ -132,20 +133,25 @@ wl_input_rules = {
 }
 
 groups = [
+    ScratchPad("scratchpad", [DropDown("term", "foot")]),
     Group(
         "1",
         label="\uf4f6",
-        spawn="foot nvim ~/git/gitjournal/ +:Neotree",
+        spawn="foot nvim git/gitjournal/ +:Neotree",
         init=True,
-        persist=True,
     ),
-    Group("2", label="\uf120", spawn="foot", init=True, persist=True),
+    Group(
+        "2",
+        label="\uf120",
+        spawn="foot",
+        init=True,
+    ),
     Group(
         "3",
         label="\uf269",
         matches=[Match(wm_class=re.compile("firefox"))],
         init=True,
-        persist=True,
+        exclusive=True,
         spawn="firefox",
         layout="max",
     ),
@@ -163,7 +169,6 @@ for grp in groups:
                 lazy.group[grp.name].toscreen(),
                 desc=f"Switch to group {grp.name}",
             ),
-            # mod + shift + group number = switch to & move focused window to group
             Key(
                 [mod, "shift"],
                 grp.name,
@@ -305,7 +310,7 @@ def create_bar():
                 foreground=colors["sky"],
                 change_command="light -S {0}",
                 mouse_callbacks={
-                    "Button5": lazy.widget["backlight"].change_backlight(
+                    "Button4": lazy.widget["backlight"].change_backlight(
                         backlight.ChangeDirection.UP
                     ),
                     "Button5": lazy.widget["backlight"].change_backlight(
