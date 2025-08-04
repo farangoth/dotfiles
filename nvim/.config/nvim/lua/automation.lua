@@ -11,3 +11,10 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufWinLeave" }, {
         vim.fn.jobstart({ "bash", "/home/farangoth/bin/push_commit.sh" })
     end,
 })
+
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+    pattern = "/home/farangoth/dotfiles/qtile/.config/qtile/config.py",
+    callback = function()
+        vim.fn.jobstart({ "qtile cmd-obj -o cmd -f reload_config" })
+    end,
+})
