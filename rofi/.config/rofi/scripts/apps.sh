@@ -5,18 +5,20 @@ set -u
 
 declare -A APPS
 APPS=(
-    ["web"]="  web browser"
-    ["file"]=" 󰉋 file manager"
+    ["web"]="  web browser - firefox"
+    ["file"]=" 󰉋 file manager - thunar"
+    ["editor"]=" 󰭷 editor - nvim"
     ["notes"]="  edit notes"
     ["code"]="  edit code"
-    ["config"]="  edit config"
-    ["term"]="  open terminal"
+    ["config"]="  edit config - dotfiles"
+    ["term"]="  open terminal - foot"
 )
 
 declare -A COMMANDS
 COMMANDS=(
     ["web"]="firefox --new-tab about:newtab & sleep 0.2 && qtile cmd-obj -o group 3 -f toscreen" 
     ["file"]="thunar"
+    ["editor"]="foot nvim ~ +:Neotree"
     ["notes"]="foot nvim git/gitjournal/ :Neotree" 
     ["code"]="foot nvim code/ +:Neotree"
     ["config"]="foot nvim dotfiles/ +:Neotree"
@@ -37,14 +39,6 @@ else
         fi
     done
 
-    if [ -n "$run_cmd" ]; then
-        if [[ "$run_cmd" == *"rofi -show notes"* ]]; then
-            eval "$run_cmd" &
-        else
-            nohup bash -c "$run_cmd" > /dev/null 2>&1 &
-        fi
-    else
-        nohup bash -c "firefox --new-tab \"https://www.google.com/search?q=${selection}\" && qtile cmd-obj -o group 3 -f toscreen" > /dev/null 2>&1 &
-    fi
+    nohup bash -c "$run_cmd" > /dev/null 2>&1 &
 fi
 
