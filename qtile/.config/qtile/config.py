@@ -295,6 +295,7 @@ def create_bar():
             widget.CurrentLayout(fmt="[{}]"),
             sep(),
             widget.StatusNotifier(),
+            Nordvpn(),
             widget.Wlan(fmt="\uf1eb  {}", format="{essid}", foreground=colors["mauve"]),
             widget.Battery(
                 fmt="{}",

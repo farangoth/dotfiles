@@ -24,8 +24,8 @@ COMMANDS=(
     ["config"]="foot nvim dotfiles/ +:Neotree"
     ["term"]="foot"
 )
-if [ -z "$@" ]; then
-    for entry in "${!APPS[@]}";     do
+if [ -z "$*" ]; then
+    for entry in "${!APPS[@]}"; do
         echo -e "${APPS[$entry]}"
     done
 else

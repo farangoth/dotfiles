@@ -1,5 +1,5 @@
 configuration {
- modi: "notes,drun,window,power,apps,combi";
+ modi: "notes,nordvpn,drun,window,power,apps,combi";
  font: "FiraCodeNerdFontMono 14";
  combi-modi: "window,apps,drun";
  drun-display-format: "{name} [<span weight='light' size='small'><i>({exec})</i></span>]";
