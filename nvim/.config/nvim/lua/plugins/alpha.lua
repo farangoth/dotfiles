@@ -6,8 +6,8 @@ return {
 		local dashboard = require("alpha.themes.dashboard")
 		dashboard.section.buttons.val = {
 			dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
-            dashboard.button("n", "⌹  Edit notes", ":e ~/git/gitjournal/<CR>"),
 			dashboard.button("t", "  Browse cwd", ":Neotree filesystem reveal left<CR>"),
+            dashboard.button("n", "⌹  Edit notes", ":e ~/git/gitjournal/<CR>"),
 			dashboard.button("r", "  Browse code", ":e ~/code/<CR>"),
 			dashboard.button("c", "  Config", ":e ~/dotfiles/<CR>"),
 			dashboard.button("p", "  Plugins", ":Lazy<CR>"),
