@@ -1,6 +1,9 @@
 import os
 import subprocess
+import os
+import subprocess
 import re
+
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
@@ -9,6 +12,8 @@ from libqtile.backend.wayland.inputs import InputConfig
 from libqtile.widget import backlight
 from qtile_extras import widget as extra_widget
 from qtile_extras.layout.decorations.borders import RoundedCorners
+
+from widgets.nordvpn import Nordvpn
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -40,7 +45,6 @@ colors_macchiato = {
 
 colors = colors_macchiato
 myfont = "Fira Code Nerd Font Bold"
-
 
 keys = [
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -87,8 +91,8 @@ keys = [
         desc="Toggle floating on the focused window",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod, "control"], "Return", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Launch terminal"),
-    Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
+    Key([mod, "control"], "Return", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Launch dropdown terminal"),
+    Key([mod, "control"], "r", lazy.reload_config(), desc="reload config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
     Key([mod], "space", lazy.spawn("rofi -show combi"), desc="Show launcher menu"),
@@ -98,7 +102,7 @@ keys = [
         [mod],
         "i",
         lazy.spawn("rofi -show firefox-bookmarks"),
-        desc="Show firefox-bookmarks",
+        desc="Show bookmarks menu",
     ),
     Key(
         [],
@@ -156,9 +160,9 @@ groups = [
         layout="max",
     ),
     Group("4", label="\U000f06a9", spawn="foot -e gemini"),
+    Group("5", label="\uf52c")
 ]
 
-groups.extend([Group(i, label="(" + i + ") " + "\ueaae") for i in "56"])
 
 for grp in groups:
     keys.extend(
@@ -230,7 +234,7 @@ widget_defaults = dict(
     font=myfont,
     foreground=colors["text"],
     fontsize=14,
-    padding=5,
+    padding_x=6,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -268,6 +272,7 @@ def sep():
 #
 
 
+
 def create_bar():
     return bar.Bar(
         [
@@ -282,6 +287,7 @@ def create_bar():
                 this_screen_border=colors["overlay1"],
                 other_current_screen_border=colors["subtext0"],
                 other_screen_border=colors["overlay0"],
+                margin_x=6,
             ),
             sep(),
             widget.Prompt(),
