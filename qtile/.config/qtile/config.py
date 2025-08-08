@@ -328,7 +328,7 @@ def create_bar():
             widget.Volume(
                 name="volume",
                 foreground=colors["rosewater"],
-                fmt="\uf028 {}",
+                fmt="\uf028  {}",
                 mute_format="Mute",
                 unmute_format="{volume}%",
                 get_volume_command="get_volume.sh",
