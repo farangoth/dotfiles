@@ -91,13 +91,24 @@ keys = [
         desc="Toggle floating on the focused window",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod, "control"], "Return", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Launch dropdown terminal"),
+    Key(
+        [mod, "control"],
+        "Return",
+        lazy.group["scratchpad"].dropdown_toggle("term"),
+        desc="Launch dropdown terminal",
+    ),
     Key([mod, "control"], "r", lazy.reload_config(), desc="reload config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
     Key([mod], "space", lazy.spawn("rofi -show combi"), desc="Show launcher menu"),
     Key([mod], "Escape", lazy.spawn("rofi -show power"), desc="Show power menu"),
     Key([mod], "n", lazy.spawn("rofi -show notes"), desc="Show notes menu"),
+    Key(
+        [mod],
+        "z",
+        lazy.spawn("swaync-client -t -sw"),
+        desc="Toggle notification center",
+    ),
     Key(
         [mod],
         "i",
@@ -136,18 +147,15 @@ wl_input_rules = {
     "type:keyboard": InputConfig(kb_layout="gb", kb_options="caps:escape"),
 }
 
-groups = [
-    ScratchPad("scratchpad", [DropDown("term", "foot")]),
+workspaces = [
     Group(
         "1",
         label="\uf4f6",
-        spawn="foot nvim git/gitjournal/ +:Neotree",
         init=True,
     ),
     Group(
         "2",
         label="\uf120",
-        spawn="foot",
         init=True,
     ),
     Group(
@@ -156,15 +164,15 @@ groups = [
         matches=[Match(wm_class=re.compile("firefox"))],
         init=True,
         exclusive=True,
-        spawn="firefox",
         layout="max",
     ),
-    Group("4", label="\U000f06a9", spawn="foot -e gemini"),
-    Group("5", label="\uf52c")
+    Group("4", label="\U000f06a9"),
+    Group("5", label="\uf52c"),
 ]
 
+groups = [ScratchPad("scratchpad", [DropDown("term", "foot")]),] + workspaces
 
-for grp in groups:
+for grp in workspaces:
     keys.extend(
         [
             Key(
@@ -270,7 +278,6 @@ def sep():
 #     )
 #     return volume
 #
-
 
 
 def create_bar():
