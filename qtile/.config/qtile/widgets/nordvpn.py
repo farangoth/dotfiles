@@ -9,9 +9,9 @@ class Nordvpn(base.ThreadPoolText):
 
     defaults = [
         ("update_interval", 5, "Update interval in seconds"),
-        ("format_disconneted", "  Disconnected", "Format when disconnected"),
-        ("format_connect", " {country}", "Format when connected"),
-        ("format_connecting", "󱘖 Process...", "Format during connection"),
+        ("format_disconneted", "[  No VPN]", "Format when disconnected"),
+        ("format_connect", "[ {country}]", "Format when connected"),
+        ("format_connecting", "[󱘖 Process...]", "Format during connection"),
         ("rofi_command", "rofi -show nordvpn", "Command for menu"),
     ]
 
@@ -71,4 +71,4 @@ class Nordvpn(base.ThreadPoolText):
         if "Connected" in status:
             qtile.spawn("nordvpn disconnect", shell=True)
         else:
-            qtile.spawn("nordvpn connect", shell-True)
+            qtile.spawn("nordvpn connect", shell=True)
