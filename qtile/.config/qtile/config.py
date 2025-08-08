@@ -295,8 +295,19 @@ def create_bar():
             widget.CurrentLayout(fmt="[{}]"),
             sep(),
             widget.StatusNotifier(),
-            Nordvpn(),
-            widget.Wlan(fmt="\uf1eb  {}", format="{essid}", foreground=colors["mauve"]),
+            widget.Wlan(
+                fmt="\uf1eb  {}",
+                format="{essid}",
+                foreground=colors["mauve"],
+                mouse_callbacks={
+                    "Button1": lazy.spawn(
+                        "bash -c $HOME/.config/rofi/scripts/wifi_picker.sh", shell=True
+                    )
+                },
+            ),
+            Nordvpn(
+                foreground=colors["mauve"],
+            ),
             widget.Battery(
                 fmt="{}",
                 full_char="\U000f17e2",
