@@ -1,5 +1,10 @@
+gui:
+  theme:
+    selectedLineBgColor:
+      - black
+      - bold
 customCommands:
-  - key: "<C-v>"
+  - key: "<c-v>"
     type: "command"
     context: "global"
     description: "Create new conventional commit"
