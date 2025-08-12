@@ -151,19 +151,16 @@ workspaces = [
     Group(
         "1",
         label="\uf4f6",
-        init=True,
     ),
     Group(
         "2",
         label="\uf120",
-        init=True,
     ),
     Group(
         "3",
         label="\uf269",
         matches=[Match(wm_class=re.compile("firefox"))],
         init=True,
-        exclusive=True,
         layout="max",
     ),
     Group("4", label="\U000f06a9"),
