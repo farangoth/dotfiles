@@ -167,7 +167,7 @@ workspaces = [
     Group("5", label="\uf52c"),
 ]
 
-groups = [ScratchPad("scratchpad", [DropDown("term", "foot")]),] + workspaces
+groups = [ScratchPad("scratchpad", [DropDown("term", "foot", wrap_pointer=True, on_focus_lost_hide=False)]),] + workspaces
 
 for grp in workspaces:
     keys.extend(
@@ -192,7 +192,7 @@ layout_defaults = dict(
     border_normal=RoundedCorners(colour=colors["overlay2"]),
     border_focus=RoundedCorners(colour=colors["lavender"]),
     border_width=2,
-    margin=12,
+    margin=14,
     margin_on_single=8,
     single_border_width=2,
 )
@@ -379,12 +379,14 @@ def create_bar():
         border_width=1,
         # TODO: RoundedBorders for bar?
         border_color=colors["overlay0"],
+        opacity=0.85
     )
 
 
 screen_params = dict(
     wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
     wallpaper_mode="fill",
+
 )
 
 screens = [
