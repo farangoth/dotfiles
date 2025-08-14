@@ -10,7 +10,6 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.backend.wayland.inputs import InputConfig
 from libqtile.widget import backlight
-from qtile_extras import widget as extra_widget
 from qtile_extras.layout.decorations.borders import RoundedCorners
 
 from widgets.nordvpn import Nordvpn
