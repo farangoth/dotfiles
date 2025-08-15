@@ -80,5 +80,5 @@ customCommands:
         initialValue: ""
         suggestions:
           command: "~/bin/gh-issues-to-json.sh"
-    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}:{{.Form.Title}}{{ if .Form.Body}}\\n\\n{{.Form.Body}}{{ end }}{{ if .Form.Footer}}\\n\\n{{.Form.Footer}}{{ end }}'"
+    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}:{{.Form.Title}}{{ if .Form.Body}}\n\n{{.Form.Body}}{{ end }}{{ if .Form.Footer}}\n\n{{.Form.Footer}}{{ end }}'"
     loadingText: "Creating conventional commit..."
