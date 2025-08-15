@@ -66,22 +66,19 @@ customCommands:
         title: "body (optional)"
         key: "Body"
         initialValue: ""
-      - type: "menuFromCommand"
-        key: "LinkedIssue"
-        title: "Linked issue (optional)"
-        command: "gh issue list --json number,title"
-        filter: '"number":(?P<issue_number>\\d+),"title":"(?P<issue_title>[^\"]+)"'
-        valueFormat: "{{ .issue_number }}"
-        labelFormat: "#{{ .issue_number | green | bold }} - {{ .issue_title | yellow }}"
+      # - type: "menuFromCommand"
+      #   key: "LinkedIssue"
+      #   title: "Linked issue (optional)"
+      #   command: "gh issue list --json number,title"
+      #   filter: '\"number\":(?P<issue_number>\\d+),\"title\":\"(?P<issue_title>[^\"]+)"'
+      #   valueFormat: "{{ .issue_number }}"
+      #   labelFormat: "#{{ .issue_number | green | bold }} - {{ .issue_title | yellow }}"
+      #   optional: true
       - type: "input"
         title: "footer (optional)"
         key: "Footer"
         initialValue: ""
-    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}: {{.Form.Title}}{{ if .Form.Body}}
-
-{{.Form.Body}}{{ end }}{{ if and .Form.LinkedIssue (ne .Form.LinkedIssue \"0\") }}
-
-Closes #{{.Form.LinkedIssue}}{{ end }}{{ if .Form.Footer }}
-
-{{.Form.Footer}}{{ end }}'"
+        suggestions:
+          command: "~/bin/gh-issues-to-json.sh"
+    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}:{{.Form.Title}}{{ if .Form.Body}}\\n\\n{{.Form.Body}}{{ end }}{{ if .Form.Footer}}\\n\\n{{.Form.Footer}}{{ end }}'"
     loadingText: "Creating conventional commit..."
