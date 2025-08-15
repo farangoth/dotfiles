@@ -298,6 +298,11 @@ def create_bar():
             widget.CurrentLayout(fmt="[{}]"),
             sep(),
             widget.StatusNotifier(),
+            widget.Bluetooth(
+                default_text="󰂯 {num_connected_devices}",
+                foreground=colors["blue"],
+
+                ),
             widget.Wlan(
                 fmt="\uf1eb  {}",
                 format="{essid}",
