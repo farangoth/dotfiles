@@ -301,7 +301,11 @@ def create_bar():
             widget.Bluetooth(
                 default_text="󰂯 {num_connected_devices}",
                 foreground=colors["blue"],
-
+                mouse_callbacks={
+                    "Button1": lazy.spawn(
+                        "bash -c $HOME/.config/rofi/scripts/bluetooth_picker.sh", shell=True
+                        )
+                    }
                 ),
             widget.Wlan(
                 fmt="\uf1eb  {}",
