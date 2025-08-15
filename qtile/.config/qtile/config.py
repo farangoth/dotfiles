@@ -96,6 +96,12 @@ keys = [
         lazy.group["scratchpad"].dropdown_toggle("term"),
         desc="Launch dropdown terminal",
     ),
+    Key(
+        [mod, "control"],
+        "n",
+        lazy.group["scratchpad"].dropdown_toggle("notes"),
+        desc="Raise dropdown notes",
+    ),
     Key([mod, "control"], "r", lazy.reload_config(), desc="reload config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "e", lazy.spawn(file_explorer), desc="Open file_explorer"),
@@ -166,7 +172,20 @@ workspaces = [
     Group("5", label="\uf52c"),
 ]
 
-groups = [ScratchPad("scratchpad", [DropDown("term", "foot", wrap_pointer=True, on_focus_lost_hide=False)]),] + workspaces
+groups = [
+    ScratchPad(
+        "scratchpad",
+        [
+            DropDown("term", "foot", wrap_pointer=True, on_focus_lost_hide=False),
+            DropDown(
+                "notes",
+                "foot nvim ~/git/gitjournal/",
+                wrap_pointer=True,
+                on_focus_lost_hide=False,
+            ),
+        ],
+    )
+] + workspaces
 
 for grp in workspaces:
     keys.extend(
@@ -303,10 +322,11 @@ def create_bar():
                 foreground=colors["blue"],
                 mouse_callbacks={
                     "Button1": lazy.spawn(
-                        "bash -c $HOME/.config/rofi/scripts/bluetooth_picker.sh", shell=True
-                        )
-                    }
-                ),
+                        "bash -c $HOME/.config/rofi/scripts/bluetooth_picker.sh",
+                        shell=True,
+                    )
+                },
+            ),
             widget.Wlan(
                 fmt="\uf1eb  {}",
                 format="{essid}",
@@ -387,14 +407,13 @@ def create_bar():
         border_width=1,
         # TODO: RoundedBorders for bar?
         border_color=colors["overlay0"],
-        opacity=0.85
+        opacity=0.85,
     )
 
 
 screen_params = dict(
     wallpaper="/home/farangoth/.config/qtile/wallpaper.png",
     wallpaper_mode="fill",
-
 )
 
 screens = [
