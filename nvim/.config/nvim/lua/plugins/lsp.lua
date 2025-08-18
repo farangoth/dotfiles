@@ -77,23 +77,18 @@ return {
 					},
 				},
 			})
-		end,
-	},
-	{
-		"ray-x/lsp_signature.nvim",
-		event = "InsertEnter",
-		opts = {
-			hint_enable = false,
-			bind = true,
-			handler_opts = {
-				border = "rounded",
-			},
-		},
-		config = function(_, opts)
-			require("lsp_signature").setup(opts)
-			vim.keymap.set({ "i", "n" }, "<C-s>", function()
-				require("lsp_signature").toggle_float_win()
-			end, { desc = "(LSP) Toggle signature", noremap = true })
+			require("lspconfig")["pyright"].setup({
+				settings = {
+					pyright = {
+						disableOrganizeImports = true,
+					},
+					python = {
+						analysis = {
+							ignore = { "*" },
+						},
+					},
+				},
+			})
 		end,
 	},
 }
