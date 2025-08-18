@@ -7,7 +7,7 @@ return {
             cmp.setup({
                 snippet = {
                     expand = function(args)
-                        require('luasnip').lsp_expand(args.body) 
+                        require("luasnip").lsp_expand(args.body)
                     end,
                 },
                 window = {
@@ -25,15 +25,15 @@ return {
                         else
                             fallback()
                         end
-                    end, { "i", "s" }), 
+                    end, { "i", "s" }),
                 }),
                 sources = cmp.config.sources({
                     -- { name = "copilot", group_index = 2 },
                     { name = "nvim_lsp" },
-                    { name = 'luasnip' }, -- For luasnip users.
+                    { name = "luasnip" },
                     { name = "buffer" },
                     { name = "path" },
-
+                    { name = "nvim_lsp_signature_help" },
                 }),
             })
 
@@ -48,12 +48,10 @@ return {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "path" },
-                }, {
                     { name = "cmdline" },
                 }),
                 matching = { disallow_symbol_nonprefix_matching = false },
             })
-
         end,
     },
     {

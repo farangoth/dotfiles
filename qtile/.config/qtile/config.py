@@ -1,14 +1,12 @@
 import os
-import subprocess
-import os
-import subprocess
 import re
+import subprocess
 
-from libqtile import bar, layout, widget, hook
-from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
+from libqtile import bar, hook, layout, widget
+from libqtile.backend.wayland.inputs import InputConfig
+from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
-from libqtile.backend.wayland.inputs import InputConfig
 from libqtile.widget import backlight
 from qtile_extras.layout.decorations.borders import RoundedCorners
 
@@ -41,7 +39,6 @@ colors_macchiato = {
     "blue": "#8aadf4",
     "rosewater": "#f4dbd6",
 }
-
 colors = colors_macchiato
 myfont = "Fira Code Nerd Font Bold"
 
