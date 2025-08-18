@@ -19,7 +19,6 @@ end
 
 vim.keymap.set('n', '<leader>bg', toggle_background_color, {desc="Toggle background color"})
 
--- Deactivate arrows to force Vim motion
 vim.keymap.set('n', '<Left>', '<Esc>:echoe "Use h!"<CR>', {desc="Enforce Vim motions"})
 vim.keymap.set('n', '<Right>', '<Esc>:echoe "Use l!"<CR>', {desc="Enforce Vim motions"})
 vim.keymap.set('n', '<Up>', '<Esc>:echoe "Use k!"<CR>', {desc="Enforce Vim motions"})
@@ -35,7 +34,6 @@ vim.keymap.set('v', '<Right>', '<Esc>:echoe "Use l!"<CR>', {desc="Enforce Vim mo
 vim.keymap.set('v', '<Up>', '<Esc>:echoe "Use k!"<CR>', {desc="Enforce Vim motions"})
 vim.keymap.set('v', '<Down>', '<Esc>:echoe "Use j!"<CR>', {desc="Enforce Vim motions"})
 
--- better move between buffers
 vim.keymap.set('n', '<c-k>', ':wincmd k<CR>', {desc="Vim motion for navigate windows"})
 vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', {desc="Vim motion for navigate windows"})
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', {desc="Vim motion for navigate windows"})

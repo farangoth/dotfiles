@@ -18,6 +18,8 @@ return {
             { "<leader>t", group = "neotree" },
             { "<leader>h", group = "git/hunk" },
             { "<leader>g", group = "LSP/GoTo" },
+            { "<leader>b", group = "customisation" },
+
         })
     end,
 }
