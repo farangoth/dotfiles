@@ -7,6 +7,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 
 vim.opt.showmode = false
+vim.opt.scrolloff = 10
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
