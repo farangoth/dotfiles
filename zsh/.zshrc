@@ -5,7 +5,7 @@ export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 source $HOME/.env_secrets
 
 export EDITOR="nvim"
-export TERMINAL="foot"
+export TERMINAL="kitty"
 
 ZSH_THEME="my-agnoster"
 
@@ -24,4 +24,3 @@ alias neovim="nvim"
 alias startqtile="qtile start -b wayland"
 alias cat="bat -f"
 alias bat="bat -f"
-# eval "$(zellij setup --generate-auto-start zsh)"

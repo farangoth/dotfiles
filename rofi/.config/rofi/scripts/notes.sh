@@ -1,14 +1,14 @@
 #!/bin/env bash
 
 NOTES_DIR="$HOME/git/gitjournal"
-EDITOR=$EDITOR
-TERMINAL="foot"
+EDITOR="nvim"
+TERMINAL="kitty"
 
 mkdir -p "$NOTES_DIR"
 
 CREATE_NEW=" New note"
 
-if [ -z "$@" ]; then
+if [ -z "$*" ]; then
     echo -e "$CREATE_NEW"
 
     find "$NOTES_DIR" -maxdepth 2 -type f -name *.md -printf '%T@ %P\n' \

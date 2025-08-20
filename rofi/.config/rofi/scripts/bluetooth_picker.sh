@@ -1,5 +1,5 @@
 #!/bin/env bash
-
+terminal="kitty"
 get_devices() {
     bluetoothctl devices | grep "^Device" | while read -r line; do
         mac_addr=$(echo "$line" | awk '{print $2}')
@@ -33,6 +33,6 @@ case "$state" in
         bluetoothctl connect "$mac_addr"
         ;;
     *)
-        foot bluetoothctl
+        ${terminal} bluetoothctl
         ;;
 esac
