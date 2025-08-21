@@ -41,7 +41,7 @@ return {
 				map("n", "<leader>hD", function()
 					gs.diffthis("~")
 				end, { desc = "Diff This (HEAD)" })
-				map("n", "<leader>hL", gs.toggle_current_line_blame, { desc = "Toggle Current Line Blame" })
+				map("n", "<leader>hb", gs.toggle_current_line_blame, { desc = "Toggle Current Line Blame" })
 				map("n", "<leader>hP", gs.toggle_deleted, { desc = "Toggle Deleted Lines" })
 			end,
 		})

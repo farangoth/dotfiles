@@ -9,6 +9,13 @@ return {
 			end,
 			desc = "lazygit",
 		},
+        {
+            "<leader>hB",
+            function ()
+                Snacks.git.blame_line()
+            end,
+            desc = "blame line (float)"
+        },
 		{
 			"<leader>hw",
 			function()
