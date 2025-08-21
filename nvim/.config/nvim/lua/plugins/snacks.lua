@@ -3,9 +3,30 @@ return {
     lazy = false,
     opts = {
         -- scroll = { enabled = true },
-        zen = { enabled = true },
-        dim = { enabled = true },
+        zen = {
+            enabled = true,
+            toggles = {
+                dim = true,
+                git_signs = false,
+                mini_diff_signs = false,
+                inlay_hints = false,
+                line_number = false,
+                diagnostics = false,
+                statuscolumn = false,
+                animate = false,
+                indent = false,
+            },
+            show = {
+                statusline = false,
+            },
+        },
+        dim = { enable = true },
         lazygit = { enable = true },
+        gitbrowse = { enabled = true },
+        explorer = { replacenetrw = true },
+        statuscolumn = { left = { "mark", "sign", "fold", "git" }, right = {} },
+        indent = { animate = { enabled = false }, only_current = true,  },
+        input = { enable = true },
         toggle = {
             map = vim.keymap.set,
             which_key = true,
@@ -14,7 +35,6 @@ return {
                 enabled = " ",
                 disabled = " ",
             },
-            -- colors for enabled/disabled states
             color = {
                 enabled = "green",
                 disabled = "yellow",
@@ -23,23 +43,6 @@ return {
                 enabled = "Disable ",
                 disabled = "Enable ",
             },
-        },
-    },
-    keys = {
-        {
-            "<leader>hG",
-            function()
-                Snacks.lazygit()
-            end,
-            desc = "lazygit",
-        },
-        {
-            "<leader>z",
-            function()
-                Snacks.zen()
-                Snacks.toggle.dim()
-            end,
-            desc = "Toggle zen mode",
         },
     },
 }

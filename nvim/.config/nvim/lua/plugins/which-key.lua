@@ -17,9 +17,9 @@ return {
             { "<leader>f", group = "fuzzy (telescope)" },
             { "<leader>t", group = "neotree" },
             { "<leader>h", group = "git/hunk" },
-            { "<leader>g", group = "LSP/GoTo" },
+            { "<leader>l", group = "LSP" },
             { "<leader>b", group = "customisation" },
-
+            { "<leader>g", group = "GoTo" },
         })
     end,
 }
