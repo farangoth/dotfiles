@@ -1,5 +1,6 @@
 return {
     "nvimtools/none-ls.nvim",
+    event = "BufReadPre",
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
