@@ -77,7 +77,7 @@ return {
 			desc = "open diagnostics explorer (workspace)",
 		},
 		{
-			"<leader>fD",
+			"<leader>fd",
 			function()
 				Snacks.picker.diagnostics_buffer({ layout = { preset = "left" } })
 			end,

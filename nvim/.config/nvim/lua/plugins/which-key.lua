@@ -14,11 +14,10 @@ return {
     config = function()
         local wk = require("which-key")
         wk.add({
-            { "<leader>f", group = "fuzzy (telescope)" },
-            { "<leader>t", group = "neotree" },
+            { "<leader>f", group = "fuzzy finders" },
+            { "<leader>t", group = "toggle" },
             { "<leader>h", group = "git/hunk" },
             { "<leader>l", group = "LSP" },
-            { "<leader>b", group = "customisation" },
             { "<leader>g", group = "GoTo" },
         })
     end,

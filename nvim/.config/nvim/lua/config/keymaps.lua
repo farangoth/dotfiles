@@ -17,7 +17,7 @@ local function toggle_background_color()
     end
 end
 
-vim.keymap.set('n', '<leader>bg', toggle_background_color, {desc="toggle background color"})
+vim.keymap.set('n', '<leader>tb', toggle_background_color, {desc="toggle background color"})
 
 vim.keymap.set('n', '<Left>', '<Esc>:echoe "Use h!"<CR>', {desc="enforce Vim motions"})
 vim.keymap.set('n', '<Right>', '<Esc>:echoe "Use l!"<CR>', {desc="enforce Vim motions"})

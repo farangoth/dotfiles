@@ -14,7 +14,7 @@ from widgets.nordvpn import Nordvpn
 
 mod = "mod4"
 terminal = "kitty" 
-file_explore = "thunar"
+file_explorer = "thunar"
 
 colors_macchiato = {
     "text": "#cad3f5",
