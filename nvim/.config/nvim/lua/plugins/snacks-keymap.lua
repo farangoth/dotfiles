@@ -32,6 +32,13 @@ return {
             desc = "toggle zen mode",
 		},
         {
+            "<leader>d",
+            function()
+                Snacks.dashboard()
+            end,
+            desc = "open dashboard",
+        },
+        {
             "<leader>ts",
             function ()
                 Snacks.toggle.option()

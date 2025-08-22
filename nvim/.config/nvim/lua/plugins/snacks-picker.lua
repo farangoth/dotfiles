@@ -64,6 +64,7 @@ return {
 			function()
 				Snacks.picker.grep()
 			end,
+            desc = "grep text"
 		},
 		{
 			"<leader>fs",
@@ -97,13 +98,15 @@ return {
             "<leader>fh",
             function ()
                Snacks.picker.help()
-            end
+            end,
+            desc = "find help",
         },
         {
             "<leader>fu",
             function ()
                Snacks.picker.undo()
-            end
+            end,
+            desc = "explore undo"
         },
 		{
 			'<leader>"',
