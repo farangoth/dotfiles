@@ -16,6 +16,10 @@ return {
 					hidden = true,
 					ignored = false,
 				},
+				grep = {
+					hidden = true,
+					ignored = false,
+				},
 			},
 		},
 	},
@@ -56,6 +60,12 @@ return {
 			desc = "open files explorer",
 		},
 		{
+			"<leader>fg",
+			function()
+				Snacks.picker.grep()
+			end,
+		},
+		{
 			"<leader>fs",
 			function()
 				Snacks.picker.lsp_symbols({ layout = { preset = "left" } })
@@ -83,6 +93,18 @@ return {
 			end,
 			desc = "open diagnostics explorer (buffer)",
 		},
+        {
+            "<leader>fh",
+            function ()
+               Snacks.picker.help()
+            end
+        },
+        {
+            "<leader>fu",
+            function ()
+               Snacks.picker.undo()
+            end
+        },
 		{
 			'<leader>"',
 			function()
