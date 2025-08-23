@@ -6,10 +6,8 @@ from libqtile import bar, hook, layout, widget
 from libqtile.backend.wayland.inputs import InputConfig
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 from libqtile.widget import backlight
 from qtile_extras.layout.decorations.borders import RoundedCorners
-
 from widgets.nordvpn import Nordvpn
 
 mod = "mod4"
@@ -330,7 +328,8 @@ def create_bar():
                 foreground=colors["mauve"],
                 mouse_callbacks={
                     "Button1": lazy.spawn(
-                        "bash -c $HOME/.config/rofi/scripts/wifi_picker.sh", shell=True
+                        "bash -c $HOME/.config/rofi/scripts/wifi_picker.sh",
+                        shell=True,
                     )
                 },
             ),

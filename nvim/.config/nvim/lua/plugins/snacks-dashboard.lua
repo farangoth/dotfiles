@@ -13,19 +13,19 @@ return {
 				keys = {
 					{
 						icon = " ",
-						key = "e",
+						key = "n",
 						desc = "new file",
 						action = ":ene",
 					},
 					{
 						icon = " ",
-						key = "t",
+						key = "e",
 						desc = "browse cwd",
 						action = ":lua Snacks.dashboard.pick('explorer')",
 					},
 					{
 						icon = " ",
-						key = "n",
+						key = "N",
 						desc = "edit notes",
 						action = ":e ~/git/gitjournal/",
 					},
@@ -149,6 +149,7 @@ return {
 										section = "recent_files",
 										icon = " ",
 										title = "recent files",
+                                        cwd = true,
 										padding = 1,
 										indent = 2,
 										height = 10,
@@ -159,7 +160,7 @@ return {
 										enabled = is_git,
 										pane = 2,
 										section = "terminal",
-										cmd = "gh issue list -L 5",
+										cmd = "gh issue list -L 5 --json number,title --template '{{range .}}{{tablerow .number .title}}{{end}}'",
 										icon = " ",
 										title = "GitHub issues",
 										action = function()
@@ -180,7 +181,7 @@ return {
 										action = function()
 											Snacks.picker.git_log()
 										end,
-										key = "h",
+										key = "H",
 										padding = 1,
 										height = 10,
 									},

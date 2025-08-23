@@ -41,7 +41,7 @@ return {
 		{
 			"<leader>fb",
 			function()
-				Snacks.picker.buffers()
+				Snacks.picker.buffers({ layout = "select" })
 			end,
 			desc = "find buffers",
 		},
@@ -64,7 +64,7 @@ return {
 			function()
 				Snacks.picker.grep()
 			end,
-            desc = "grep text"
+			desc = "grep text",
 		},
 		{
 			"<leader>fs",
@@ -94,20 +94,20 @@ return {
 			end,
 			desc = "open diagnostics explorer (buffer)",
 		},
-        {
-            "<leader>fh",
-            function ()
-               Snacks.picker.help()
-            end,
-            desc = "find help",
-        },
-        {
-            "<leader>fu",
-            function ()
-               Snacks.picker.undo()
-            end,
-            desc = "explore undo"
-        },
+		{
+			"<leader>fh",
+			function()
+				Snacks.picker.help()
+			end,
+			desc = "find help",
+		},
+		{
+			"<leader>fu",
+			function()
+				Snacks.picker.undo()
+			end,
+			desc = "explore undo",
+		},
 		{
 			'<leader>"',
 			function()
