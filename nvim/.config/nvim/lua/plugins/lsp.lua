@@ -33,7 +33,6 @@ return {
 			end, { desc = "(LSP) Show description" })
 
 			local on_attach = function(client, bufnr)
-				vim.lsp.buf.signature_help()
 				vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { buffer = bufnr })
 			end
 
