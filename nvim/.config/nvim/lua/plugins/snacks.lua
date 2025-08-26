@@ -16,8 +16,14 @@ return {
 				animate = false,
 				indent = false,
 			},
+            backdrop = {
+                transparent = true,
+                blend = 40,
+            },
 			show = {
 				statusline = false,
+                tabline = false,
+
 			},
 		},
 		dim = { enable = true },
