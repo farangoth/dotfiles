@@ -7,9 +7,9 @@ source $HOME/.env_secrets
 export EDITOR="nvim"
 export TERMINAL="kitty"
 
-ZSH_THEME="my-agnoster"
-
 zstyle ':omz:update' mode reminder  
+
+ZSH_THEME="my-prompt"
 
 plugins=(
 	git
