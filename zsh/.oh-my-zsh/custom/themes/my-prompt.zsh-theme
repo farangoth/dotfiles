@@ -28,7 +28,7 @@ retval_prompt () {
 setopt promptsubst
 NEWLINE=$'\n'
 TAB=$'\t'
-PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB${vcs_info_msg_0_}$TAB$(virtualenv_prompt)$NEWLINE > '
+PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB ${vcs_info_msg_0_}$TAB  $(virtualenv_prompt)$NEWLINE > '
 RPROMPT='$(retval_prompt)'
 
 autoload -U add-zsh-hook
