@@ -11,11 +11,17 @@ zstyle ':omz:update' mode reminder
 
 ZSH_THEME="my-prompt"
 
+PYTHON_VENV_NAME=".venv"
+PYTHON_VENV_NAMES=($PYTHON_VENV_NAME .venv venv)
+PYTHON_AUTO_VRUN=true
+
 plugins=(
 	git
 	colored-man-pages
-    virtualenv
     python
+    archlinux
+    pip
+
 )
 
 source $ZSH/oh-my-zsh.sh
