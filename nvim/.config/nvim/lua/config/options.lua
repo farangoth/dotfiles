@@ -12,3 +12,7 @@ vim.opt.signcolumn = "yes"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+
+vim.opt.title = true
+vim.opt.titlelen = 0
+vim.opt.titlestring = 'nvim %{fnamemodify(getcwd(), ":p:~")}'
