@@ -1,11 +1,10 @@
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' check-for-staged-changes true
 zstyle ':vcs_info:*' unstagedstr '%F{red}*' 
 zstyle ':vcs_info:*' stagedstr '%F{yellow}+'
 zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:*' actionformats '%F{5}[ %b%F{3}|%F{1}%a%c%u%F{5}]%f '
-zstyle ':vcs_info:*' formats '%F{cyan} %b%f%c%u%f '
+zstyle ':vcs_info:*' formats '%F{#a5adcb} %b%f%c%u%f '
 zstyle ':vcs_info:*' enable git
 theme_precmd() {
     vcs_info
@@ -29,7 +28,7 @@ retval_prompt () {
 setopt promptsubst
 NEWLINE=$'\n'
 TAB=$'\t'
-PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB ${vcs_info_msg_0_}$TAB $(virtualenv_prompt)$NEWLINE > '
+PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB${vcs_info_msg_0_}$TAB$(virtualenv_prompt)$NEWLINE > '
 RPROMPT='$(retval_prompt)'
 
 autoload -U add-zsh-hook
