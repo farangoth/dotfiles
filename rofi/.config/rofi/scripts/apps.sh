@@ -20,10 +20,10 @@ declare -A COMMANDS
 COMMANDS=(
     ["web"]="firefox --new-tab about:newtab & sleep 0.2 && qtile cmd-obj -o group 3 -f toscreen" 
     ["file"]="thunar"
-    ["editor"]="${terminal} nvim ~ +:Neotree"
-    ["notes"]="${terminal} nvim git/gitjournal/ :Neotree" 
-    ["code"]="${terminal} nvim code/ +:Neotree"
-    ["config"]="${terminal} nvim dotfiles/ +:Neotree"
+    ["editor"]="${terminal} nvim ~"
+    ["notes"]="${terminal} nvim git/gitjournal/" 
+    ["code"]="${terminal} nvim code/"
+    ["config"]="${terminal} nvim dotfiles/"
     ["term"]="${terminal}"
 )
 if [ -z "$*" ]; then
