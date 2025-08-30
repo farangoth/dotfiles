@@ -7,7 +7,11 @@ zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:*' actionformats '%F{5}[ %b%F{3}|%F{1}%a%c%u%F{5}]%f '
 zstyle ':vcs_info:*' formats '%F{#a5adcb} %b%f%c%u%f'
 zstyle ':vcs_info:*' enable git
-function get-commit () {
+theme_precmd() {
+    vcs_info
+}
+
+commit_prompt () {
     if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]]; then
         local TO_PUSH=$(git log --oneline @{u}.. 2> /dev/null | wc -l)
         local TO_PULL=$(git log --oneline ..@{u} 2> /dev/null | wc -l)
@@ -18,9 +22,6 @@ function get-commit () {
             echo -n "%F{cyan}$TO_PULL%f"
         fi
     fi
-}
-theme_precmd() {
-    vcs_info
 }
 
 virtualenv_prompt () {
@@ -41,7 +42,7 @@ retval_prompt () {
 setopt promptsubst
 NEWLINE=$'\n'
 TAB=$'\t'
-PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB ${vcs_info_msg_0_}$(get-commit)$TAB  $(virtualenv_prompt)$NEWLINE > '
+PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB ${vcs_info_msg_0_}$(commit_prompt)$TAB  $(virtualenv_prompt)$NEWLINE > '
 RPROMPT='$(retval_prompt)'
 
 autoload -U add-zsh-hook
