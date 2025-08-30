@@ -11,7 +11,8 @@ from qtile_extras.layout.decorations.borders import RoundedCorners
 from widgets.nordvpn import Nordvpn
 
 mod = "mod4"
-terminal = "kitty" 
+terminal = "kitty"
+dropdown_terminal = "kitty"
 file_explorer = "thunar"
 
 colors_macchiato = {
@@ -171,7 +172,7 @@ groups = [
     ScratchPad(
         "scratchpad",
         [
-            DropDown("term", terminal, wrap_pointer=True, on_focus_lost_hide=False),
+            DropDown("term", dropdown_terminal, wrap_pointer=True, on_focus_lost_hide=False),
             DropDown(
                 "notes",
                 terminal + " nvim ~/git/gitjournal/",

@@ -21,7 +21,7 @@ plugins=(
     python
     archlinux
     pip
-
+    zsh-vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh

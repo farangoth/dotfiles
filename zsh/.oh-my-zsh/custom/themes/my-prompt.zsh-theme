@@ -18,7 +18,7 @@ commit_prompt () {
         if [[ -n $TO_PUSH ]] && [[ $TO_PUSH != '0' ]]; then
             echo -n "%F{cyan}$TO_PUSH%f"
         fi
-        if [[ -n $TO_PULL ]] && [[ $TO_PUSH != '0' ]]; then
+        if [[ -n $TO_PULL ]] && [[ $TO_PULL != '0' ]]; then
             echo -n "%F{cyan}$TO_PULL%f"
         fi
     fi
