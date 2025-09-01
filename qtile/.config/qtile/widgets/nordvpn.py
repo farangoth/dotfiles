@@ -9,7 +9,7 @@ class Nordvpn(base.ThreadPoolText):
 
     defaults = [
         ("update_interval", 5, "Update interval in seconds"),
-        ("format_disconneted", "[  No VPN]", "Format when disconnected"),
+        ("format_disconneted", "[  no VPN]", "Format when disconnected"),
         ("format_connect", "[ {country}]", "Format when connected"),
         ("format_connecting", "[󱘖 Process...]", "Format during connection"),
         ("rofi_command", "rofi -show nordvpn", "Command for menu"),
