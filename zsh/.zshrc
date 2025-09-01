@@ -9,11 +9,10 @@ export TERMINAL="kitty"
 
 zstyle ':omz:update' mode reminder  
 
-ZSH_THEME="my-prompt"
+export PYTHON_VENV_NAME=".venv"
+export PYTHON_AUTO_VRUN=true
 
-PYTHON_VENV_NAME=".venv"
-PYTHON_VENV_NAMES=($PYTHON_VENV_NAME .venv venv)
-PYTHON_AUTO_VRUN=true
+ZSH_THEME="my-prompt"
 
 plugins=(
 	git

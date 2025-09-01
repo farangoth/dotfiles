@@ -40,6 +40,7 @@ retval_prompt () {
 }
 
 setopt promptsubst
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 NEWLINE=$'\n'
 TAB=$'\t'
 PROMPT='$NEWLINE %B%F{blue}%~%b%f$TAB ${vcs_info_msg_0_}$(commit_prompt)$TAB  $(virtualenv_prompt)$NEWLINE > '
