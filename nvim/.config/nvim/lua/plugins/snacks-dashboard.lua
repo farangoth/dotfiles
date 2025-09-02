@@ -160,13 +160,13 @@ return {
 										enabled = is_git,
 										pane = 2,
 										section = "terminal",
-										cmd = "gh issue list -L 5 --json number,title --template '{{range .}}{{tablerow .number .title}}{{end}}'",
+										cmd = "gh issue list -L 8 --json number,title --template '{{range .}}{{tablerow .number .title}}{{end}}' | cat",
 										icon = " ",
 										title = "GitHub issues",
 										action = function()
 											vim.fn.jobstart("gh issue list --web", { detach = true })
 										end,
-										key = "I",
+										key = "w",
 										padding = 1,
 										indent = 2,
 										height = 10,
