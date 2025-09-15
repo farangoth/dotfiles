@@ -48,7 +48,7 @@ return {
 		{
 			"<leader>fp",
 			function()
-				Snacks.picker.projects()
+                Snacks.picker.projects({})
 			end,
 			desc = "find projects",
 		},
