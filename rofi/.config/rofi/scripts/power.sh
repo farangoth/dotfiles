@@ -13,7 +13,7 @@ set -e
 set -u
 
 # All supported choices
-all=(lockscreen suspend  reboot shutdown)
+all=(lockscreen suspend hibernate reboot shutdown)
 
 # By default, show all (i.e., just copy the array)
 show=("${all[@]}")
@@ -21,6 +21,7 @@ show=("${all[@]}")
 declare -A texts
 texts[lockscreen]="lock screen"
 texts[suspend]="suspend"
+texts[hibernate]="hibernate"
 texts[reboot]="reboot"
 texts[shutdown]="shutdown"
 texts[cancel]="cancel"
@@ -28,6 +29,7 @@ texts[cancel]="cancel"
 declare -A icons
 icons[lockscreen]="\Uf033e"
 icons[suspend]="\Uf04b2"
+icons[hibernate]="\Uf04b3"
 icons[reboot]="\Uf0709"
 icons[shutdown]="\Uf0425"
 icons[cancel]="\Uf0156"
@@ -36,11 +38,12 @@ declare -A actions
 actions[lockscreen]="physlock"
 actions[logout]="loginctl terminate-session ${XDG_SESSION_ID-}"
 actions[suspend]="systemctl suspend"
+actions[hibernate]="systemctl hibernate"
 actions[reboot]="systemctl reboot"
 actions[shutdown]="systemctl poweroff"
 
 # By default, ask for confirmation for actions that are irreversible
-confirmations=(reboot shutdown logout)
+confirmations=(hibernate reboot shutdown logout)
 
 # By default, no dry run
 dryrun=false
