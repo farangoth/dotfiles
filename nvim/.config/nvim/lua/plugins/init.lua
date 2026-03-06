@@ -1,0 +1,5 @@
+require("plugins.whichkey")
+require("plugins.catppuccin")
+require("plugins.treesitter")
+require("plugins.snacks")
+require("plugins.completion")

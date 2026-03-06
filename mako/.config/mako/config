@@ -1,0 +1,5 @@
+sort=-time
+layer=overlay
+font=VictorMono Nerd Font 12
+default-timeout=5000
+ignore-timeout=1
