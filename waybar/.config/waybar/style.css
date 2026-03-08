@@ -1,7 +1,7 @@
 @import "catppuccin-macchiato.css";
 
 * {
-    font-family: "VictorMono Nerd Font";
+    font-family: "Geist";
     font-size: 12px;
 }
 
@@ -115,6 +115,7 @@ button:hover {
 #tags button {
     /* border-radius: 8px; */
     transition: all 0.2s ease;
+    color: @overlay0;
 }
 
 #tags button.occupied {

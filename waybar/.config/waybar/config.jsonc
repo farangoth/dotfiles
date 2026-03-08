@@ -20,8 +20,8 @@
         "tray"
     ],
     "river/tags": {
-        "num-tags": 9,
-        "hide-vacant": true,
+        "num-tags": 4,
+        "hide-vacant": false,
         "tag-labels": [
             "1: \uf121",
             "2: \uf4f6",
