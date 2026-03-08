@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PROMPT="󰣇 System> "
+
+options="󰐥 Power Off\n󰜉 Restart\n󰍃 Logout"
+
+selected=$(echo -e "$options" | rofi -dmenu) 
+
+case "$selected" in
+    *"Power Off") systemctl poweroff ;;
+    *"Restart") systemctl reboot ;;
+    *"Logout") riverctl exit ;;
+esac
