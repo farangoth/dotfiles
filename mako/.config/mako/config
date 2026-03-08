@@ -3,3 +3,13 @@ layer=overlay
 font=VictorMono Nerd Font 12
 default-timeout=5000
 ignore-timeout=1
+border-radius=10
+
+# Colors
+background-color=#24273a
+text-color=#cad3f5
+border-color=#ed8796
+progress-color=over #363a4f
+
+[urgency=high]
+border-color=#f5a97f
