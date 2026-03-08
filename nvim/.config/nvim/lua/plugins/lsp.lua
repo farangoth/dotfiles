@@ -10,6 +10,7 @@ require("mason-lspconfig").setup({
         "lua_ls",
         "ruff",
         "basedpyright",
+        "bashls",
     }
 })
 
