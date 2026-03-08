@@ -5,6 +5,18 @@
       "src": "https://github.com/Saghen/blink.cmp",
       "version": "'v1.9.1'"
     },
+    "lualine.nvim": {
+      "rev": "47f91c416daef12db467145e16bed5bbfe00add8",
+      "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
+    "mason-lspconfig.nvim": {
+      "rev": "a324581a3c83fdacdb9804b79de1cbe00ce18550",
+      "src": "https://github.com/mason-org/mason-lspconfig.nvim"
+    },
+    "mason.nvim": {
+      "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
+      "src": "https://github.com/mason-org/mason.nvim"
+    },
     "nvim": {
       "rev": "c4d475e4b5684747cde9b3f849186af7837d4397",
       "src": "https://github.com/catppuccin/nvim"
@@ -12,6 +24,10 @@
     "nvim-autopairs": {
       "rev": "59bce2eef357189c3305e25bc6dd2d138c1683f5",
       "src": "https://github.com/windwp/nvim-autopairs"
+    },
+    "nvim-lspconfig": {
+      "rev": "2163c54bb6cfec53e3e555665ada945b8c8331b9",
+      "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
       "rev": "544320a9cf5d6bf539ec1cc54d393064015670c4",
