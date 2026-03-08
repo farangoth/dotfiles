@@ -2,25 +2,32 @@
 import subprocess
 import os
 
+
 def riverctl(*args):
     """Helper to run riverctl commands."""
     subprocess.run(["riverctl"] + list(args))
 
+
 def spawn(command):
     """Helper to spawn background processes."""
     subprocess.Popen(command.split())
+
 
 def spawn_unique(command):
     """Helper to spawn only once the processes at the start.
     Used for reload configuration."""
     process_name = command.split()[0]
     subprocess.run(["pkill", "-x", process_name], stderr=subprocess.DEVNULL)
-    subprocess.Popen(command.split(), stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    subprocess.Popen(
+        command.split(), stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL
+    )
+
 
 def bindkey(keychord, key, command, params, mode="normal"):
     riverctl("map", mode, keychord, key, command, params)
 
-# Parameters & Aliases
+
+# parameters & aliases
 MOD = "Super"
 TERM = "kitty"
 FILEBROWSER = "thunar"
@@ -28,23 +35,33 @@ WEBBROWSER = "firefox"
 
 RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 
-PADDING = 4
+PADDING = 6
 
 # --- 1. Startup Processes ---
 # Env variables
-runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
-riverctl("spawn", "notify-send", f"{runtime_dir}")
-os.environ["SSH_AUTH_SOCK"] = f"{runtime_dir}/ssh-agent.socket"
-os.environ["SSH_ASKPASS"] = "/usr/bin/seahorse"
-riverctl("import-environment", "SSH_ASKPASS", "SSH_AUTH_SOCK")
+# runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
+# riverctl("spawn", "notify-send", f"{runtime_dir}")
+# os.environ["SSH_AUTH_SOCK"] = f"{runtime_dir}/ssh-agent.socket"
+# os.environ["SSH_ASKPASS"] = "/usr/bin/seahorse"
+# riverctl("import-environment", "SSH_ASKPASS", "SSH_AUTH_SOCK")
 
-spawn_unique(f"rivertile -view-padding {PADDING} -outer-padding {PADDING}")
-riverctl("default-layout", "rivertile")
+# layout
+spawn("riverctl default-layout wideriver")
+spawn_unique(
+    f"wideriver \
+        --layout left \
+        --stack dwindle \
+        --ratio-master 0.6 \
+        --count-master 1 \
+        --inner-gaps {PADDING} \
+        --outer-gaps {PADDING}"
+)
+
 spawn_unique("waybar")
 spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
 spawn_unique("mako")
 
-# --- 2. Input Settings (ThinkPad L13 Optimized) ---
+# --- 2. Input Settings ---
 TOUCHPAD = "*_Touchpad"
 riverctl("keyboard-layout", "gb")
 riverctl("input", TOUCHPAD, "events", "enabled")
@@ -52,33 +69,61 @@ riverctl("input", TOUCHPAD, "tap", "enabled")
 riverctl("input", TOUCHPAD, "tap-button-map", "left-right-middle")
 riverctl("input", TOUCHPAD, "natural-scroll", "enabled")
 
-# --- 3. Keybindings ---
-# River control
+# --- 3. Keymaps ---
+# river control
 riverctl("map", "normal", f"{MOD}+Shift", "E", "exit")
 riverctl("map", "normal", f"{MOD}+Shift", "C", "spawn", f"{RIVER_CONFIG_FOLDER}/init")
 
-# Apps
-riverctl("map", "normal", MOD, "Return", "spawn", TERM)
-riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
-bindkey(MOD, "space", "spawn", "wmenu-run")
-bindkey(MOD, "I", "spawn", WEBBROWSER)
-
-riverctl("map", "normal", MOD, "Q", "close")
-
-# Focus movement
+# layout control
 riverctl("map", "normal", MOD, "J", "focus-view", "next")
 riverctl("map", "normal", MOD, "K", "focus-view", "previous")
+riverctl("map", "normal", MOD, "Tab", "zoom")
+riverctl(
+    "map",
+    "normal",
+    f"{MOD}+Shift",
+    "H",
+    "send-layout-cmd",
+    "wideriver",
+    "--ratio -0.05",
+)
+riverctl(
+    "map",
+    "normal",
+    f"{MOD}+Shift",
+    "L",
+    "send-layout-cmd",
+    "wideriver",
+    "--ratio +0.05",
+)
+
+# apps
+riverctl("map", "normal", MOD, "Return", "spawn", TERM)
+riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
+riverctl("map", "normal", MOD, "Space", "spawn", "wmenu-run")
+
+riverctl("map", "normal", MOD, "Q", "close")
 
 # --- 4. Tags (1-9) ---
 for i in range(1, 10):
     tags = 1 << (i - 1)
-    # View tag: Super + N
     riverctl("map", "normal", MOD, str(i), "set-focused-tags", str(tags))
-    # Move to tag: Super + Shift + N
     riverctl("map", "normal", f"{MOD}+Shift", str(i), "set-view-tags", str(tags))
+    riverctl(
+        "map", "normal", f"{MOD}+Control", str(i), "toggle-focused-tags", str(tags)
+    )
+    riverctl(
+        "map", "normal", f"{MOD}+Shift+Control", str(i), "toggle-view-tags", str(tags)
+    )
+    all_tags = (1 << 32) - 1
+    riverctl("map", "normal", MOD, "0", "set-focused-tags", str(all_tags))
+
+# rules
+riverctl("rule-add", "-app-id", "firefox", "tags", "4")
+riverctl("default-attach-mode", "below")
+
 
 # --- 5. Aesthetics ---
 riverctl("border-width", "2")
-riverctl("border-color-focused", "0x535d6c") # Muted ThinkPad blue/grey
+riverctl("border-color-focused", "0x535d6c")  # Muted ThinkPad blue/grey
 riverctl("border-color-unfocused", "0x2e3440")
-
