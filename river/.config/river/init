@@ -13,7 +13,7 @@ def spawn(command):
     subprocess.Popen(command.split())
 
 
-def spawn_unique(command):
+def spawn_unique(command: str):
     """Helper to spawn only once the processes at the start.
     Used for reload configuration."""
     process_name = command.split()[0]
@@ -21,10 +21,6 @@ def spawn_unique(command):
     subprocess.Popen(
         command.split(), stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL
     )
-
-
-def bindkey(keychord, key, command, params, mode="normal"):
-    riverctl("map", mode, keychord, key, command, params)
 
 
 # parameters & aliases
@@ -38,7 +34,6 @@ RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 PADDING = 6
 XCURSOR_THEME = "catppuccin-macchiato-light-cursors"
 XCURSOR_SIZE = "24"
-
 
 # --- 1. Startup Processes ---
 # Env variables
@@ -62,6 +57,7 @@ spawn_unique(
 spawn_unique("waybar")
 spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
 spawn_unique("mako")
+spawn_unique("swayidle -w")
 
 # --- 2. Input Settings ---
 TOUCHPAD = "*_Touchpad"
@@ -75,6 +71,7 @@ riverctl("input", TOUCHPAD, "natural-scroll", "enabled")
 # river control
 riverctl("map", "normal", f"{MOD}+Shift", "E", "exit")
 riverctl("map", "normal", f"{MOD}+Shift", "C", "spawn", f"{RIVER_CONFIG_FOLDER}/init")
+riverctl("map", "normal", MOD, "Q", "close")
 
 # layout control
 riverctl("map", "normal", MOD, "J", "focus-view", "next")
@@ -102,8 +99,10 @@ riverctl(
 # apps
 riverctl("map", "normal", MOD, "Return", "spawn", TERM)
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
+# rofi
 riverctl("map", "normal", MOD, "Space", "spawn", "rofi -show")
-riverctl("map", "normal", MOD, "Q", "close")
+riverctl("map", "normal", MOD, "X", "spawn", "dmenu-power")
+
 
 # --- 4. Tags (1-9) ---
 for i in range(1, 10):
@@ -120,6 +119,9 @@ for i in range(1, 10):
     riverctl("map", "normal", MOD, "0", "set-focused-tags", str(all_tags))
 
 # rules
+riverctl("rule-add", "-app-id", "term-float", "float")
+riverctl("rule-add", "-app-id", "term-float", "dimensions", "800", "600")
+riverctl("rule-add", "-app-id", "com.saivert.pwvucontrol", "float")
 riverctl("rule-add", "-app-id", "firefox", "tags", "4")
 riverctl("default-attach-mode", "below")
 
