@@ -2,7 +2,7 @@
 
 * {
     font-family: "Geist";
-    font-size: 12px;
+    font-size: 14px;
 }
 
 window#waybar {
@@ -114,8 +114,10 @@ button:hover {
 
 #tags button {
     /* border-radius: 8px; */
-    transition: all 0.2s ease;
+    /* transition: all 0.2s ease; */
+    margin: 0 4;
     color: @overlay0;
+    padding: 0 4;
 }
 
 #tags button.occupied {
@@ -131,5 +133,18 @@ button:hover {
 }
 
 #window {
-    color: @text
+    color: @overlay0;
+}
+
+#window.focused {
+    color: @text;
+}
+
+#bluetooth {
+    color: @blue;
+}
+
+tooltip {
+    background-color: @surface1;
+    color: @text;
 }
