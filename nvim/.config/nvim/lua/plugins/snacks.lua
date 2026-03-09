@@ -22,7 +22,8 @@ Snacks.setup({
         }
     },
     input = { enabled = true },
-    scope = { enable = true },
+    scope = { enabled = true },
+    gh = { enabled = true },
     -- lazygit = { enabled = true }
     zen = {
         toggles = {
@@ -93,6 +94,7 @@ Snacks.setup({
 
 local keymaps = {
     -- finders
+    { "<leader>b",       function() Snacks.picker.buffers() end,                                                                                   desc = "smart file",           hidden = true },
     { "<leader><space>", function() Snacks.picker.smart() end,                                                                                     desc = "smart file",           hidden = true },
     { "<leader>ff",      function() Snacks.picker.files() end,                                                                                     desc = "files" },
     { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.expand("~/dotfiles/") }) end,                                               desc = "configs" },
@@ -129,7 +131,6 @@ local keymaps = {
     { "<leader>ghI",     function() Snacks.picker.gh_issue({ state = "all" }) end,                                                                 desc = "all issues" },
     { "<leader>ghp",     function() Snacks.picker.gh_pr() end,                                                                                     desc = "opened PR" },
     { "<leader>ghP",     function() Snacks.picker.gh_pr({ state = "all" }) end,                                                                    desc = "all PR" },
-    { "<leader>ghh",     function() Snacks.gh.open() end,                                                                                          desc = "GitHub CLI" },
     -- toggle
     { "<leader>tz",      function() Snacks.zen() end,                                                                                              desc = "zen mode" },
     { "<leader>ti",      function() Snacks.toggle.indent() end,                                                                                    desc = "indent" },

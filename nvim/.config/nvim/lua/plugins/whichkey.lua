@@ -9,6 +9,7 @@ require("which-key").add({
     { "<leader>gh", group = "GitHub" },
     { "<leader>l",  group = "lsp" },
     { "<leader>t",  group = "toggle" },
+    { "<leader>h",  group = "helper" },
     { "g",          group = "goto" },
 
 })
