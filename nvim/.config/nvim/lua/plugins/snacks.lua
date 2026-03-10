@@ -94,7 +94,7 @@ Snacks.setup({
 
 local keymaps = {
     -- finders
-    { "<leader>b",       function() Snacks.picker.buffers() end,                                                                                   desc = "smart file",           hidden = true },
+    { "<leader>b",       function() Snacks.picker.buffers() end,                                                                                   desc = "switch buffer",        hidden = true },
     { "<leader><space>", function() Snacks.picker.smart() end,                                                                                     desc = "smart file",           hidden = true },
     { "<leader>ff",      function() Snacks.picker.files() end,                                                                                     desc = "files" },
     { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.expand("~/dotfiles/") }) end,                                               desc = "configs" },
