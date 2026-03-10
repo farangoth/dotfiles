@@ -15,12 +15,12 @@
   spacing:                     2;
   alternate-normal-foreground: @foreground;
   urgent-background:           @background;
-  selected-normal-foreground:  @lightbg;
+  selected-normal-foreground:  @crust;
   active-foreground:           @blue;
   background:                  @base;
   selected-active-background:  @blue;
   active-background:           @background;
-  selected-normal-background:  @lightfg;
+  selected-normal-background:  @lavender;
   alternate-normal-background: @lightbg;
   foreground:                  @text;
   selected-urgent-foreground:  @background;
