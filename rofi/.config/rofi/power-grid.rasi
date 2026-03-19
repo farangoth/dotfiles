@@ -1,0 +1,45 @@
+@theme "catppuccin"
+
+configuration {
+    show-icons: true;
+}
+
+window {
+    border:           2px;
+    border-color:     @blue;
+    background-color: @background;
+}
+
+mainbox {
+    children: [ listview ];
+}
+
+listview {
+    columns:      5;
+    lines:        1;
+    cycle:        true;
+    dynamic:      true;
+    layout:       vertical;
+    flow:         horizontal;
+    fixed-columns: true;
+    spacing:      10px;
+    scrollbar:    false;
+}
+
+element {
+    orientation:      vertical; 
+    padding:          15px 0px;
+    border-radius:    10px;
+    children: [element-text];
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    font:             "VictorMono Nerd Font 40";
+}
+
+element selected {
+    background-color: @selected-active-background;
+    text-color:       @selected-active-foreground;
+}

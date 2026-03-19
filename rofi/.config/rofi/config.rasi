@@ -1,9 +1,10 @@
 @theme "catppuccin"
 configuration {
-/*	modes: "window,drun,run,ssh";*/
-/*	font: "mono 12";*/
+modes: "combi,run,ssh,app-mode,power-mode";
+combi-modes: "app-mode,power-mode,drun,run";
 font: "VictorMono Nerd Font 12";
-hide-scrollbar: true;
+scrollbar: false;
+drun-display-format: "{name} [<span size='small'><i>({exec})</i></span>]";
 /*	on-selection-changed: ;*/
 /*	on-mode-changed: ;*/
 /*	on-entry-accepted: ;*/
@@ -154,6 +155,7 @@ hide-scrollbar: true;
 /*	me-select-entry: "MousePrimary";*/
 /*	me-accept-entry: "MouseDPrimary";*/
 /*	me-accept-custom: "Control+MouseDPrimary";*/
+markup-rows: true;
   timeout {
       action: "kb-cancel";
       delay:  0;

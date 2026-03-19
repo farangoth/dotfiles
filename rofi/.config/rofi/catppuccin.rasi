@@ -76,6 +76,7 @@ element-text {
     cursor:           inherit;
     highlight:        inherit;
     text-color:       inherit;
+    tab-stops:  [300px];
 }
 element-icon {
     background-color: transparent;
@@ -107,6 +108,7 @@ listview {
     spacing:      2px ;
     fixed-height: 0;
     border:       2px dash 0px 0px ;
+    scrollbar:     false;
 }
 scrollbar {
     width:        4px ;
