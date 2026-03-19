@@ -8,14 +8,19 @@ export TERMINAL="kitty"
 zstyle ':omz:update' mode reminder
 ZSH_THEME="macovsky"
 
+export PYTHON_VENV_NAME=".venv"
+export PYTHON_AUTO_VRUN=true
+
 plugins=(
 	git
 	colored-man-pages
 	python
 	archlinux
+    uv
+    vi-mode
 )
 
+source $HOME/.env_secrets
 source $ZSH/oh-my-zsh.sh
 
 alias neovim="nvim"
-alias cat="bat"
