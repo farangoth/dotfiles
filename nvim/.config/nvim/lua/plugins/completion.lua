@@ -12,6 +12,9 @@ vim.pack.add({
 })
 
 require("blink.cmp").setup({
+    sources = {
+        default = { "lsp", "path", "snippets", "buffer", },
+    },
     keymap = {
         preset = "super-tab",
         -- ["<C-k>"] = {
