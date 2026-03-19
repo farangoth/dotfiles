@@ -23,15 +23,20 @@ def spawn_unique(command: str):
     )
 
 
+def test(a: int = 2, b: int = 2):
+    return a + b
+
+
 # parameters & aliases
 MOD = "Super"
 TERM = "kitty"
 FILEBROWSER = "thunar"
 WEBBROWSER = "firefox"
+VOLUME_MIXER = "wpctl"
 
 RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 
-PADDING = 6
+PADDING = 8
 XCURSOR_THEME = "catppuccin-macchiato-light-cursors"
 XCURSOR_SIZE = "24"
 
@@ -42,6 +47,7 @@ XCURSOR_SIZE = "24"
 # os.environ["SSH_AUTH_SOCK"] = f"{runtime_dir}/ssh-agent.socket"
 # os.environ["SSH_ASKPASS"] = "/usr/bin/seahorse"
 # riverctl("import-environment", "SSH_ASKPASS", "SSH_AUTH_SOCK")
+
 # layout
 spawn("riverctl default-layout wideriver")
 spawn_unique(
@@ -56,8 +62,10 @@ spawn_unique(
 
 spawn_unique("waybar")
 spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
-spawn_unique("mako")
 spawn_unique("swayidle -w")
+spawn_unique("mako")
+
+spawn_unique("wl-paste --watch cliphist store")
 
 # --- 2. Input Settings ---
 TOUCHPAD = "*_Touchpad"
@@ -96,12 +104,52 @@ riverctl(
     "--ratio +0.05",
 )
 
+# mediakeys
+riverctl(
+    "map",
+    "normal",
+    "None",
+    "XF86AudioLowerVolume",
+    "spawn",
+    f"{VOLUME_MIXER} set-volume @DEFAULT_SINK@ 5%-",
+)
+riverctl(
+    "map",
+    "normal",
+    "None",
+    "XF86AudioRaiseVolume",
+    "spawn",
+    f"{VOLUME_MIXER} set-volume @DEFAULT_SINK@ 5%+",
+)
+riverctl(
+    "map",
+    "normal",
+    "None",
+    "XF86AudioMute",
+    "spawn",
+    f"{VOLUME_MIXER} set-mute @DEFAULT_SINK@ toggle",
+)
+riverctl(
+    "map",
+    "normal",
+    "None",
+    "XF86AudioMicMute",
+    "spawn",
+    f"{VOLUME_MIXER} set-mute @DEFAULT_SOURCE@ toggle",
+)
 # apps
 riverctl("map", "normal", MOD, "Return", "spawn", TERM)
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
 # rofi
 riverctl("map", "normal", MOD, "Space", "spawn", "rofi -show")
-riverctl("map", "normal", MOD, "X", "spawn", "dmenu-power")
+riverctl(
+    "map",
+    "normal",
+    MOD,
+    "escape",
+    "spawn",
+    "rofi -show power-grid -theme power-grid",
+)
 
 
 # --- 4. Tags (1-9) ---
