@@ -2,6 +2,50 @@ vim.o.number = true
 vim.o.cursorline = true
 vim.o.winborder = "none"
 vim.o.scrolloff = 10
+vim.o.title = true
+
+local function get_title()
+    if vim.bo.filetype == "codecompanion" then
+        return "CodeCompanion"
+    end
+    if vim.bo.buftype ~= "" then
+        return "nvim"
+    end
+    local path = vim.fn.expand("%:p") -- Full absolute path
+    if path == "" then
+        return "nvim"
+    end
+
+    -- Try to find git root
+    local git_dir = vim.fn.finddir(".git", vim.fn.expand("%:p:h") .. ";")
+    if git_dir ~= "" then
+        -- Get the absolute path to the .git directory
+        local git_root = vim.fn.fnamemodify(git_dir, ":p:h")
+        -- If the path ends in .git, go up one more level to get the project root
+        if git_root:match("%.git$") then
+            git_root = vim.fn.fnamemodify(git_root, ":h")
+        end
+
+        local project_root_path = git_root
+        local project_root_name = vim.fn.fnamemodify(project_root_path, ":t")
+        local rel_path = path:sub(#project_root_path + 2)
+
+        if rel_path == "" then
+            return "nvim - [" .. project_root_name .. "]"
+        end
+        return "nvim - [  " .. project_root_name .. " ] " .. rel_path
+    else
+        -- If not in git, show full path
+        return "nvim - " .. path
+    end
+end
+
+-- Update title on relevant events
+vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, {
+    callback = function()
+        vim.opt.titlestring = get_title()
+    end,
+})
 
 -- indentation
 vim.o.tabstop = 4
@@ -43,7 +87,4 @@ if vim.fn.isdirectory(undodir) == 0 then
 end
 vim.o.undodir = undodir
 
-
-
 vim.g.autoformat = true
-
