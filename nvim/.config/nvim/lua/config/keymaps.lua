@@ -3,11 +3,12 @@ local keymaps = {
     { "H",          ":bprevious<CR>",                         desc = "prev buffer",       silent = true },
     { "L",          ":bnext<CR>",                             desc = "next buffer",       silent = true },
     { "<leader>v",  ":vsplit<CR>",                            desc = "split vertical",    silent = true },
-    { "<leader>c",  ":hsplit<CR>",                            desc = "split horizontal",  silent = true },
+    { "<leader>c",  ":split<CR>",                             desc = "split horizontal",  silent = true },
     { "<C-h>",      ":wincmd h<CR>",                          desc = "move to left win",  silent = true },
     { "<C-j>",      ":wincmd j<CR>",                          desc = "move to down win",  silent = true },
     { "<C-k>",      ":wincmd k<CR>",                          desc = "move to up win",    silent = true },
     { "<C-l>",      ":wincmd l<CR>",                          desc = "move to right win", silent = true },
+    { "<leader>w",  ":w",                                     desc = "write files",       },
 }
 
 for _, map in ipairs(keymaps) do
