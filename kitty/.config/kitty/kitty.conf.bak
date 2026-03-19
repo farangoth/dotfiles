@@ -27,7 +27,7 @@ bold_italic_font auto
 #: <https://sw.kovidgoyal.net/kitty/kittens/choose-fonts/#font-spec-
 #: syntax>.
 
-# font_size 11.0
+font_size 11.0
 
 #: Font size (in pts).
 
@@ -2997,3 +2997,9 @@ bold_italic_font auto
 #: }}}
 
 #: }}}
+
+
+# BEGIN_KITTY_THEME
+# Catppuccin-Mocha
+include current-theme.conf
+# END_KITTY_THEME
