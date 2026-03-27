@@ -36,6 +36,25 @@ Snacks.setup({
     },
     picker = {
         sources = {
+            projects = {
+                dev = { "~/code", "~/git", "~/dotfiles/" },
+                win = {
+                    preview = {
+                        enabled = true,
+                    },
+                },
+                preview = function(picker)
+                    local item = picker:current()
+                    local path = item.path or item.text
+                    local readme = vim.fs.find({ "README.md", "README", "readme.md", "readme" },
+                        { path = path, type = "file", limit = 1 })[1]
+                    if readme then
+                        return Snacks.picker.preview.file(picker, { file = readme })
+                    else
+                        return Snacks.picker.preview.directory(picker, item)
+                    end
+                end
+            },
             files = {
                 hidden = true,
                 ignored = true,

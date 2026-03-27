@@ -10,7 +10,7 @@ require("which-key").add({
     { "<leader>l",  group = "lsp" },
     { "<leader>t",  group = "toggle" },
     { "<leader>h",  group = "helper" },
-    { "<leader>a",  group = "AI agent" },
+    { "<leader>m",  group = "mistral" },
     { "g",          group = "goto" },
 
 })
