@@ -15,7 +15,7 @@ APPS=(
 declare -A COMMANDS
 COMMANDS=(
     ["web"]="firefox --new-tab about:newtab"
-    ["file"]="thunar ~"
+    ["file"]="thunar $HOME"
     ["editor"]="kitty -d $HOME nvim"
     ["config"]="kitty -d $HOME/dotfiles/ nvim"
     ["term"]="kitty"

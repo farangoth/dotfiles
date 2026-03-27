@@ -8,6 +8,7 @@ window {
     border:           2px;
     border-color:     @blue;
     background-color: @background;
+    border-radius:    10px;
 }
 
 mainbox {

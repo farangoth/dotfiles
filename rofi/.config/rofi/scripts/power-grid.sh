@@ -39,9 +39,9 @@ if [[ -z "$*" ]]; then
 else
     selection="$1"
     run_cmd=""
-    for entry in "${ICONS[@]}"; do
-        if [[ "$selection" == "${ICONS[$entry]}" ]]; then
-            run_cmd="${CMDS[$entry]}"
+    for key in "${ORDER[@]}"; do
+        if [[ "$selection" == "${ICONS[$key]}" ]]; then
+            run_cmd="${CMDS[$key]}"
             break
         fi
     done 
