@@ -31,12 +31,12 @@ local function get_title()
         local rel_path = path:sub(#project_root_path + 2)
 
         if rel_path == "" then
-            return "nvim - [" .. project_root_name .. "]"
+            return "[ " .. project_root_name .. " ]"
         end
-        return "nvim - [  " .. project_root_name .. " ] " .. rel_path
+        return "[ " .. project_root_name .. "] " .. rel_path
     else
         -- If not in git, show full path
-        return "nvim - " .. path
+        return "" .. path
     end
 end
 
