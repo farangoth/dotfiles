@@ -38,22 +38,6 @@ Snacks.setup({
         sources = {
             projects = {
                 dev = { "~/code", "~/git", "~/dotfiles/" },
-                win = {
-                    preview = {
-                        enabled = true,
-                    },
-                },
-                preview = function(picker)
-                    local item = picker:current()
-                    local path = item.path or item.text
-                    local readme = vim.fs.find({ "README.md", "README", "readme.md", "readme" },
-                        { path = path, type = "file", limit = 1 })[1]
-                    if readme then
-                        return Snacks.picker.preview.file(picker, { file = readme })
-                    else
-                        return Snacks.picker.preview.directory(picker, item)
-                    end
-                end
             },
             files = {
                 hidden = true,
@@ -111,6 +95,23 @@ Snacks.setup({
     },
 })
 
+local projects_picker = function()
+    Snacks.picker.pick({
+        source = "projects",
+        opts = {
+            finder = "recent_projects",
+            dev = { "~/code", "~/bin", "~/git", "~/dotfiles/" },
+            preview = function(ctx)
+                local item = ctx.item
+                local path = item.path or item.text
+                local readme = vim.fs.find({ "README.md", "README", "readme.md", "readme" },
+                    { path = path, type = "file", limit = 1 })[1]
+                return Snacks.picker.preview.file(ctx)
+            end
+        }
+    })
+end
+
 local keymaps = {
     -- finders
     { "<leader>b",       function() Snacks.picker.buffers() end,                                                                                   desc = "switch buffer",        hidden = true },
@@ -119,7 +120,7 @@ local keymaps = {
     { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.expand("~/dotfiles/") }) end,                                               desc = "configs" },
     { "<leader>fr",      function() Snacks.picker.recent() end,                                                                                    desc = "recents" },
     { "<leader>fb",      function() Snacks.picker.buffers() end,                                                                                   desc = "buffers" },
-    { "<leader>fp",      function() Snacks.picker.projects() end,                                                                                  desc = "projects" },
+    { "<leader>fp",      function() projects_picker() end,                                                                                         desc = "projects" },
     { "<leader>e",       function() Snacks.explorer() end,                                                                                         desc = "open explorer" },
     --grep
     { "<leader>sl",      function() Snacks.picker.lines() end,                                                                                     desc = "search buffer lines" },
