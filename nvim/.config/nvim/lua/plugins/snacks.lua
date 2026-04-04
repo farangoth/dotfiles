@@ -6,6 +6,7 @@ vim.pack.add({
 local Snacks = require("snacks")
 
 Snacks.setup({
+    dim = { animate = { enabled = false } },
     explorer = { enabled = true },
     statuscolumn = { enabled = true },
     indent = {
@@ -95,69 +96,63 @@ Snacks.setup({
     },
 })
 
-local projects_picker = function()
-    Snacks.picker.pick({
-        source = "projects",
-        opts = {
-            finder = "recent_projects",
-            dev = { "~/code", "~/bin", "~/git", "~/dotfiles/" },
-            preview = function(ctx)
-                local item = ctx.item
-                local path = item.path or item.text
-                local readme = vim.fs.find({ "README.md", "README", "readme.md", "readme" },
-                    { path = path, type = "file", limit = 1 })[1]
-                return Snacks.picker.preview.file(ctx)
-            end
-        }
-    })
-end
 
 local keymaps = {
     -- finders
-    { "<leader>b",       function() Snacks.picker.buffers() end,                                                                                   desc = "switch buffer",        hidden = true },
-    { "<leader><space>", function() Snacks.picker.smart() end,                                                                                     desc = "smart file",           hidden = true },
-    { "<leader>ff",      function() Snacks.picker.files() end,                                                                                     desc = "files" },
-    { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.expand("~/dotfiles/") }) end,                                               desc = "configs" },
-    { "<leader>fr",      function() Snacks.picker.recent() end,                                                                                    desc = "recents" },
-    { "<leader>fb",      function() Snacks.picker.buffers() end,                                                                                   desc = "buffers" },
-    { "<leader>fp",      function() projects_picker() end,                                                                                         desc = "projects" },
-    { "<leader>e",       function() Snacks.explorer() end,                                                                                         desc = "open explorer" },
+    { "<leader>b",       function() Snacks.picker.buffers() end,                                     desc = "switch buffer",        hidden = true },
+    { "<leader><space>", function() Snacks.picker.smart() end,                                       desc = "smart file",           hidden = true },
+    { "<leader>ff",      function() Snacks.picker.files() end,                                       desc = "files" },
+    { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.expand("~/dotfiles/") }) end, desc = "configs" },
+    { "<leader>fr",      function() Snacks.picker.recent() end,                                      desc = "recents" },
+    { "<leader>fb",      function() Snacks.picker.buffers() end,                                     desc = "buffers" },
+    { "<leader>fp",      function() Snacks.picker.projects() end,                                    desc = "projects" },
+    { "<leader>e",       function() Snacks.explorer() end,                                           desc = "open explorer" },
     --grep
-    { "<leader>sl",      function() Snacks.picker.lines() end,                                                                                     desc = "search buffer lines" },
-    { "<leader>sb",      function() Snacks.picker.grep_buffers() end,                                                                              desc = "search buffers" },
-    { "<leader>sf",      function() Snacks.picker.grep() end,                                                                                      desc = "search files" },
+    { "<leader>sl",      function() Snacks.picker.lines() end,                                       desc = "search buffer lines" },
+    { "<leader>sb",      function() Snacks.picker.grep_buffers() end,                                desc = "search buffers" },
+    { "<leader>sf",      function() Snacks.picker.grep() end,                                        desc = "search files" },
     -- GoTo
-    { "gd",              function() Snacks.picker.lsp_definitions() end,                                                                           desc = "goto definition" },
-    { "gD",              function() Snacks.picker.lsp_declarations() end,                                                                          desc = "goto declaration" },
-    { "gr",              function() Snacks.picker.lsp_references() end,                                                                            desc = "list references",      nowait = true, },
-    { "gI",              function() Snacks.picker.lsp_implementations() end,                                                                       desc = "goto implementations" },
-    { "gy",              function() Snacks.picker.lsp_type_definitions() end,                                                                      desc = "goto type definitions" },
+    { "gd",              function() Snacks.picker.lsp_definitions() end,                             desc = "goto definition" },
+    { "gD",              function() Snacks.picker.lsp_declarations() end,                            desc = "goto declaration" },
+    { "gr",              function() Snacks.picker.lsp_references() end,                              desc = "list references",      nowait = true, },
+    { "gI",              function() Snacks.picker.lsp_implementations() end,                         desc = "goto implementations" },
+    { "gy",              function() Snacks.picker.lsp_type_definitions() end,                        desc = "goto type definitions" },
+    -- run
+    {
+        "<leader>rp",
+        function()
+            Snacks.terminal.toggle("uv run " .. vim.fn.expand("%:p"),
+                { win = { position = "bottom" } })
+        end,
+        desc = "python script"
+    },
     -- lsp
-    { "<leader>ld",      function() Snacks.picker.diagnostics_buffer({ layout = "sidebar", }) end,                                                 desc = "buffer diagnostics" },
-    { "<leader>lD",      function() Snacks.picker.diagnostics({ layout = "sidebar" }) end,                                                         desc = "workspace diagnostics" },
-    { "<leader>ls",      function() Snacks.picker.lsp_symbols({ layout = "sidebar", auto_close = false, jump = { close = false } }) end,           desc = "buffer symbols" },
-    { "<leader>lS",      function() Snacks.picker.lsp_workspace_symbols({ layout = "sidebar", auto_close = false, jump = { close = false } }) end, desc = "workspace symbols" },
-    { "<leader>lC",      function() Snacks.picker.lsp_config() end,                                                                                desc = "configs" },
+    { "<leader>ld",  function() Snacks.picker.diagnostics_buffer({ layout = "sidebar", }) end,                                                 desc = "buffer diagnostics" },
+    { "<leader>lD",  function() Snacks.picker.diagnostics({ layout = "sidebar" }) end,                                                         desc = "workspace diagnostics" },
+    { "<leader>ls",  function() Snacks.picker.lsp_symbols({ layout = "sidebar", auto_close = false, jump = { close = false } }) end,           desc = "buffer symbols" },
+    { "<leader>lS",  function() Snacks.picker.lsp_workspace_symbols({ layout = "sidebar", auto_close = false, jump = { close = false } }) end, desc = "workspace symbols" },
+    { "<leader>lC",  function() Snacks.picker.lsp_config() end,                                                                                desc = "configs" },
     -- git
-    { "<leader>gg",      function() Snacks.lazygit() end,                                                                                          desc = "lazygit" },
-    { "<leader>gb",      function() Snacks.picker.git_branches() end,                                                                              desc = "branches" },
-    { "<leader>gs",      function() Snacks.picker.git_status() end,                                                                                desc = "status" },
-    { "<leader>gd",      function() Snacks.picker.git_diff() end,                                                                                  desc = "diff" },
-    { "<leader>gl",      function() Snacks.picker.git_log() end,                                                                                   desc = "log" },
-    { "<leader>gL",      function() Snacks.git.blame_line() end,                                                                                   desc = "blame line" },
-    { "<leader>gO",      function() Snacks.gitbrowse.open() end,                                                                                   desc = "open repo" },
+    { "<leader>gg",  function() Snacks.lazygit() end,                                                                                          desc = "lazygit" },
+    { "<leader>gb",  function() Snacks.picker.git_branches() end,                                                                              desc = "branches" },
+    { "<leader>gs",  function() Snacks.picker.git_status() end,                                                                                desc = "status" },
+    { "<leader>gd",  function() Snacks.picker.git_diff() end,                                                                                  desc = "diff" },
+    { "<leader>gl",  function() Snacks.picker.git_log() end,                                                                                   desc = "log" },
+    { "<leader>gL",  function() Snacks.git.blame_line() end,                                                                                   desc = "blame line" },
+    { "<leader>gO",  function() Snacks.gitbrowse.open() end,                                                                                   desc = "open repo" },
     --github
-    { "<leader>ghi",     function() Snacks.picker.gh_issue() end,                                                                                  desc = "opened issues" },
-    { "<leader>ghI",     function() Snacks.picker.gh_issue({ state = "all" }) end,                                                                 desc = "all issues" },
-    { "<leader>ghp",     function() Snacks.picker.gh_pr() end,                                                                                     desc = "opened PR" },
-    { "<leader>ghP",     function() Snacks.picker.gh_pr({ state = "all" }) end,                                                                    desc = "all PR" },
+    { "<leader>ghi", function() Snacks.picker.gh_issue() end,                                                                                  desc = "opened issues" },
+    { "<leader>ghI", function() Snacks.picker.gh_issue({ state = "all" }) end,                                                                 desc = "all issues" },
+    { "<leader>ghp", function() Snacks.picker.gh_pr() end,                                                                                     desc = "opened PR" },
+    { "<leader>ghP", function() Snacks.picker.gh_pr({ state = "all" }) end,                                                                    desc = "all PR" },
     -- toggle
-    { "<leader>tz",      function() Snacks.zen() end,                                                                                              desc = "zen mode" },
-    { "<leader>ti",      function() Snacks.toggle.indent() end,                                                                                    desc = "indent" },
+    { "<leader>tz",  function() Snacks.zen() end,                                                                                              desc = "zen mode" },
+    { "<leader>ti",  function() Snacks.toggle.indent() end,                                                                                    desc = "indent" },
+    { "<leader>td",  function() Snacks.toggle.dim() end,                                                                                       desc = "dim" },
     -- helpers
-    { "<leader>hh",      function() Snacks.picker.help() end,                                                                                      desc = "help" },
-    { "<leader>hm",      function() Snacks.picker.man() end,                                                                                       desc = "man" },
-    { "<leader>hk",      function() Snacks.picker.keymaps() end,                                                                                   desc = "keymaps" },
+    { "<leader>hh",  function() Snacks.picker.help() end,                                                                                      desc = "help" },
+    { "<leader>hm",  function() Snacks.picker.man() end,                                                                                       desc = "man" },
+    { "<leader>hk",  function() Snacks.picker.keymaps() end,                                                                                   desc = "keymaps" },
 }
 
 for _, map in ipairs(keymaps) do

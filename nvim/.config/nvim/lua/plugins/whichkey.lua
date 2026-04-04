@@ -12,5 +12,8 @@ require("which-key").add({
     { "<leader>h",  group = "helper" },
     { "<leader>m",  group = "mistral" },
     { "g",          group = "goto" },
+    { "<leader>r",  group = "run" },
+    { "<leader>p",  group = "vim.pack" },
+
 
 })

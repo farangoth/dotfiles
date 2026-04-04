@@ -8,7 +8,10 @@ local keymaps = {
     { "<C-j>",      ":wincmd j<CR>",                          desc = "move to down win",  silent = true },
     { "<C-k>",      ":wincmd k<CR>",                          desc = "move to up win",    silent = true },
     { "<C-l>",      ":wincmd l<CR>",                          desc = "move to right win", silent = true },
-    { "<leader>w",  ":w",                                     desc = "write files",       },
+    { "<leader>w",  ":w",                                     desc = "write files", },
+    { "<leader>lr", function() vim.lsp.buf.rename() end,      desc = "rename symbol" },
+    { "<leader>pu", function() vim.pack.update() end,         desc = "update package" },
+    { "<leader>pc", ":e ~/.config/nvim/lua/plugins/<CR>",     desc = "config plugins" }
 }
 
 for _, map in ipairs(keymaps) do
