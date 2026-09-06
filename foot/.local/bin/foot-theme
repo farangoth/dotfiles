@@ -52,10 +52,14 @@ done < <(grep -E '^(background|foreground|regular[0-7]|bright[0-7])=[0-9a-fA-F]{
 
 # Latte's own background (its "base" tier, #eff1f5) reads as stark/glaring
 # on a screen. foot's theme files only expose background/foreground/the 16
-# ANSI colors, not Catppuccin's dimmer background tiers (mantle, crust),
-# so this one has to be hardcoded rather than read from the theme file.
-# Crust (#dce0e8) is still unmistakably light -- nowhere near Macchiato's
-# #24273a or Mocha's #1e1e2e -- just easier on the eyes than pure white.
+# ANSI colors, not Catppuccin's other tiers, so this one has to be
+# hardcoded rather than read from the theme file. Override via
+# FOOT_THEME_LATTE_BG to retune without editing this file -- the Latte
+# tier ladder, darkest first:
+#   surface2 #acb0be  surface1 #bcc0cc  surface0 #ccd0da
+#   crust    #dce0e8  mantle   #e6e9ef  base     #eff1f5 (the original)
+# All of them are still nowhere near Macchiato's #24273a or Mocha's
+# #1e1e2e.
 if [[ "$1" == "latte" ]]; then
-    osc "11;#dce0e8"
+    osc "11;#${FOOT_THEME_LATTE_BG:-bcc0cc}"
 fi
