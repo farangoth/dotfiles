@@ -55,7 +55,7 @@ Entry point: `nvim/.config/nvim/init.lua` loads three modules in order:
 
 **Lua LSP**: `.luarc.json` at the repo root declares `vim` as a global for lua_ls diagnostics.
 
-**Minimal profile** (`nvim-pi/.config/nvim/init.lua`): a single-file, dependency-free config for resource-constrained machines (Raspberry Pi) — no plugin manager, no LSP/treesitter, built-ins only. It targets the same `~/.config/nvim` path as the main `nvim` package, so the two are **alternatives, never stow both on the same machine** (`stow` will correctly refuse if you try — it just won't be caught by CI's per-package dry-run, since each `stow -n` run there starts from a clean scratch `$HOME`). Its colorscheme (`retrobox`/`desert`, whichever the local Neovim has) is deliberately not Macchiato, so the terminal itself tells you which machine you're on.
+**Minimal profile**: see the `raspi` package, below.
 
 ## Key Neovim Keymaps
 
@@ -78,8 +78,17 @@ Leader is `Space`.
 
 Uses oh-my-zsh with `macovsky` theme. Python venvs auto-activated via the `uv` and `python` plugins (`PYTHON_AUTO_VRUN=true`, venv name `.venv`). Secrets sourced from `~/.env_secrets` (not in this repo).
 
-**Minimal profile** (`zsh-pi/.zshrc`): trimmed oh-my-zsh setup for headless/SSH-only machines (Raspberry Pi) — no `archlinux` plugin (wrong OS), no Python venv auto-activation, stock `robbyrussell` theme instead of `macovsky` (guaranteed present without extra setup), and no hardcoded `SSH_AUTH_SOCK` (would clobber the one `sshd` sets via agent forwarding). Same `~/.zshrc` target as the main `zsh` package, so the two are alternatives — never stow both.
+**Minimal profile**: see the `raspi` package, below.
 
 ## Tmux
 
 `tmux/.config/tmux/tmux.conf` (XDG path, tmux 3.1+). Default prefix (`Ctrl-b`), vi copy-mode, Catppuccin Macchiato status line, mouse on. `Ctrl-h/j/k/l` move between tmux panes and Neovim splits seamlessly (mirrors the Neovim `<C-hjkl>` window-nav keymaps via a `pane_tty`/process check — no plugin needed). Copy-mode `y` uses tmux's OSC 52 clipboard relay (see Clipboard above) rather than a `wl-copy` pipe, so it works the same locally and over SSH.
+
+## Raspberry Pi (`raspi` package)
+
+Everything for the headless, SSH-only Pi lives in one stow package — `stow raspi` sets up both pieces in one shot:
+
+- **`raspi/.config/nvim/init.lua`**: a single-file, dependency-free Neovim config — no plugin manager, no LSP/treesitter, built-ins only, so it starts instantly and works offline. Targets the same `~/.config/nvim` path as the main `nvim` package, so the two are **alternatives — never stow both on the same machine** (`stow` correctly refuses if you try; the repo's CI `stow -n` dry-run can't catch this specific case since each package is checked independently against a clean scratch `$HOME`). Colorscheme tries `retrobox` (Neovim 0.10+) and falls back to `desert` (bundled forever) — deliberately not Macchiato, so the terminal itself tells you which machine you're on. A `[PI]` window-title tag backs that up.
+- **`raspi/.zshrc`**: trimmed oh-my-zsh setup — no `archlinux` plugin (wrong OS on Raspberry Pi OS/Debian), no Python venv auto-activation, stock `robbyrussell` theme instead of `macovsky` (guaranteed present without extra setup), and no hardcoded `SSH_AUTH_SOCK` (would clobber the one `sshd` sets via agent forwarding, breaking `ssh -A`). Same `~/.zshrc` target as the main `zsh` package — alternatives, never stow both.
+
+The Wayland desktop stack above (river, waybar, mako, rofi, kanshi, swayidle, swaylock, foot, kitty) doesn't apply here — the Pi has no display and no Wayland session.
