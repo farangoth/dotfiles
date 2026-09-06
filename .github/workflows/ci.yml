@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: Shellcheck (rofi scripts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: shellcheck rofi/.config/rofi/scripts/*.sh
+
+  python:
+    name: Python syntax (river/init)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Compile-check river/init
+        run: python3 -m py_compile river/.config/river/init
+
+  luacheck:
+    name: Luacheck (nvim config)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1 luarocks
+          sudo luarocks install luacheck
+      - name: Run luacheck
+        run: luacheck nvim/.config/nvim
+
+  jsonc:
+    name: Validate waybar config.jsonc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse JSONC
+        run: python3 .github/scripts/validate_jsonc.py waybar/.config/waybar/config.jsonc
+
+  stow-dry-run:
+    name: Stow dry-run (no conflicts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stow
+        run: sudo apt-get update && sudo apt-get install -y stow
+      - name: Dry-run stow every package
+        run: |
+          set -e
+          fake_home="$(mktemp -d)"
+          for pkg in */; do
+            pkg="${pkg%/}"
+            echo "::group::stow -n ${pkg}"
+            stow -n -v -d "$PWD" -t "$fake_home" "$pkg"
+            echo "::endgroup::"
+          done

@@ -1,5 +1,5 @@
 return {
-    on_attach = function(client, bufnr)
+    on_attach = function(client, _)
         client.server_capabilities.hoverProvider = false
     end,
     init_options = {

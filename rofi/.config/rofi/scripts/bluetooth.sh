@@ -41,7 +41,7 @@ case "$state" in
     "󰂲")
         notify-send " connecting $device..."
         if bluetoothctl connect "$mac_addr"; then
-            batteryinfo=$(bluetoothctl info $mac_addr | grep "Battery Percentage")
+            batteryinfo=$(bluetoothctl info "$mac_addr" | grep "Battery Percentage")
             notify-send " $device connected" "$batteryinfo"
         else
             notify-send -u critical " failed to connect $device"
