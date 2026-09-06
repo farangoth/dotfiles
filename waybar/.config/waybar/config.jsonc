@@ -21,13 +21,18 @@
         "tray"
     ],
     "river/tags": {
-        "num-tags": 4,
-        "hide-vacant": false,
+        "num-tags": 9,
+        "hide-vacant": true,
         "tag-labels": [
-            "1 \uf121 ",
-            "2 \uf4f6 ",
-            "3 \uf269 ",
-            "4 \uf52c ",
+            "1 : \uf121 ",
+            "2 : \uf4f6 ",
+            "3 : \uf269 ",
+            "4 : \uf52c ",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
         ]
     },
     "bluetooth": {
