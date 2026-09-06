@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Push a foot color theme to the terminal live, via the same OSC dynamic-
+# color escape sequences xterm/foot/kitty/alacritty all support -- no foot
+# restart or config reload needed. Reads the actual theme file so nothing
+# is hardcoded here and it can't drift out of sync with the installed
+# themes.
+#
+# Usage:
+#   foot-theme <name>   # e.g. `foot-theme latte` reads
+#                        # /usr/share/foot/themes/catppuccin-latte
+#   foot-theme reset     # reset fg/bg/cursor/palette back to whatever
+#                         # foot.ini loaded (Macchiato, here)
+#
+# Used by the zsh `ssh` wrapper to flip foot to Catppuccin Latte for the
+# duration of an SSH session. If this is running inside tmux, tmux needs
+# `allow-passthrough on` (see tmux.conf) to forward these sequences to the
+# outer terminal instead of swallowing them.
+set -euo pipefail
+
+# shellcheck disable=SC1003  # `\\` here is a literal ST terminator (ESC \), not an escaped quote
+osc() { printf '\033]%s\033\\' "$1"; }
+
+case "${1:-}" in
+"")
+    echo "usage: foot-theme <name>|reset" >&2
+    exit 1
+    ;;
+reset)
+    osc "104" # reset the whole 16-color palette
+    osc "110" # reset foreground
+    osc "111" # reset background
+    osc "112" # reset cursor color
+    exit 0
+    ;;
+esac
+
+theme_file="/usr/share/foot/themes/catppuccin-$1"
+if [[ ! -r "$theme_file" ]]; then
+    echo "foot-theme: no such theme file: $theme_file" >&2
+    exit 1
+fi
+
+while IFS='=' read -r key value; do
+    case "$key" in
+    background) osc "11;#$value" ;;
+    foreground) osc "10;#$value" ;;
+    regular[0-7]) osc "4;${key#regular};#$value" ;;
+    bright[0-7]) osc "4;$((${key#bright} + 8));#$value" ;;
+    esac
+done < <(grep -E '^(background|foreground|regular[0-7]|bright[0-7])=[0-9a-fA-F]{6}$' "$theme_file")
