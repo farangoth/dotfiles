@@ -27,11 +27,11 @@ source $ZSH/oh-my-zsh.sh
 alias neovim="nvim"
 
 # Catppuccin Frappe in foot for the duration of an SSH session, restored
-# to whatever foot.ini loaded (Macchiato) on exit -- see
+# to whatever foot.ini loaded (Mocha) on exit -- see
 # ~/.local/bin/foot-theme. Also sets the window title to "SSH: <target>"
 # (cleared back to empty on exit) -- waybar's river/window module shows
 # the title live, so this is a second, textual signal alongside the color
-# switch (Frappe/Macchiato are both dark, so the color flip alone is
+# switch (Frappe/Mocha are both dark, so the color flip alone is
 # subtler than Latte's was). Guarded on -t 1 so neither fires when ssh's
 # output is being piped/captured (git remotes, deploy scripts, etc.) --
 # otherwise the escape sequences would land in whatever's capturing it.
@@ -62,12 +62,12 @@ alias cdi="zi"         # interactive pick via fzf when there are multiple matche
 # ---- fzf (fuzzy finder) ----
 source <(fzf --zsh)
 
-# Catppuccin Macchiato, matching foot/tmux/rofi/waybar
+# Catppuccin Mocha, matching foot/tmux/rofi/waybar
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline \
---color=fg:#cad3f5,fg+:#cad3f5,bg:#24273a,bg+:#363a4f \
---color=hl:#ed8796,hl+:#ed8796,info:#c6a0f6,marker:#f4dbd6 \
---color=prompt:#c6a0f6,spinner:#f4dbd6,pointer:#f4dbd6,header:#ed8796 \
---color=border:#363a4f,label:#cad3f5,query:#cad3f5"
+--color=fg:#cdd6f4,fg+:#cdd6f4,bg:#1e1e2e,bg+:#313244 \
+--color=hl:#f38ba8,hl+:#f38ba8,info:#cba6f7,marker:#f5e0dc \
+--color=prompt:#cba6f7,spinner:#f5e0dc,pointer:#f5e0dc,header:#f38ba8 \
+--color=border:#313244,label:#cdd6f4,query:#cdd6f4"
 
 _fzf_preview='[[ -d {} ]] && eza --tree --level=2 --color=always --icons=auto {} || bat --color=always --style=numbers --line-range=:200 {}'
 

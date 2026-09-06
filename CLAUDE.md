@@ -22,7 +22,7 @@ stow --restow <package> # re-link (useful after adding files)
 - **Launcher**: Rofi (`rofi/.config/rofi/`) with custom shell scripts in `scripts/`
 - **Idle/lock**: Swayidle + Swaylock
 - **Display management**: Kanshi (auto-switch output profiles: `nomad`, `clamshell`, `dual`)
-- **Theme**: Catppuccin Macchiato throughout all components
+- **Theme**: Catppuccin Mocha throughout all components
 
 To reload the River config: `Super+Shift+C` (re-executes `~/.config/river/init`).
 
@@ -80,16 +80,16 @@ Uses oh-my-zsh with `macovsky` theme. Python venvs auto-activated via the `uv` a
 
 **Minimal profile**: see the `raspi` package, below.
 
-**SSH theme switch**: the `ssh` function wraps the real `ssh`, flipping foot to Catppuccin Frappe for the duration of the session and back to whatever `foot.ini` loaded (Macchiato) on exit — so the terminal itself signals "you're on a remote box" independently of anything the remote sends. Implemented via `~/.local/bin/foot-theme` (`foot/.local/bin/foot-theme`), which reads the actual `/usr/share/foot/themes/catppuccin-<name>` file and emits the corresponding OSC 4/10/11 dynamic-color sequences (reset via OSC 104/110/111/112) — nothing hardcoded, so it can't drift from the installed theme (Frappe's own background needs no dimming the way Latte's did, so unlike the very first version of this feature there's no override to keep in sync anywhere). Guarded on `[[ -t 1 ]]` so it never fires when `ssh`'s output is being piped or captured. Needs `allow-passthrough on` in tmux (already set) to reach foot when `ssh` runs inside a pane, since tmux otherwise swallows OSC sequences from programs running in it.
+**SSH theme switch**: the `ssh` function wraps the real `ssh`, flipping foot to Catppuccin Frappe for the duration of the session and back to whatever `foot.ini` loaded (Mocha) on exit — so the terminal itself signals "you're on a remote box" independently of anything the remote sends. Implemented via `~/.local/bin/foot-theme` (`foot/.local/bin/foot-theme`), which reads the actual `/usr/share/foot/themes/catppuccin-<name>` file and emits the corresponding OSC 4/10/11 dynamic-color sequences (reset via OSC 104/110/111/112) — nothing hardcoded, so it can't drift from the installed theme (Frappe's own background needs no dimming the way Latte's did, so unlike the very first version of this feature there's no override to keep in sync anywhere). Guarded on `[[ -t 1 ]]` so it never fires when `ssh`'s output is being piped or captured. Needs `allow-passthrough on` in tmux (already set) to reach foot when `ssh` runs inside a pane, since tmux otherwise swallows OSC sequences from programs running in it.
 
-Frappe and Macchiato are both dark flavours, though, so the flip is subtler than Latte's was — mostly a base-color shift (`#303446` vs `#24273a`), not light-vs-dark. Two more explicit, textual signals back it up, both needing their own opt-in tmux option since tmux doesn't forward either by default:
+Frappe and Mocha are both dark flavours, though, so the flip is subtler than Latte's was — mostly a base-color shift (`#303446` vs `#1e1e2e`), not light-vs-dark. Two more explicit, textual signals back it up, both needing their own opt-in tmux option since tmux doesn't forward either by default:
 
 - **Window title**: the same `ssh` function sets the window title to `SSH: <target>` on connect (a heuristic — the last argument, so `ssh host cmd args` would show the last arg instead) and clears it back to empty on exit, via a plain OSC 2 sequence. Waybar's `river/window` module shows the title live, so this surfaces there too. Needs `set-titles on` in tmux (already set) — off by default, same reason as `allow-passthrough`.
 - **Tmux pane border**: `pane-border-format` shows each pane's running command on its own border, styled with `@thm_peach` specifically when that command is `ssh`. This is the one thing the whole-window color/title switch can't do on its own — OSC changes and the title are both window-scoped, so if only one pane in a multi-pane window is SSH'd, the other two signals still apply to the entire window; the pane border is genuinely per-pane.
 
 ## Tmux
 
-`tmux/.config/tmux/tmux.conf` (XDG path, tmux 3.1+). Default prefix (`Ctrl-b`), vi copy-mode, Catppuccin Macchiato status line, mouse on. `Ctrl-h/j/k/l` move between tmux panes and Neovim splits seamlessly (mirrors the Neovim `<C-hjkl>` window-nav keymaps via a `pane_tty`/process check — no plugin needed). Copy-mode `y` uses tmux's OSC 52 clipboard relay (see Clipboard above) rather than a `wl-copy` pipe, so it works the same locally and over SSH.
+`tmux/.config/tmux/tmux.conf` (XDG path, tmux 3.1+). Default prefix (`Ctrl-b`), vi copy-mode, Catppuccin Mocha status line, mouse on. `Ctrl-h/j/k/l` move between tmux panes and Neovim splits seamlessly (mirrors the Neovim `<C-hjkl>` window-nav keymaps via a `pane_tty`/process check — no plugin needed). Copy-mode `y` uses tmux's OSC 52 clipboard relay (see Clipboard above) rather than a `wl-copy` pipe, so it works the same locally and over SSH.
 
 ## Raspberry Pi (`raspi` package)
 

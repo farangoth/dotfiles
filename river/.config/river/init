@@ -33,7 +33,7 @@ VOLUME_MIXER = "wpctl"
 RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 
 PADDING = 8
-XCURSOR_THEME = "catppuccin-macchiato-light-cursors"
+XCURSOR_THEME = "catppuccin-mocha-light-cursors"
 XCURSOR_SIZE = "24"
 
 # --- 1. Startup Processes ---
