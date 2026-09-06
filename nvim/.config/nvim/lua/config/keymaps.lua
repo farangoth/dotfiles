@@ -11,7 +11,8 @@ local keymaps = {
     { "<leader>w",  ":w",                                     desc = "write files", },
     { "<leader>lr", function() vim.lsp.buf.rename() end,      desc = "rename symbol" },
     { "<leader>pu", function() vim.pack.update() end,         desc = "update package" },
-    { "<leader>pc", ":e ~/.config/nvim/lua/plugins/<CR>",     desc = "config plugins" }
+    { "<leader>pc", ":e ~/.config/nvim/lua/plugins/<CR>",     desc = "config plugins" },
+    { "<leader>pm", ":MasonUpdate<CR>",                       desc = "update LSPs" },
 }
 
 for _, map in ipairs(keymaps) do

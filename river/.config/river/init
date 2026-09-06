@@ -29,7 +29,7 @@ def test(a: int = 2, b: int = 2):
 
 # parameters & aliases
 MOD = "Super"
-TERM = "kitty"
+TERM = "foot"
 FILEBROWSER = "thunar"
 WEBBROWSER = "firefox"
 VOLUME_MIXER = "wpctl"
@@ -64,16 +64,24 @@ spawn_unique("waybar")
 spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
 spawn_unique("swayidle -w")
 spawn_unique("mako")
+# spawn_unique("kanshi")
+spawn_unique("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &")
 
 spawn_unique("wl-paste --watch cliphist store")
 
 # --- 2. Input Settings ---
 TOUCHPAD = "*_Touchpad"
-riverctl("keyboard-layout", "gb")
 riverctl("input", TOUCHPAD, "events", "enabled")
 riverctl("input", TOUCHPAD, "tap", "enabled")
 riverctl("input", TOUCHPAD, "tap-button-map", "left-right-middle")
 riverctl("input", TOUCHPAD, "natural-scroll", "enabled")
+
+KEYBOARD = "keyboard-*"
+riverctl("input", KEYBOARD, "xkb-layout", "gb")
+riverctl("input", KEYBOARD, "xkb-options", "caps:escape")
+
+MAG75_KB = "*_IQUNIX_MG75_BT2_Keyboard"
+riverctl("input", MAG75_KB, "xkb-variant", "mac")
 
 # --- 3. Keymaps ---
 # river control
@@ -84,6 +92,8 @@ riverctl("map", "normal", MOD, "Q", "close")
 # layout control
 riverctl("map", "normal", MOD, "J", "focus-view", "next")
 riverctl("map", "normal", MOD, "K", "focus-view", "previous")
+riverctl("map", "normal", f"{MOD}+Shift", "J", "send-to-output", "next")
+riverctl("map", "normal", f"{MOD}+Shift", "K", "send-to-output", "previous")
 riverctl("map", "normal", MOD, "Tab", "zoom")
 riverctl(
     "map",
