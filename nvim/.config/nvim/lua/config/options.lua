@@ -61,6 +61,9 @@ vim.o.smartcase = true
 vim.o.incsearch = true
 vim.o.hlsearch = false
 
+-- clipboard (shares yanks/pastes with foot/tmux via wl-clipboard + cliphist)
+vim.o.clipboard = "unnamedplus"
+
 -- visual
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes"

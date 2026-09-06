@@ -21,7 +21,7 @@
         "tray"
     ],
     "river/tags": {
-        "num-tags": 4,
+        "num-tags": 9,
         "hide-vacant": false,
         "tag-labels": [
             "1 \uf121 ",
@@ -44,7 +44,7 @@
     	"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
     	"tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         "on-click-right": "~/.config/rofi/scripts/bluetooth.sh",
-        "on-click-middle": "kitty --class term-float bluetoothctl"
+        "on-click-middle": "foot --app-id=term-float bluetoothctl"
     },
     // "keyboard-state": {
     //     "numlock": true,
@@ -156,7 +156,7 @@
         "format-disconnected": "Disconnected ⚠",
         "format-alt": "{ifname}: {ipaddr}/{cidr}",
         "on-click-right": "~/.config/rofi/scripts/wifi.sh",
-        "on-click-middle": "kitty --class term-float iwctl"
+        "on-click-middle": "foot --app-id=term-float iwctl"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float

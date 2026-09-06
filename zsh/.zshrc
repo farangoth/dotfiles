@@ -3,7 +3,7 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export ZSH="$HOME/.oh-my-zsh"
 
 export EDITOR="nvim"
-export TERMINAL="kitty"
+export TERMINAL="foot"
 
 zstyle ':omz:update' mode reminder
 ZSH_THEME="macovsky"
