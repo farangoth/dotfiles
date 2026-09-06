@@ -4,15 +4,7 @@ set -e
 set -u
 
 ORDER=("lock" "kill" "suspend" "reboot" "shutdown")
-declare -A LABELS
-LABELS=(
-    ["lock"]="Lock"
-    ["kill"]="Kill"
-    ["suspend"]="Suspend"
-    ["reboot"]="Reboot"
-    ["shutdown"]="Shutdown"
-    )
-    
+
 declare -A ICONS
 ICONS=(
     ["lock"]=""

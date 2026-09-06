@@ -12,6 +12,8 @@ stow --delete <package> # remove symlinks
 stow --restow <package> # re-link (useful after adding files)
 ```
 
+**CI** (`.github/workflows/ci.yml`): on every push to `main` and every PR, runs shellcheck on the rofi scripts, luacheck on the nvim Lua config (see `.luacheckrc`), a syntax check of `river/init`, a JSONC sanity check of waybar's config, and a `stow -n` dry-run of every package to catch symlink conflicts before they hit `$HOME`. There's no CD — a dotfiles repo isn't deployed anywhere; `stow` is run by hand on whichever machine you're setting up.
+
 ## Wayland Desktop Stack
 
 - **WM**: River (config: `river/.config/river/init` — a Python script run by River on startup)
