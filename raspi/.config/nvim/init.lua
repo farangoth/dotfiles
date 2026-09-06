@@ -3,14 +3,12 @@
 -- only, so it works offline and doesn't ask an ARM board to compile or fetch
 -- anything just to open a file.
 --
--- The colorscheme is Catppuccin Latte, hand-rolled below with plain
+-- The colorscheme is Catppuccin Frappe, hand-rolled below with plain
 -- highlight calls rather than the catppuccin.nvim plugin (this config has
 -- no plugin manager) -- matching the theme foot itself switches to for the
 -- SSH session this nvim is normally opened inside (see
--- foot/.local/bin/foot-theme on the desktop). The background matches
--- foot-theme's dimmed alternative rather than Latte's own near-white
--- default, for the same reason foot dims it: less glaring on a screen.
--- The titlestring below adds a second "which machine is this" signal.
+-- foot/.local/bin/foot-theme on the desktop). The titlestring below adds
+-- a second "which machine is this" signal.
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -75,92 +73,84 @@ map("n", "<C-k>", "<C-w>k", { desc = "move to up win" })
 map("n", "<C-l>", "<C-w>l", { desc = "move to right win" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { silent = true })
 
--- colorscheme: Catppuccin Latte, hand-rolled (see header comment).
--- Background hex matches foot-theme's FOOT_THEME_LATTE_BG default
--- (surface1); this machine has no way to inherit that env var over SSH,
--- so keep the two in sync by hand if you change one.
-local latte = {
-    rosewater = "#dc8a78",
-    flamingo = "#dd7878",
-    pink = "#ea76cb",
-    mauve = "#8839ef",
-    red = "#d20f39",
-    maroon = "#e64553",
-    peach = "#fe640b",
-    yellow = "#df8e1d",
-    green = "#40a02b",
-    teal = "#179299",
-    sky = "#04a5e5",
-    blue = "#1e66f5",
-    text = "#4c4f69",
-    overlay0 = "#9ca0b0",
-    surface1 = "#bcc0cc",
-    surface0 = "#ccd0da",
-    -- dimmed alternative background, not Latte's own #eff1f5 -- reads
-    -- $FOOT_THEME_LATTE_BG in case that ever gets forwarded over SSH,
-    -- otherwise falls back to the same default foot-theme uses
-    base = "#" .. (os.getenv("FOOT_THEME_LATTE_BG") or "bcc0cc"),
-    mantle = "#e6e9ef",
+-- colorscheme: Catppuccin Frappe, hand-rolled (see header comment).
+local frappe = {
+    pink = "#f4b8e4",
+    mauve = "#ca9ee6",
+    red = "#e78284",
+    peach = "#ef9f76",
+    yellow = "#e5c890",
+    green = "#a6d189",
+    teal = "#81c8be",
+    sky = "#99d1db",
+    blue = "#8caaee",
+    text = "#c6d0f5",
+    overlay0 = "#737994",
+    surface1 = "#51576d",
+    surface0 = "#414559",
+    base = "#303446",
+    mantle = "#292c3c",
+    crust = "#232634",
 }
 
 local function hl(group, opts)
     vim.api.nvim_set_hl(0, group, opts)
 end
 
-hl("Normal", { fg = latte.text, bg = latte.base })
-hl("NormalFloat", { fg = latte.text, bg = latte.mantle })
-hl("Comment", { fg = latte.overlay0, italic = true })
-hl("Constant", { fg = latte.peach })
-hl("String", { fg = latte.green })
-hl("Character", { fg = latte.teal })
-hl("Number", { fg = latte.peach })
-hl("Boolean", { fg = latte.peach })
-hl("Identifier", { fg = latte.blue })
-hl("Function", { fg = latte.blue, bold = true })
-hl("Statement", { fg = latte.mauve })
-hl("Keyword", { fg = latte.mauve })
-hl("Operator", { fg = latte.sky })
-hl("PreProc", { fg = latte.pink })
-hl("Type", { fg = latte.yellow })
-hl("Special", { fg = latte.pink })
-hl("Underlined", { fg = latte.blue, underline = true })
-hl("Todo", { fg = latte.base, bg = latte.yellow, bold = true })
-hl("Error", { fg = latte.base, bg = latte.red, bold = true })
-hl("ErrorMsg", { fg = latte.red, bold = true })
-hl("WarningMsg", { fg = latte.yellow, bold = true })
+hl("Normal", { fg = frappe.text, bg = frappe.base })
+hl("NormalFloat", { fg = frappe.text, bg = frappe.mantle })
+hl("Comment", { fg = frappe.overlay0, italic = true })
+hl("Constant", { fg = frappe.peach })
+hl("String", { fg = frappe.green })
+hl("Character", { fg = frappe.teal })
+hl("Number", { fg = frappe.peach })
+hl("Boolean", { fg = frappe.peach })
+hl("Identifier", { fg = frappe.blue })
+hl("Function", { fg = frappe.blue, bold = true })
+hl("Statement", { fg = frappe.mauve })
+hl("Keyword", { fg = frappe.mauve })
+hl("Operator", { fg = frappe.sky })
+hl("PreProc", { fg = frappe.pink })
+hl("Type", { fg = frappe.yellow })
+hl("Special", { fg = frappe.pink })
+hl("Underlined", { fg = frappe.blue, underline = true })
+hl("Todo", { fg = frappe.crust, bg = frappe.yellow, bold = true })
+hl("Error", { fg = frappe.crust, bg = frappe.red, bold = true })
+hl("ErrorMsg", { fg = frappe.red, bold = true })
+hl("WarningMsg", { fg = frappe.yellow, bold = true })
 
-hl("LineNr", { fg = latte.overlay0 })
-hl("CursorLineNr", { fg = latte.blue, bold = true })
-hl("CursorLine", { bg = latte.surface0 })
-hl("Visual", { bg = latte.surface1 })
-hl("Search", { fg = latte.base, bg = latte.yellow })
-hl("IncSearch", { fg = latte.base, bg = latte.peach })
-hl("MatchParen", { fg = latte.red, bold = true, underline = true })
+hl("LineNr", { fg = frappe.overlay0 })
+hl("CursorLineNr", { fg = frappe.blue, bold = true })
+hl("CursorLine", { bg = frappe.surface0 })
+hl("Visual", { bg = frappe.surface1 })
+hl("Search", { fg = frappe.crust, bg = frappe.yellow })
+hl("IncSearch", { fg = frappe.crust, bg = frappe.peach })
+hl("MatchParen", { fg = frappe.red, bold = true, underline = true })
 
-hl("StatusLine", { fg = latte.text, bg = latte.surface0 })
-hl("StatusLineNC", { fg = latte.overlay0, bg = latte.mantle })
-hl("WinSeparator", { fg = latte.surface0 })
-hl("SignColumn", { bg = latte.base })
-hl("Folded", { fg = latte.overlay0, bg = latte.surface0 })
+hl("StatusLine", { fg = frappe.text, bg = frappe.surface0 })
+hl("StatusLineNC", { fg = frappe.overlay0, bg = frappe.mantle })
+hl("WinSeparator", { fg = frappe.surface0 })
+hl("SignColumn", { bg = frappe.base })
+hl("Folded", { fg = frappe.overlay0, bg = frappe.surface0 })
 
-hl("Pmenu", { fg = latte.text, bg = latte.mantle })
-hl("PmenuSel", { fg = latte.base, bg = latte.blue })
-hl("PmenuSbar", { bg = latte.surface0 })
-hl("PmenuThumb", { bg = latte.overlay0 })
+hl("Pmenu", { fg = frappe.text, bg = frappe.mantle })
+hl("PmenuSel", { fg = frappe.crust, bg = frappe.blue })
+hl("PmenuSbar", { bg = frappe.surface0 })
+hl("PmenuThumb", { bg = frappe.overlay0 })
 
-hl("NonText", { fg = latte.surface1 })
-hl("EndOfBuffer", { fg = latte.surface1 })
-hl("Whitespace", { fg = latte.surface1 })
+hl("NonText", { fg = frappe.surface1 })
+hl("EndOfBuffer", { fg = frappe.surface1 })
+hl("Whitespace", { fg = frappe.surface1 })
 
-hl("DiffAdd", { fg = latte.green, bg = latte.base })
-hl("DiffChange", { fg = latte.yellow, bg = latte.base })
-hl("DiffDelete", { fg = latte.red, bg = latte.base })
-hl("DiffText", { fg = latte.blue, bg = latte.base, bold = true })
+hl("DiffAdd", { fg = frappe.green, bg = frappe.base })
+hl("DiffChange", { fg = frappe.yellow, bg = frappe.base })
+hl("DiffDelete", { fg = frappe.red, bg = frappe.base })
+hl("DiffText", { fg = frappe.blue, bg = frappe.base, bold = true })
 
-hl("DiagnosticError", { fg = latte.red })
-hl("DiagnosticWarn", { fg = latte.yellow })
-hl("DiagnosticInfo", { fg = latte.sky })
-hl("DiagnosticHint", { fg = latte.teal })
+hl("DiagnosticError", { fg = frappe.red })
+hl("DiagnosticWarn", { fg = frappe.yellow })
+hl("DiagnosticInfo", { fg = frappe.sky })
+hl("DiagnosticHint", { fg = frappe.teal })
 
-vim.o.background = "light"
-vim.g.colors_name = "catppuccin-latte-minimal"
+vim.o.background = "dark"
+vim.g.colors_name = "catppuccin-frappe-minimal"

@@ -2,17 +2,15 @@
 # Push a foot color theme to the terminal live, via the same OSC dynamic-
 # color escape sequences xterm/foot/kitty/alacritty all support -- no foot
 # restart or config reload needed. Reads the actual theme file so colors
-# can't drift out of sync with the installed themes, aside from the one
-# deliberate override below (foot's theme files don't expose Catppuccin's
-# dimmer background tiers, so that one has to be hardcoded).
+# can't drift out of sync with the installed themes.
 #
 # Usage:
-#   foot-theme <name>   # e.g. `foot-theme latte` reads
-#                        # /usr/share/foot/themes/catppuccin-latte
+#   foot-theme <name>   # e.g. `foot-theme frappe` reads
+#                        # /usr/share/foot/themes/catppuccin-frappe
 #   foot-theme reset     # reset fg/bg/cursor/palette back to whatever
 #                         # foot.ini loaded (Macchiato, here)
 #
-# Used by the zsh `ssh` wrapper to flip foot to Catppuccin Latte for the
+# Used by the zsh `ssh` wrapper to flip foot to Catppuccin Frappe for the
 # duration of an SSH session. If this is running inside tmux, tmux needs
 # `allow-passthrough on` (see tmux.conf) to forward these sequences to the
 # outer terminal instead of swallowing them.
@@ -49,17 +47,3 @@ while IFS='=' read -r key value; do
     bright[0-7]) osc "4;$((${key#bright} + 8));#$value" ;;
     esac
 done < <(grep -E '^(background|foreground|regular[0-7]|bright[0-7])=[0-9a-fA-F]{6}$' "$theme_file")
-
-# Latte's own background (its "base" tier, #eff1f5) reads as stark/glaring
-# on a screen. foot's theme files only expose background/foreground/the 16
-# ANSI colors, not Catppuccin's other tiers, so this one has to be
-# hardcoded rather than read from the theme file. Override via
-# FOOT_THEME_LATTE_BG to retune without editing this file -- the Latte
-# tier ladder, darkest first:
-#   surface2 #acb0be  surface1 #bcc0cc  surface0 #ccd0da
-#   crust    #dce0e8  mantle   #e6e9ef  base     #eff1f5 (the original)
-# All of them are still nowhere near Macchiato's #24273a or Mocha's
-# #1e1e2e.
-if [[ "$1" == "latte" ]]; then
-    osc "11;#${FOOT_THEME_LATTE_BG:-bcc0cc}"
-fi

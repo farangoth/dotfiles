@@ -26,19 +26,29 @@ source $ZSH/oh-my-zsh.sh
 
 alias neovim="nvim"
 
-# Catppuccin Latte in foot for the duration of an SSH session, restored to
-# whatever foot.ini loaded (Macchiato) on exit -- see
-# ~/.local/bin/foot-theme. Guarded on -t 1 so it never fires when ssh's
+# Catppuccin Frappe in foot for the duration of an SSH session, restored
+# to whatever foot.ini loaded (Macchiato) on exit -- see
+# ~/.local/bin/foot-theme. Also sets the window title to "SSH: <target>"
+# (cleared back to empty on exit) -- waybar's river/window module shows
+# the title live, so this is a second, textual signal alongside the color
+# switch (Frappe/Macchiato are both dark, so the color flip alone is
+# subtler than Latte's was). Guarded on -t 1 so neither fires when ssh's
 # output is being piped/captured (git remotes, deploy scripts, etc.) --
 # otherwise the escape sequences would land in whatever's capturing it.
-# If ssh runs inside tmux, tmux needs `allow-passthrough on` to forward
-# these through to foot instead of swallowing them (see tmux.conf).
+# If ssh runs inside tmux, tmux needs `allow-passthrough on` (for
+# foot-theme) and `set-titles on` (for the title) to forward these
+# through to foot instead of swallowing them (see tmux.conf).
 ssh() {
     if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
-        foot-theme latte
+        local target="${@[-1]:-ssh}"  # heuristic: usually the last arg is
+                                       # the host, but `ssh host cmd args`
+                                       # would show the last arg instead
+        printf '\033]2;SSH: %s\033\\' "$target"
+        foot-theme frappe
         command ssh "$@"
         local exit_code=$?
         foot-theme reset
+        printf '\033]2;\033\\'
         return $exit_code
     fi
     command ssh "$@"
