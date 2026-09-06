@@ -55,6 +55,8 @@ Entry point: `nvim/.config/nvim/init.lua` loads three modules in order:
 
 **Lua LSP**: `.luarc.json` at the repo root declares `vim` as a global for lua_ls diagnostics.
 
+**Minimal profile** (`nvim-pi/.config/nvim/init.lua`): a single-file, dependency-free config for resource-constrained machines (Raspberry Pi) — no plugin manager, no LSP/treesitter, built-ins only. It targets the same `~/.config/nvim` path as the main `nvim` package, so the two are **alternatives, never stow both on the same machine** (`stow` will correctly refuse if you try — it just won't be caught by CI's per-package dry-run, since each `stow -n` run there starts from a clean scratch `$HOME`). Its colorscheme (`retrobox`/`desert`, whichever the local Neovim has) is deliberately not Macchiato, so the terminal itself tells you which machine you're on.
+
 ## Key Neovim Keymaps
 
 Leader is `Space`.
