@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Push a foot color theme to the terminal live, via the same OSC dynamic-
 # color escape sequences xterm/foot/kitty/alacritty all support -- no foot
-# restart or config reload needed. Reads the actual theme file so nothing
-# is hardcoded here and it can't drift out of sync with the installed
-# themes.
+# restart or config reload needed. Reads the actual theme file so colors
+# can't drift out of sync with the installed themes, aside from the one
+# deliberate override below (foot's theme files don't expose Catppuccin's
+# dimmer background tiers, so that one has to be hardcoded).
 #
 # Usage:
 #   foot-theme <name>   # e.g. `foot-theme latte` reads
@@ -48,3 +49,13 @@ while IFS='=' read -r key value; do
     bright[0-7]) osc "4;$((${key#bright} + 8));#$value" ;;
     esac
 done < <(grep -E '^(background|foreground|regular[0-7]|bright[0-7])=[0-9a-fA-F]{6}$' "$theme_file")
+
+# Latte's own background (its "base" tier, #eff1f5) reads as stark/glaring
+# on a screen. foot's theme files only expose background/foreground/the 16
+# ANSI colors, not Catppuccin's dimmer background tiers (mantle, crust),
+# so this one has to be hardcoded rather than read from the theme file.
+# Crust (#dce0e8) is still unmistakably light -- nowhere near Macchiato's
+# #24273a or Mocha's #1e1e2e -- just easier on the eyes than pure white.
+if [[ "$1" == "latte" ]]; then
+    osc "11;#dce0e8"
+fi
