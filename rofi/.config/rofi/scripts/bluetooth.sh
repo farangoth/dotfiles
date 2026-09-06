@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-terminal="kitty"
+terminal="foot"
 prompt=" bluetooth"
 
 get_devices() {

@@ -16,9 +16,9 @@ declare -A COMMANDS
 COMMANDS=(
     ["web"]="firefox --new-tab about:newtab"
     ["file"]="thunar $HOME"
-    ["editor"]="kitty -d $HOME nvim"
-    ["config"]="kitty -d $HOME/dotfiles/ nvim"
-    ["term"]="kitty"
+    ["editor"]="foot -D $HOME nvim"
+    ["config"]="foot -D $HOME/dotfiles/ nvim"
+    ["term"]="foot"
 )
 if [[ -z "$*" ]]; then
     echo -en "\0prompt\x1fapps \n"

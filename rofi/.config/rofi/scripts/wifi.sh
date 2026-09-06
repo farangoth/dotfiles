@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-TERMINAL="kitty"
+TERMINAL="foot"
 STATION="wlan0"
 PROMPT="󰖩 WiFi"
 

@@ -64,7 +64,7 @@ spawn_unique("waybar")
 spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
 spawn_unique("swayidle -w")
 spawn_unique("mako")
-# spawn_unique("kanshi")
+spawn_unique("kanshi")
 spawn_unique("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &")
 
 spawn_unique("wl-paste --watch cliphist store")
@@ -150,6 +150,17 @@ riverctl(
 # apps
 riverctl("map", "normal", MOD, "Return", "spawn", TERM)
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
+
+# screenshots (piped to clipboard; cliphist picks them up automatically)
+riverctl("map", "normal", "None", "Print", "spawn", "grim - | wl-copy")
+riverctl(
+    "map",
+    "normal",
+    f"{MOD}+Shift",
+    "S",
+    "spawn",
+    'grim -g "$(slurp)" - | wl-copy',
+)
 # rofi
 riverctl("map", "normal", MOD, "Space", "spawn", "rofi -show")
 riverctl(
