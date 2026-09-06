@@ -1,0 +1,28 @@
+profile nomad {
+    output eDP-1 {
+        mode 1920x1080@60.008Hz 
+        position 0,0
+        scale 1.0
+    }
+}
+
+profile clamshell {
+    output DP-1 {
+        mode 3840x2160@60Hz
+        position 0,0
+        scale 1.5
+    }
+}
+
+profile dual {
+    output DP-1 {
+        mode 3840x2160@30Hz
+        scale 1.5
+        position 0,0
+    }
+    output eDP-1 {
+       mode 1920x1080@60.008Hz
+       scale 1.0
+       position 0,1440
+    }
+}
