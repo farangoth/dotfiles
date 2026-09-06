@@ -8,7 +8,7 @@
 #   foot-theme <name>   # e.g. `foot-theme frappe` reads
 #                        # /usr/share/foot/themes/catppuccin-frappe
 #   foot-theme reset     # reset fg/bg/cursor/palette back to whatever
-#                         # foot.ini loaded (Macchiato, here)
+#                         # foot.ini loaded (Mocha, here)
 #
 # Used by the zsh `ssh` wrapper to flip foot to Catppuccin Frappe for the
 # duration of an SSH session. If this is running inside tmux, tmux needs

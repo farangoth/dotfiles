@@ -6,10 +6,10 @@ ignore-timeout=1
 border-radius=10
 
 # Colors
-background-color=#24273a
-text-color=#cad3f5
-border-color=#8aadf4
-progress-color=over #363a4f
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+progress-color=over #313244
 
 [urgency=high]
-border-color=#f5a97f
+border-color=#fab387
