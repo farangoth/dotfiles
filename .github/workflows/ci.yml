@@ -7,12 +7,12 @@ on:
 
 jobs:
   shellcheck:
-    name: Shellcheck (rofi scripts)
+    name: Shellcheck (shell scripts)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Run shellcheck
-        run: shellcheck rofi/.config/rofi/scripts/*.sh
+        run: shellcheck rofi/.config/rofi/scripts/*.sh foot/.local/bin/foot-theme
 
   python:
     name: Python syntax (river/init)

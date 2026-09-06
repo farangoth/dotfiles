@@ -12,7 +12,7 @@ stow --delete <package> # remove symlinks
 stow --restow <package> # re-link (useful after adding files)
 ```
 
-**CI** (`.github/workflows/ci.yml`): on every push to `main` and every PR, runs shellcheck on the rofi scripts, luacheck on the nvim Lua config (see `.luacheckrc`), a syntax check of `river/init`, a JSONC sanity check of waybar's config, and a `stow -n` dry-run of every package to catch symlink conflicts before they hit `$HOME`. There's no CD — a dotfiles repo isn't deployed anywhere; `stow` is run by hand on whichever machine you're setting up.
+**CI** (`.github/workflows/ci.yml`): on every push to `main` and every PR, runs shellcheck on the rofi scripts and `foot-theme`, luacheck on the nvim Lua config (see `.luacheckrc`), a syntax check of `river/init`, a JSONC sanity check of waybar's config, and a `stow -n` dry-run of every package to catch symlink conflicts before they hit `$HOME`. There's no CD — a dotfiles repo isn't deployed anywhere; `stow` is run by hand on whichever machine you're setting up.
 
 ## Wayland Desktop Stack
 
@@ -79,6 +79,8 @@ Leader is `Space`.
 Uses oh-my-zsh with `macovsky` theme. Python venvs auto-activated via the `uv` and `python` plugins (`PYTHON_AUTO_VRUN=true`, venv name `.venv`). Secrets sourced from `~/.env_secrets` (not in this repo).
 
 **Minimal profile**: see the `raspi` package, below.
+
+**SSH theme switch**: the `ssh` function wraps the real `ssh`, flipping foot to Catppuccin Latte for the duration of the session and back to whatever `foot.ini` loaded (Macchiato) on exit — so the terminal itself signals "you're on a remote box" independently of anything the remote sends. Implemented via `~/.local/bin/foot-theme` (`foot/.local/bin/foot-theme`), which reads the actual `/usr/share/foot/themes/catppuccin-<name>` file and emits the corresponding OSC 4/10/11 dynamic-color sequences (reset via OSC 104/110/111/112) — nothing hardcoded, so it can't drift from the installed theme. Guarded on `[[ -t 1 ]]` so it never fires when `ssh`'s output is being piped or captured. Needs `allow-passthrough on` in tmux (already set) to reach foot when `ssh` runs inside a pane, since tmux otherwise swallows OSC sequences from programs running in it.
 
 ## Tmux
 
