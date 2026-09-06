@@ -26,8 +26,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias neovim="nvim"
 
-# Catppuccin Latte in foot for the duration of an SSH session, restored to
-# whatever foot.ini loaded (Macchiato) on exit -- see
+# Catppuccin Frappe in foot for the duration of an SSH session, restored
+# to whatever foot.ini loaded (Macchiato) on exit -- see
 # ~/.local/bin/foot-theme. Guarded on -t 1 so it never fires when ssh's
 # output is being piped/captured (git remotes, deploy scripts, etc.) --
 # otherwise the escape sequences would land in whatever's capturing it.
@@ -35,7 +35,7 @@ alias neovim="nvim"
 # these through to foot instead of swallowing them (see tmux.conf).
 ssh() {
     if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
-        foot-theme latte
+        foot-theme frappe
         command ssh "$@"
         local exit_code=$?
         foot-theme reset
