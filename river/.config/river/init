@@ -23,10 +23,6 @@ def spawn_unique(command: str):
     )
 
 
-def test(a: int = 2, b: int = 2):
-    return a + b
-
-
 # parameters & aliases
 MOD = "Super"
 TERM = "foot"
@@ -174,7 +170,7 @@ riverctl(
 
 
 # --- 4. Tags (1-9) ---
-for i in range(1, 10):
+for i in range(1, 5):
     tags = 1 << (i - 1)
     riverctl("map", "normal", MOD, str(i), "set-focused-tags", str(tags))
     riverctl("map", "normal", f"{MOD}+Shift", str(i), "set-view-tags", str(tags))
