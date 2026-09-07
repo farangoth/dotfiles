@@ -34,7 +34,7 @@ To reload the River config: `Super+Shift+C` (re-executes `~/.config/river/init`)
 
 ## Neovim Config
 
-**Package manager**: Native `vim.pack` (Neovim 0.11+ built-in) — not lazy.nvim.
+**Package manager**: Native `vim.pack` (Neovim 0.12+ built-in — confirmed absent on 0.11.4, present on nightly/0.12) — not lazy.nvim.
 
 Entry point: `nvim/.config/nvim/init.lua` loads three modules in order:
 1. `plugins/` — plugin declarations and setup (each file calls `vim.pack.add` then configures)
@@ -45,11 +45,11 @@ Entry point: `nvim/.config/nvim/init.lua` loads three modules in order:
 - `snacks.nvim` — picker (files, grep, LSP navigation), explorer, git UI, zen mode, terminal
 - `blink.cmp` — completion (super-tab preset, LSP/path/snippets/buffer sources)
 - `codecompanion.nvim` — AI integration via Mistral (`MISTRAL_API_KEY` env var required)
-- `mason.nvim` + `mason-lspconfig` — manages LSP servers (lua_ls, ruff, basedpyright, bashls)
+- `mason.nvim` + `mason-lspconfig` — manages LSP servers (lua_ls, ruff, basedpyright, bashls, jsonls, yamlls, taplo, cssls, html)
 - `which-key.nvim` — keymap groups
 - `catppuccin` — colorscheme
 
-**LSP servers** auto-installed by Mason. LSP format-on-save is always active (`BufWritePre`).
+**LSP servers** auto-installed by Mason. LSP format-on-save runs on `BufWritePre`, gated on `vim.g.autoformat` (toggle with `<leader>tf`).
 
 **Adding a new plugin**: Call `vim.pack.add("url")` at the top of the relevant file in `lua/plugins/`, then configure below it. Run `:lua vim.pack.update()` (or `<leader>pu`) to fetch.
 
@@ -72,6 +72,7 @@ Leader is `Space`.
 | `<leader>mt` | Toggle AI chat |
 | `<leader>pu` | Update packages |
 | `<leader>pm` | MasonUpdate |
+| `<leader>tf` | Toggle format-on-save |
 | `H` / `L` | Prev/next buffer |
 
 ## Zsh
