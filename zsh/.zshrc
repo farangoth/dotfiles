@@ -24,6 +24,43 @@ plugins=(
 source $HOME/.env_secrets
 source $ZSH/oh-my-zsh.sh
 
+# ---- extend macovsky's git segment: dirty state + ahead/behind vs upstream,
+# all inside one <branch +> bracket, plain ASCII only (+ ahead, - behind,
+# * dirty). Reads local refs only (no network) -- ahead/behind reflect
+# whatever the last `git fetch` last saw, not a live check.
+function git_prompt_segment() {
+  local ref
+  ref=$(git symbolic-ref --short HEAD 2>/dev/null) || ref=$(git rev-parse --short HEAD 2>/dev/null) || return
+  local status_text lines branch_line flags=""
+  status_text=$(git status --porcelain --branch 2>/dev/null)
+  lines=("${(@f)status_text}")
+  branch_line="${lines[1]}"
+  (( ${#lines} > 1 )) && flags+="*"
+  [[ "$branch_line" == *ahead* ]] && flags+="+"
+  [[ "$branch_line" == *behind* ]] && flags+="-"
+  echo "%{$fg[yellow]%}<${ref}${flags:+ $flags}>%{$reset_color%} "
+}
+PROMPT='%{$fg[green]%}%~%{$reset_color%} $(ruby_prompt_info) $(git_prompt_segment)%{$reset_color%}%B$%b '
+
+# Throttled background `git fetch` so the "-" (behind) flag above catches up
+# on its own instead of only reflecting whatever the last manual fetch saw.
+# Runs at most once every 5 min per repo, in the background, off stdin, so it
+# never blocks the prompt and fails silently (no network, no cached creds)
+# rather than hanging on a credential prompt.
+zmodload zsh/datetime
+autoload -Uz add-zsh-hook
+typeset -gA _git_prompt_last_fetch
+function _git_prompt_maybe_fetch() {
+  local toplevel
+  toplevel=$(git rev-parse --show-toplevel 2>/dev/null) || return
+  local now=$EPOCHSECONDS
+  local last=${_git_prompt_last_fetch[$toplevel]:-0}
+  (( now - last < 300 )) && return
+  _git_prompt_last_fetch[$toplevel]=$now
+  ( git fetch --quiet </dev/null &>/dev/null & ) 2>/dev/null
+}
+add-zsh-hook precmd _git_prompt_maybe_fetch
+
 alias neovim="nvim"
 
 # Catppuccin Frappe in foot for the duration of an SSH session, restored
