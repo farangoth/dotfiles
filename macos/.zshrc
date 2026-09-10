@@ -1,9 +1,16 @@
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+eval "$(/opt/homebrew/bin/brew shellenv)"  # Apple Silicon Homebrew prefix; puts
+                                            # brewed nvim/tmux/fzf/etc. on PATH
+
+export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 export ZSH="$HOME/.oh-my-zsh"
 
 export EDITOR="nvim"
-export TERMINAL="foot"
+# No $TERMINAL: nothing on macOS shells out to it the way river/rofi do on
+# the desktop.
+# No hardcoded SSH_AUTH_SOCK: on macOS this is normally set by whichever SSH
+# agent you run (Secretive, 1Password, or ssh-agent via launchd) -- setting
+# it here would clobber that, the same class of bug the raspi zshrc already
+# avoids for `ssh -A` agent forwarding.
 
 zstyle ':omz:update' mode reminder
 ZSH_THEME="macovsky"
@@ -15,7 +22,6 @@ plugins=(
 	git
 	colored-man-pages
 	python
-	archlinux
     uv
     vi-mode
     fzf-tab
@@ -63,28 +69,35 @@ add-zsh-hook precmd _git_prompt_maybe_fetch
 
 alias neovim="nvim"
 
-# Catppuccin Frappe in foot for the duration of an SSH session, restored
-# to whatever foot.ini loaded (Mocha) on exit -- see
-# ~/.local/bin/foot-theme. Also sets the window title to "SSH: <target>"
-# (cleared back to empty on exit) -- waybar's river/window module shows
-# the title live, so this is a second, textual signal alongside the color
-# switch (Frappe/Mocha are both dark, so the color flip alone is
-# subtler than Latte's was). Guarded on -t 1 so neither fires when ssh's
-# output is being piped/captured (git remotes, deploy scripts, etc.) --
-# otherwise the escape sequences would land in whatever's capturing it.
-# If ssh runs inside tmux, tmux needs `allow-passthrough on` (for
-# foot-theme) and `set-titles on` (for the title) to forward these
-# through to foot instead of swallowing them (see tmux.conf).
+# Catppuccin Frappe in iTerm2 for the duration of an SSH session, restored
+# to Mocha (the "Default" profile) on exit -- via iTerm2's proprietary OSC 50
+# "SetProfile" sequence switching to the "SSH-Frappe" dynamic profile (see
+# ~/Library/Application Support/iTerm2/DynamicProfiles/dotfiles.json), the
+# iTerm2-native equivalent of the desktop's foot-theme script (which reads
+# theme files that don't exist on macOS). Also sets the window title to
+# "SSH: <target>" (cleared back to empty on exit) as a second, textual
+# signal alongside the color switch (Frappe/Mocha are both dark, so the
+# color flip alone is subtler than Latte's was). Guarded on -t 1 so neither
+# fires when ssh's output is being piped/captured (git remotes, deploy
+# scripts, etc.) -- otherwise the escape sequences would land in whatever's
+# capturing it. If ssh runs inside tmux, tmux needs `allow-passthrough on`
+# and `set-titles on` to forward these through to iTerm2 instead of
+# swallowing them (see tmux.conf).
+#
+# NOT verified against a real iTerm2 session -- built from iTerm2's
+# documented OSC 50 SetProfile syntax, not tested live. Confirm the profile
+# actually flips (and that allow-passthrough is enough inside tmux) before
+# relying on it.
 ssh() {
-    if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
+    if [[ -t 1 && "$TERM_PROGRAM" == "iTerm.app" ]]; then
         local target="${@[-1]:-ssh}"  # heuristic: usually the last arg is
                                        # the host, but `ssh host cmd args`
                                        # would show the last arg instead
         printf '\033]2;SSH: %s\033\\' "$target"
-        foot-theme frappe
+        printf '\033]50;SetProfile=SSH-Frappe\a'
         command ssh "$@"
         local exit_code=$?
-        foot-theme reset
+        printf '\033]50;SetProfile=Default\a'
         printf '\033]2;\033\\'
         return $exit_code
     fi
@@ -99,7 +112,7 @@ alias cdi="zi"         # interactive pick via fzf when there are multiple matche
 # ---- fzf (fuzzy finder) ----
 source <(fzf --zsh)
 
-# Catppuccin Mocha, matching foot/tmux/rofi/waybar
+# Catppuccin Mocha, matching tmux and the iTerm2 "Default" profile
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline \
 --color=fg:#cdd6f4,fg+:#cdd6f4,bg:#1e1e2e,bg+:#313244 \
 --color=hl:#f38ba8,hl+:#f38ba8,info:#cba6f7,marker:#f5e0dc \
