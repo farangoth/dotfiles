@@ -3,6 +3,7 @@
     {
       "Name": "Default",
       "Guid": "A13FDE81-2ECE-4BD9-9DB0-33C6259FA770",
+      "Normal Font": "LigaSFMonoNerdFont-Regular 13",
       "Background Color": {
         "Color Space": "sRGB",
         "Red Component": 0.117647,
@@ -145,6 +146,7 @@
     {
       "Name": "SSH-Frappe",
       "Guid": "B93199F1-5C3A-42D5-972F-646A84D8AA14",
+      "Normal Font": "LigaSFMonoNerdFont-Regular 13",
       "Background Color": {
         "Color Space": "sRGB",
         "Red Component": 0.188235,
