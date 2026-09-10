@@ -41,10 +41,10 @@ function git_prompt_segment() {
   status_text=$(git status --porcelain --branch 2>/dev/null)
   lines=("${(@f)status_text}")
   branch_line="${lines[1]}"
-  (( ${#lines} > 1 )) && flags+="* "
-  [[ "$branch_line" == *ahead* ]] && flags+="+ "
-  [[ "$branch_line" == *behind* ]] && flags+="- "
-  echo "%{$fg[yellow]%}<${ref}${flags:+ $flags}>%{$reset_color%} "
+  (( ${#lines} > 1 )) && flags+="*"
+  [[ "$branch_line" == *ahead* ]] && flags+="+"
+  [[ "$branch_line" == *behind* ]] && flags+="-"
+  echo "%{$fg[yellow]%}<.${ref}${flags:+ $flags}.>%{$reset_color%} "
 }
 PROMPT='%{$fg[green]%}%~%{$reset_color%} $(ruby_prompt_info) $(git_prompt_segment)%{$reset_color%}%B$%b '
 
