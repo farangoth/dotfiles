@@ -72,12 +72,19 @@ riverctl("input", TOUCHPAD, "tap", "enabled")
 riverctl("input", TOUCHPAD, "tap-button-map", "left-right-middle")
 riverctl("input", TOUCHPAD, "natural-scroll", "enabled")
 
-KEYBOARD = "keyboard-*"
-riverctl("input", KEYBOARD, "xkb-layout", "gb")
-riverctl("input", KEYBOARD, "xkb-options", "caps:escape")
+# Keyboard layout is global in river, not a per-device `input` property --
+# `xkb-layout`/`xkb-variant`/`xkb-options` aren't valid `input` properties at
+# all (the `input` command only exposes pointer/touch settings: events,
+# accel-profile, tap, natural-scroll, etc, plus map-to-output). The previous
+# per-device calls here (`riverctl input keyboard-* xkb-layout gb`, etc.)
+# were silently no-ops -- riverctl rejects the unknown property but nothing
+# in this script checks subprocess return codes -- so the internal keyboard
+# was never actually getting "gb" + caps:escape. The real, global command:
+riverctl("keyboard-layout", "-options", "caps:escape", "gb")
 
-MAG75_KB = "*_IQUNIX_MG75_BT2_Keyboard"
-riverctl("input", MAG75_KB, "xkb-variant", "mac")
+# No riverctl mechanism exists for a different layout/variant on a specific
+# keyboard (e.g. the IQUNIX MG75's "mac" variant) -- `keyboard-layout` takes
+# no device-id. That needs a lower-level tool (e.g. keyd) outside river.
 
 # --- 3. Keymaps ---
 # river control
