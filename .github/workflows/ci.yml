@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run shellcheck
-        run: shellcheck rofi/.config/rofi/scripts/*.sh foot/.local/bin/foot-theme install.sh
+        run: shellcheck rofi/.config/rofi/scripts/*.sh foot/.local/bin/foot-theme tmux/.local/bin/tmux-dev install.sh
 
   python:
     name: Python syntax (river/init)
@@ -63,3 +63,32 @@ jobs:
             stow -n -v -d "$PWD" -t "$fake_home" "$pkg"
             echo "::endgroup::"
           done
+
+  zsh-syntax:
+    name: Zsh syntax (zshrc's)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+      - name: Syntax-check every zshrc
+        run: |
+          set -e
+          for f in zsh/.zshrc raspi/.zshrc macos/.zshrc; do
+            echo "::group::zsh -n ${f}"
+            zsh -n "$f"
+            echo "::endgroup::"
+          done
+
+  tmux-config:
+    name: Tmux config (parses cleanly)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tmux
+        run: sudo apt-get update && sudo apt-get install -y tmux
+      - name: Load config into a detached session
+        run: |
+          set -e
+          tmux -f tmux/.config/tmux/tmux.conf new-session -d -s ci-check
+          tmux kill-server

@@ -20,25 +20,9 @@ require("mason-lspconfig").setup({
 })
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("my.lsp", {}),
-    callback = function(args)
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = vim.api.nvim_create_augroup("my.lsp", { clear = false }),
-            buffer = args.buf,
-            callback = function()
-                if not vim.g.autoformat then
-                    return
-                end
-                vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
-            end
-        })
-    end,
 
-})
-
-vim.keymap.set("n", "<leader>tf", function()
-    vim.g.autoformat = not vim.g.autoformat
-    vim.notify("format on save: " .. (vim.g.autoformat and "on" or "off"))
-end, { desc = "toggle format on save" })
+-- Format-on-save (gated on vim.g.autoformat, toggled via <leader>tf) lives
+-- in plugins/conform.lua now, not here -- conform.nvim's own
+-- format_on_save with lsp_format="fallback" replaces the BufWritePre/
+-- vim.lsp.buf.format autocmd this file used to set up, so there's one
+-- format-on-save mechanism instead of two potentially competing ones.

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# tmux "dev" profile: nvim + claude + shell, three panes, one directory.
+# Idempotent -- reattaches instead of duplicating if a session already
+# exists for this directory. Session name is derived from the directory's
+# basename, so separate projects get separate sessions.
+#
+# Usage: tmux-dev [dir]   # defaults to $PWD
+set -euo pipefail
+
+dir="${1:-$PWD}"
+name="dev-$(basename "$dir")"
+
+if tmux has-session -t "$name" 2>/dev/null; then
+    exec tmux attach -t "$name"
+fi
+
+tmux new-session -d -s "$name" -c "$dir" -n dev
+tmux send-keys -t "$name:dev" 'nvim' Enter
+tmux split-window -h -t "$name:dev" -c "$dir"
+tmux send-keys -t "$name:dev" 'claude' Enter
+tmux split-window -v -t "$name:dev" -c "$dir"
+tmux select-pane -t "$name:dev.0"
+exec tmux attach -t "$name"

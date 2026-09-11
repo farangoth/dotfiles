@@ -14,10 +14,12 @@ See [`CLAUDE.md`](./CLAUDE.md) for the detailed breakdown of every package and h
 | `nvim` | Neovim config (native `vim.pack`, Neovim 0.12+) — shared by the desktop and macOS |
 | `tmux` | Tmux config — shared by the desktop and macOS |
 | `zsh` | Full oh-my-zsh setup for the desktop |
-| `raspi` | Headless Pi profile — dependency-free nvim, trimmed zsh. **Alternative to `nvim`/`zsh`, not additive** |
+| `raspi` | Headless Pi profile — dependency-free nvim, trimmed zsh. **Alternative to `nvim`/`zsh`, additive with `tmux`** |
 | `macos` | Work laptop profile — zsh adapted for macOS, iTerm2 Catppuccin profiles. **Alternative to `zsh`, additive with `nvim`/`tmux`** |
 
 Theme is [Catppuccin](https://github.com/catppuccin) throughout: **Mocha** on the desktop and macOS, switching to **Frappe** for the duration of any SSH session as a "you're on a remote box" signal.
+
+Every zshrc auto-attaches to a tmux session on interactive login, so tmux's own bindings are the only ones that matter regardless of which terminal (foot, iTerm2) is attached. `dev [dir]` opens a three-pane `nvim`/`claude`/shell session rooted in that directory (`tmux-dev`, shared via the `tmux` package).
 
 ## Setup
 
@@ -38,7 +40,7 @@ stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
 
 **Raspberry Pi (headless, SSH-only):**
 ```sh
-stow raspi
+stow raspi tmux
 ```
 
 **macOS (work laptop):**
