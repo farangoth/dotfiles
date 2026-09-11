@@ -45,9 +45,20 @@ ensure_zsh_login_shell() {
     fi
     local zsh_path
     zsh_path="$(command -v zsh)"
+    # chsh refuses to set a shell that isn't listed in /etc/shells -- on
+    # Debian/Raspberry Pi OS specifically, `apt install zsh` doesn't always
+    # register it there, so chsh below would otherwise fail with "shell
+    # not listed in /etc/shells" and (under set -e) abort this whole
+    # script. Idempotent: no-ops if the line's already there (already the
+    # case on Arch, whose zsh package registers it on install).
+    if ! grep -Fxq "$zsh_path" /etc/shells 2>/dev/null; then
+        echo "==> Registering $zsh_path in /etc/shells (you may be prompted for your password)"
+        echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+    fi
     if [[ "${SHELL:-}" != "$zsh_path" ]]; then
         echo "==> Setting zsh as the default login shell (you may be prompted for your password)"
         chsh -s "$zsh_path"
+        echo "==> Done -- this takes effect on your NEXT login (new SSH connection or terminal), not the current session."
     fi
 }
 
