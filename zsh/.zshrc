@@ -143,13 +143,20 @@ alias neovim="nvim"
 # so running it in the current shell would hijack whatever window you
 # typed `dev` in -- including the main-app-id window Mod+Return manages,
 # switching it away from `main` and breaking that binding's "always shows
-# main" contract. A fresh, untagged window sidesteps that entirely: it
-# gets its own tmux client, so the window you launched `dev` from keeps
-# showing whatever it was already showing. Subshell-backgrounded (same
-# job-control-message-suppression trick as the git-fetch hook above)
-# rather than `&` directly, so no `[1] <pid>` / `[1]+ Done` noise lands in
-# the calling shell.
-dev() { ( foot tmux-dev "${1:-$PWD}" & ) 2>/dev/null; }
+# main" contract. A fresh window sidesteps that entirely: it gets its own
+# tmux client, so the window you launched `dev` from keeps showing
+# whatever it was already showing.
+#
+# Explicitly app-id'd and pinned to tag 1 (river/init's dev-term rule) --
+# an UNtagged window instead inherits whatever tags are currently focused
+# on the output it opens on, and `dev` is normally typed from inside the
+# main terminal, which lives on the hidden tag 256 (see river/init). That
+# would land the new window on tag 256 too, right back in the same
+# always-visible slot Mod+Return is supposed to keep dedicated to `main`.
+# Subshell-backgrounded (same job-control-message-suppression trick as
+# the git-fetch hook above) rather than `&` directly, so no `[1] <pid>` /
+# `[1]+ Done` noise lands in the calling shell.
+dev() { ( foot --app-id=dev-term tmux-dev "${1:-$PWD}" & ) 2>/dev/null; }
 
 # -- always inside tmux -- makes tmux's bindings the only bindings that
 # matter, on both this machine and macOS (iTerm2/foot otherwise diverge on
