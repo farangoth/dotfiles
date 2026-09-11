@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 
 def riverctl(*args):
     """Helper to run riverctl commands."""
-    subprocess.run(["riverctl"] + list(args))
+    subprocess.run(["riverctl"] + list(args), check=False)
 
 
 def spawn(command):
@@ -17,7 +17,9 @@ def spawn_unique(command: str):
     """Helper to spawn only once the processes at the start.
     Used for reload configuration."""
     process_name = command.split()[0]
-    subprocess.run(["pkill", "-x", process_name], stderr=subprocess.DEVNULL)
+    subprocess.run(
+        ["pkill", "-x", process_name], check=False, stderr=subprocess.DEVNULL
+    )
     subprocess.Popen(
         command.split(), stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL
     )
@@ -186,7 +188,7 @@ riverctl(
 
 
 # --- 4. Tags (1-9) ---
-for i in range(1, 9):
+for i in range(1, 10):
     tags = 1 << (i - 1)
     riverctl("map", "normal", MOD, str(i), "set-focused-tags", str(tags))
     riverctl("map", "normal", f"{MOD}+Shift", str(i), "set-view-tags", str(tags))
