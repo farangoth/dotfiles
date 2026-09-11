@@ -33,6 +33,24 @@ require_stow() {
     }
 }
 
+# Every zsh-driven behavior in this repo (tmux auto-attach, the SSH cwd
+# hook, oh-my-zsh itself) is dead weight if zsh isn't actually the login
+# shell -- stowing .zshrc alone does nothing on a box whose account still
+# defaults to bash. chsh normally prompts for the account password
+# interactively, which is fine since this script itself is run by hand.
+ensure_zsh_login_shell() {
+    if ! command -v zsh >/dev/null 2>&1; then
+        echo "install.sh: zsh not found -- install it first (pacman -S zsh / apt install zsh), then re-run this script or run 'chsh -s \$(command -v zsh)' by hand. Without it as the login shell, .zshrc (tmux auto-attach, the SSH cwd hook, etc.) never loads on login." >&2
+        return
+    fi
+    local zsh_path
+    zsh_path="$(command -v zsh)"
+    if [[ "${SHELL:-}" != "$zsh_path" ]]; then
+        echo "==> Setting zsh as the default login shell (you may be prompted for your password)"
+        chsh -s "$zsh_path"
+    fi
+}
+
 # tmux is stowed on every profile, so this runs once at the end rather
 # than being duplicated per-branch. Clones TPM (tmux plugin manager) if
 # it isn't already there, then runs its headless installer so plugins
@@ -58,11 +76,13 @@ desktop)
     echo "==> Desktop (Arch/river) profile"
     require_stow
     stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
+    ensure_zsh_login_shell
     ;;
 pi)
     echo "==> Raspberry Pi (headless) profile"
     require_stow
     stow raspi tmux
+    ensure_zsh_login_shell
     ;;
 macos)
     echo "==> macOS (work laptop) profile"

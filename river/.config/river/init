@@ -207,6 +207,11 @@ riverctl("rule-add", "-app-id", "term-float", "dimensions", "800", "600")
 riverctl("rule-add", "-app-id", "com.saivert.pwvucontrol", "float")
 riverctl("rule-add", "-app-id", "firefox", "tags", "4")
 riverctl("rule-add", "-app-id", "main", "tags", str(MAIN_TERM_TAG))
+# `dev` (zsh) spawns its window with this app-id specifically so it always
+# lands on a normal, visible tag rather than inheriting whatever's
+# currently focused -- which, launched from inside the main terminal,
+# would otherwise be the hidden tag above (see MAIN_TERM_TAG).
+riverctl("rule-add", "-app-id", "dev-term", "tags", "1")
 riverctl("default-attach-mode", "below")
 
 
