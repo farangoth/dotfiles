@@ -95,10 +95,18 @@ ssh() {
                                        # would show the last arg instead
         printf '\033]2;SSH: %s\033\\' "$target"
         printf '\033]50;SetProfile=SSH-Frappe\a'
+        # Also rename the tmux window itself, not just the outer terminal
+        # title -- the title is one shared string for the whole terminal,
+        # so it doesn't distinguish which tmux window you're looking at.
+        # Re-enabling automatic-rename after exit lets it resume tracking
+        # the running command as normal; if you'd manually renamed this
+        # window yourself before connecting, that manual name is lost.
+        [[ -n "$TMUX" ]] && tmux rename-window "ssh:$target"
         command ssh "$@"
         local exit_code=$?
         printf '\033]50;SetProfile=Default\a'
         printf '\033]2;\033\\'
+        [[ -n "$TMUX" ]] && tmux set-window-option automatic-rename on
         return $exit_code
     fi
     command ssh "$@"
@@ -148,3 +156,14 @@ zstyle ':fzf-tab:*' continuous-trigger '/'
 
 # optional: lightweight (non-bat) preview just for cd completion
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=auto $realpath'
+
+dev() { tmux-dev "${1:-$PWD}"; }
+
+# -- always inside tmux -- makes tmux's bindings the only bindings that
+# matter, on both this machine and Arch/river (iTerm2/foot otherwise
+# diverge on native tab/pane shortcuts neither shares). Skips
+# non-interactive shells, anything without a real tty (script/cron
+# contexts), and shells already inside tmux (no nesting).
+if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
+    tmux attach -t main || tmux new -s main
+fi

@@ -57,13 +57,21 @@ add-zsh-hook precmd _git_prompt_maybe_fetch
 # -- conditional theme on ssh --
 ssh() {
     if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
-        local target="${@[-1]:-ssh}"  
+        local target="${@[-1]:-ssh}"
         printf '\033]2;SSH: %s\033\\' "$target"
         foot-theme frappe
+        # Also rename the tmux window itself, not just the outer terminal
+        # title -- the title is one shared string for the whole terminal,
+        # so it doesn't distinguish which tmux window you're looking at.
+        # Re-enabling automatic-rename after exit lets it resume tracking
+        # the running command as normal; if you'd manually renamed this
+        # window yourself before connecting, that manual name is lost.
+        [[ -n "$TMUX" ]] && tmux rename-window "ssh:$target"
         command ssh "$@"
         local exit_code=$?
         foot-theme reset
         printf '\033]2;\033\\'
+        [[ -n "$TMUX" ]] && tmux set-window-option automatic-rename on
         return $exit_code
     fi
     command ssh "$@"
@@ -113,3 +121,13 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=auto 
 
 # -- aliases --
 alias neovim="nvim"
+dev() { tmux-dev "${1:-$PWD}"; }
+
+# -- always inside tmux -- makes tmux's bindings the only bindings that
+# matter, on both this machine and macOS (iTerm2/foot otherwise diverge on
+# native tab/pane shortcuts neither shares). Skips non-interactive shells,
+# anything without a real tty (script/cron contexts), and shells already
+# inside tmux (no nesting).
+if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
+    tmux attach -t main || tmux new -s main
+fi

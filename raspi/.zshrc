@@ -29,3 +29,10 @@ plugins=(
 source "$ZSH/oh-my-zsh.sh"
 
 alias neovim="nvim"
+
+# -- always inside tmux -- the classic benefit here: an SSH session that
+# drops doesn't lose your work, just reattach. Skips non-interactive
+# shells, anything without a real tty, and shells already inside tmux.
+if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
+    tmux attach -t main || tmux new -s main
+fi
