@@ -83,6 +83,7 @@ Leader is `Space`.
 | `<leader>tb` | Toggle inline git blame |
 | `]h` / `[h` | Next/prev git hunk |
 | `<leader>st` | Search TODO comments (quickfix) |
+| `<leader>rt` | Add a TODO comment (commented per filetype, drops into insert) |
 | `H` / `L` | Prev/next buffer |
 
 ## Zsh
