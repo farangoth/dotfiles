@@ -163,7 +163,12 @@ dev() { tmux-dev "${1:-$PWD}"; }
 # matter, on both this machine and Arch/river (iTerm2/foot otherwise
 # diverge on native tab/pane shortcuts neither shares). Skips
 # non-interactive shells, anything without a real tty (script/cron
-# contexts), and shells already inside tmux (no nesting).
+# contexts), and shells already inside tmux (no nesting). `exec`, not a
+# plain call, so once the session ends there's no shell left to fall
+# back to -- iTerm2's child process just ends, closing the window
+# instead of leaving a bare prompt behind (see zsh/.zshrc for the live
+# confirmation of exec vs non-exec here). `new-session -A` attaches if
+# `main` exists or creates it, atomically.
 if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
-    tmux attach -t main || tmux new -s main
+    exec tmux new-session -A -s main
 fi

@@ -33,6 +33,12 @@ alias neovim="nvim"
 # -- always inside tmux -- the classic benefit here: an SSH session that
 # drops doesn't lose your work, just reattach. Skips non-interactive
 # shells, anything without a real tty, and shells already inside tmux.
+# `exec`, not a plain call, so once `main` ends there's no remote shell
+# left to fall back to -- the SSH connection itself closes (standard SSH
+# behavior once the remote command exits) instead of dropping you into a
+# bare remote prompt (see zsh/.zshrc for the live confirmation of exec vs
+# non-exec here). `new-session -A` attaches if `main` exists or creates
+# it, atomically.
 if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
-    tmux attach -t main || tmux new -s main
+    exec tmux new-session -A -s main
 fi

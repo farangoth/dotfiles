@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Mod+Return: reveal the "main" tmux terminal if a term-main-tagged foot
+# window already exists somewhere, otherwise spawn one. river/init pins
+# term-main to tag 256 (bit 8) -- one of the tags above 1-8, so it's never
+# reachable via Mod+1..8 and never included in Mod+0's "all tags" -- making
+# it a dedicated, hidden slot this script alone drives via
+# `set-focused-tags`, the same "jump to a known window" idiom the Firefox
+# rule already uses for tag 4. riverctl has no "does a window with this
+# app-id exist" query, so pgrep against the running process list is the
+# best available proxy. Spawning a plain `foot --app-id=term-main` is
+# enough to get "main" attached: zsh's own tmux auto-attach
+# (`exec tmux new-session -A -s main`) does the actual attach-or-create,
+# so this script doesn't need to duplicate that logic.
+set -euo pipefail
+
+APP_ID="term-main"
+TAG=256
+
+if ! pgrep -f "app-id=$APP_ID" >/dev/null; then
+    foot --app-id="$APP_ID" &
+fi
+
+riverctl set-focused-tags "$TAG"

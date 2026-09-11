@@ -25,12 +25,19 @@ def spawn_unique(command: str):
 
 # parameters & aliases
 MOD = "Super"
-TERM = "foot"
 FILEBROWSER = "thunar"
 WEBBROWSER = "firefox"
 VOLUME_MIXER = "wpctl"
 
 RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
+# Absolute path, not a bare command name -- river spawns this outside a
+# login shell, so PATH may not include ~/.local/bin the way zsh's does.
+TOGGLE_MAIN_TERM = f"{os.path.expanduser('~')}/.local/bin/toggle-main-term"
+# Tag 256 (bit 8) is above the Mod+1..8-reachable range (bits 0-7) and
+# outside Mod+0's "all tags" bitmask below, so it's a hidden slot only
+# TOGGLE_MAIN_TERM's `riverctl set-focused-tags` ever switches to --
+# the same dedicated-tag idiom the firefox rule below uses for tag 4.
+MAIN_TERM_TAG = 256
 
 PADDING = 8
 XCURSOR_THEME = "catppuccin-mocha-light-cursors"
@@ -151,7 +158,9 @@ riverctl(
     f"{VOLUME_MIXER} set-mute @DEFAULT_SOURCE@ toggle",
 )
 # apps
-riverctl("map", "normal", MOD, "Return", "spawn", TERM)
+# Reveal the main tmux terminal if it's already open somewhere, else spawn
+# it -- see toggle-main-term and MAIN_TERM_TAG above.
+riverctl("map", "normal", MOD, "Return", "spawn", TOGGLE_MAIN_TERM)
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
 
 # screenshots (piped to clipboard; cliphist picks them up automatically)
@@ -195,6 +204,7 @@ riverctl("rule-add", "-app-id", "term-float", "float")
 riverctl("rule-add", "-app-id", "term-float", "dimensions", "800", "600")
 riverctl("rule-add", "-app-id", "com.saivert.pwvucontrol", "float")
 riverctl("rule-add", "-app-id", "firefox", "tags", "4")
+riverctl("rule-add", "-app-id", "term-main", "tags", str(MAIN_TERM_TAG))
 riverctl("default-attach-mode", "below")
 
 
