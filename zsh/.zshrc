@@ -121,7 +121,18 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=auto 
 
 # -- aliases --
 alias neovim="nvim"
-dev() { tmux-dev "${1:-$PWD}"; }
+# Spawns a new foot window rather than running tmux-dev inline: tmux-dev
+# ends by attaching/switching the CALLING client to the dev-<dir> session,
+# so running it in the current shell would hijack whatever window you
+# typed `dev` in -- including the term-main window Mod+Return manages,
+# switching it away from `main` and breaking that binding's "always shows
+# main" contract. A fresh, untagged window sidesteps that entirely: it
+# gets its own tmux client, so the window you launched `dev` from keeps
+# showing whatever it was already showing. Subshell-backgrounded (same
+# job-control-message-suppression trick as the git-fetch hook above)
+# rather than `&` directly, so no `[1] <pid>` / `[1]+ Done` noise lands in
+# the calling shell.
+dev() { ( foot tmux-dev "${1:-$PWD}" & ) 2>/dev/null; }
 
 # -- always inside tmux -- makes tmux's bindings the only bindings that
 # matter, on both this machine and macOS (iTerm2/foot otherwise diverge on
