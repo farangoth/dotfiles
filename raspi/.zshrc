@@ -30,6 +30,13 @@ source "$ZSH/oh-my-zsh.sh"
 
 alias neovim="nvim"
 
+# Dedicated tmux session for Claude Code (tmux-claude, this package's own
+# script -- see there for the idempotent attach-or-create logic, mirroring
+# tmux/.local/bin/tmux-dev's pattern). Named `cc`, not `claude`, so it
+# doesn't shadow the real `claude` binary -- typing `claude` directly here
+# still just runs the CLI in the current shell/pane.
+cc() { tmux-claude "${1:-$PWD}"; }
+
 # -- report cwd via the window title, for whoever's ssh'd into this box --
 # tmux can only read pane_current_path off its own local pty, so a pane
 # running `ssh` always shows wherever `ssh` itself was launched FROM, never

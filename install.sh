@@ -45,18 +45,31 @@ ensure_zsh_login_shell() {
     fi
     local zsh_path
     zsh_path="$(command -v zsh)"
+    # chsh refuses to set a shell that isn't listed in /etc/shells -- on
+    # Debian/Raspberry Pi OS specifically, `apt install zsh` doesn't always
+    # register it there, so chsh below would otherwise fail with "shell
+    # not listed in /etc/shells" and (under set -e) abort this whole
+    # script. Idempotent: no-ops if the line's already there (already the
+    # case on Arch, whose zsh package registers it on install).
+    if ! grep -Fxq "$zsh_path" /etc/shells 2>/dev/null; then
+        echo "==> Registering $zsh_path in /etc/shells (you may be prompted for your password)"
+        echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+    fi
     if [[ "${SHELL:-}" != "$zsh_path" ]]; then
         echo "==> Setting zsh as the default login shell (you may be prompted for your password)"
         chsh -s "$zsh_path"
+        echo "==> Done -- this takes effect on your NEXT login (new SSH connection or terminal), not the current session."
     fi
 }
 
-# tmux is stowed on every profile, so this runs once at the end rather
-# than being duplicated per-branch. Clones TPM (tmux plugin manager) if
-# it isn't already there, then runs its headless installer so plugins
-# (tmux-which-key) are ready without a manual `prefix + I` -- tmux.conf's
-# own `if "test -f ...tpm/tpm"` guard is what keeps sourcing the config
-# safe before this has ever run (a fresh checkout, or CI).
+# Only desktop/macos stow the shared tmux package (which uses TPM) --
+# raspi has its own plugin-free tmux config (raspi/.config/tmux), so this
+# is called from those two branches specifically, not unconditionally.
+# Clones TPM (tmux plugin manager) if it isn't already there, then runs
+# its headless installer so plugins (tmux-which-key) are ready without a
+# manual `prefix + I` -- tmux.conf's own `if "test -f ...tpm/tpm"` guard
+# is what keeps sourcing the config safe before this has ever run (a
+# fresh checkout, or CI).
 setup_tmux_plugins() {
     local tpm_dir="$HOME/.config/tmux/plugins/tpm"
     if [[ ! -d "$tpm_dir" ]]; then
@@ -77,11 +90,12 @@ desktop)
     require_stow
     stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
     ensure_zsh_login_shell
+    setup_tmux_plugins
     ;;
 pi)
     echo "==> Raspberry Pi (headless) profile"
     require_stow
-    stow raspi tmux
+    stow raspi
     ensure_zsh_login_shell
     ;;
 macos)
@@ -93,13 +107,12 @@ macos)
     brew bundle --file=Brewfile
     stow nvim tmux macos
     echo "Note: oh-my-zsh isn't brew-installable -- install it separately if not already present."
+    setup_tmux_plugins
     ;;
 *)
     echo "install.sh: unknown profile '$profile' (expected desktop, pi, or macos)" >&2
     exit 1
     ;;
 esac
-
-setup_tmux_plugins
 
 echo "==> Done."

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Dedicated "claude" tmux session -- single pane running Claude Code,
+# rooted in the given directory ($PWD if omitted). Idempotent -- reattaches
+# instead of duplicating if the session already exists. Mirrors tmux-dev's
+# attach_client pattern (tmux/.local/bin/tmux-dev, the desktop/macOS `dev`
+# profile launcher) but for one focused session instead of a three-pane
+# nvim+claude+shell layout -- raspi doesn't have `dev` at all, this is
+# narrower on purpose.
+#
+# Usage: tmux-claude [dir]   # defaults to $PWD
+set -euo pipefail
+
+dir="${1:-$PWD}"
+name="claude"
+
+# Every interactive shell auto-attaches to a `main` tmux session on login
+# (see raspi/.zshrc), so $TMUX is normally already set by the time this
+# runs -- attaching a second client from inside an existing one is exactly
+# the nesting tmux refuses by default ("sessions should be nested with
+# care"). switch-client changes what the *current* client is looking at
+# instead of opening a new nested one; plain attach still covers running
+# this from outside tmux entirely.
+attach_client() {
+    if [ -n "${TMUX:-}" ]; then
+        tmux switch-client -t "$1"
+    else
+        exec tmux attach -t "$1"
+    fi
+}
+
+if tmux has-session -t "$name" 2>/dev/null; then
+    attach_client "$name"
+    exit 0
+fi
+
+tmux new-session -d -s "$name" -c "$dir" -n claude
+tmux send-keys -t "$name:claude" 'claude' Enter
+attach_client "$name"
