@@ -77,6 +77,23 @@ ssh() {
     command ssh "$@"
 }
 
+# -- report cwd via the window title, for whoever's ssh'd into this box --
+# tmux can only read pane_current_path off its own local pty, so a pane
+# running `ssh` always shows wherever `ssh` itself was launched FROM, never
+# wherever `cd` takes you on the far end -- there's no way for the local
+# tmux to inspect a remote shell's cwd directly. OSC 2 (window title)
+# sidesteps that: it's just bytes in the pty stream, so it crosses the ssh
+# connection like any other terminal escape sequence and updates the
+# *local* pane's title (tmux's pane_title) same as if it came from a local
+# program. The status bar's SSH-branch cwd pill reads #{pane_title} instead
+# of #{pane_current_path} for exactly this reason (see tmux.conf). Defined
+# as a bare `chpwd` (not add-zsh-hook) -- zsh calls any function with that
+# exact name automatically on every directory change and once at shell
+# startup, no registration needed. Guarded on -t 1 so it doesn't leak
+# escape codes into piped/captured output, matching the ssh() function's
+# own guard above.
+chpwd() { [[ -t 1 ]] && printf '\033]2;%s\033\\' "$PWD"; }
+
 # ---- zoxide (smarter cd) ----
 eval "$(zoxide init zsh)"
 alias cd="z" 
