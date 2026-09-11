@@ -127,7 +127,18 @@ dev() { tmux-dev "${1:-$PWD}"; }
 # matter, on both this machine and macOS (iTerm2/foot otherwise diverge on
 # native tab/pane shortcuts neither shares). Skips non-interactive shells,
 # anything without a real tty (script/cron contexts), and shells already
-# inside tmux (no nesting).
+# inside tmux (no nesting). `exec` (not a plain call) so that once the
+# session ends -- its last window closed, which already destroys the
+# session by itself -- there's no shell left for control to fall back to:
+# the terminal's child process just ends, closing the window instead of
+# leaving a bare prompt behind. Confirmed live: without exec, a wrapper
+# shell resumes after tmux exits (real output observed); with exec, it
+# doesn't -- nothing runs after tmux exits, because there's no process
+# left to run it. `new-session -A` attaches if `main` exists or creates
+# it otherwise, in one atomic command instead of two (no window where the
+# first `tmux attach` has already failed but the second `tmux new` hasn't
+# run yet, which could race a second shell doing the same thing into
+# creating a duplicate session).
 if [[ -z "$TMUX" && -o interactive && -t 1 ]]; then
-    tmux attach -t main || tmux new -s main
+    exec tmux new-session -A -s main
 fi
