@@ -1,3 +1,6 @@
-.luarc.json
 nvim-pack-lock.json
 __pycache__/
+
+# never committed; sourced from $HOME directly, not part of any stow
+# package, but this is cheap defense-in-depth
+.env_secrets
