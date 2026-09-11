@@ -141,7 +141,7 @@ alias neovim="nvim"
 # Spawns a new foot window rather than running tmux-dev inline: tmux-dev
 # ends by attaching/switching the CALLING client to the dev-<dir> session,
 # so running it in the current shell would hijack whatever window you
-# typed `dev` in -- including the term-main window Mod+Return manages,
+# typed `dev` in -- including the main-app-id window Mod+Return manages,
 # switching it away from `main` and breaking that binding's "always shows
 # main" contract. A fresh, untagged window sidesteps that entirely: it
 # gets its own tmux client, so the window you launched `dev` from keeps
