@@ -42,14 +42,20 @@ Entry point: `nvim/.config/nvim/init.lua` loads three modules in order:
 3. `custom/` — personal overrides
 
 **Key plugins:**
-- `snacks.nvim` — picker (files, grep, LSP navigation), explorer, git UI, zen mode, terminal
+- `snacks.nvim` — picker (files, grep, LSP navigation), explorer, git UI, zen mode, terminal, notifier (`vim.notify` UI)
 - `blink.cmp` — completion (super-tab preset, LSP/path/snippets/buffer sources)
 - `codecompanion.nvim` — AI integration via Mistral (`MISTRAL_API_KEY` env var required)
 - `mason.nvim` + `mason-lspconfig` — manages LSP servers (lua_ls, ruff, basedpyright, bashls, jsonls, yamlls, taplo, cssls, html)
+- `conform.nvim` — formatting (stylua for lua, shfmt for sh/bash, falls back to the LSP formatter for everything else)
+- `gitsigns.nvim` — inline hunk signs, staging/reset/preview, inline blame toggle
+- `nvim-surround` — add/change/delete surrounding pairs
+- `todo-comments.nvim` — highlights + quickfix listing of TODO/FIXME/HACK comments
 - `which-key.nvim` — keymap groups
 - `catppuccin` — colorscheme
 
-**LSP servers** auto-installed by Mason. LSP format-on-save runs on `BufWritePre`, gated on `vim.g.autoformat` (toggle with `<leader>tf`).
+**LSP servers** auto-installed by Mason. **Formatters** (stylua, shfmt) are not — install with `:MasonInstall stylua shfmt` or the system package manager, since `mason-lspconfig`'s `ensure_installed` only covers LSP servers.
+
+**Format-on-save** lives in `plugins/conform.lua`, not `plugins/lsp.lua` — conform's own `format_on_save` (gated on `vim.g.autoformat`, toggle with `<leader>tf`) with `lsp_format = "fallback"` replaced the old `LspAttach`/`BufWritePre`/`vim.lsp.buf.format` autocmd in `lsp.lua`, so there's one format-on-save mechanism instead of two that could compete.
 
 **Adding a new plugin**: Call `vim.pack.add("url")` at the top of the relevant file in `lua/plugins/`, then configure below it. Run `:lua vim.pack.update()` (or `<leader>pu`) to fetch.
 
@@ -73,6 +79,10 @@ Leader is `Space`.
 | `<leader>pu` | Update packages |
 | `<leader>pm` | MasonUpdate |
 | `<leader>tf` | Toggle format-on-save |
+| `<leader>gp` / `ga` / `gr` | Preview / stage / reset git hunk |
+| `<leader>tb` | Toggle inline git blame |
+| `]h` / `[h` | Next/prev git hunk |
+| `<leader>st` | Search TODO comments (quickfix) |
 | `H` / `L` | Prev/next buffer |
 
 ## Zsh

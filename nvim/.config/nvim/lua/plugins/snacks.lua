@@ -9,6 +9,7 @@ Snacks.setup({
     dim = { animate = { enabled = false } },
     explorer = { enabled = true },
     statuscolumn = { enabled = true },
+    notifier = { enabled = true },
     indent = {
         animate = {
             enabled = false,
