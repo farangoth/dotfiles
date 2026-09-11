@@ -51,6 +51,8 @@ stow nvim tmux macos
 ```
 (oh-my-zsh isn't brew-installable — install it separately, then stow.)
 
+Doing it by hand also skips `install.sh`'s tmux plugin bootstrap (clones [TPM](https://github.com/tmux-plugins/tpm) and installs [tmux-which-key](https://github.com/alexwforsythe/tmux-which-key) headlessly) — install TPM yourself and press `prefix + I` inside tmux instead.
+
 Re-run with `stow --restow <package>` after adding files to a package, or `stow --delete <package>` to unlink.
 
 `raspi` and `zsh` target the same `~/.zshrc` and are **alternatives** — never stow both on the same machine (`stow` will refuse). Same for `raspi` and `nvim` on `~/.config/nvim`.
