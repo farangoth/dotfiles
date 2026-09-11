@@ -23,11 +23,15 @@ Every zshrc auto-attaches to a tmux session on interactive login, so tmux's own 
 
 ## Setup
 
-Clone this repo, then pick the packages for the machine you're on:
+Clone this repo, then run the bootstrap script — it detects which of the three machines you're on (`uname`, plus a Raspberry Pi check via `/proc/cpuinfo`/`/proc/device-tree/model`) and runs the right `stow`/`brew bundle` commands, or take an explicit profile if you'd rather not rely on auto-detection:
 
 ```sh
 git clone <repo-url> ~/dotfiles && cd ~/dotfiles
+./install.sh                  # auto-detects desktop/pi/macos
+./install.sh desktop|pi|macos # or pick explicitly
 ```
+
+What each profile actually runs, if you'd rather do it by hand (or `install.sh` can't detect your machine):
 
 **Arch desktop:**
 ```sh
