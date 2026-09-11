@@ -4,9 +4,8 @@
     "height": 32,
     // "width": 1280,
     "spacing": 0,
-
     "modules-left": [
-	    "river/tags"
+        "river/tags"
     ],
     "modules-center": [
         "river/window"
@@ -32,17 +31,17 @@
             "6",
             "7",
             "8",
-            "9"
+            "9 : \uf120 "
         ]
     },
     "bluetooth": {
-	// "controller": "controller1", // specify the alias of the controller if there are more than 1 on the system
-    	"format": " 0",
-    	"format-disabled": "", // an empty format will hide the module
-    	"format-connected": " {num_connections}",
-    	"tooltip-format": "{controller_alias}\t{controller_address}",
-    	"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-    	"tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        // "controller": "controller1", // specify the alias of the controller if there are more than 1 on the system
+        "format": " 0",
+        "format-disabled": "", // an empty format will hide the module
+        "format-connected": " {num_connections}",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         "on-click-right": "~/.config/rofi/scripts/bluetooth.sh",
         "on-click-middle": "foot --app-id=term-float bluetoothctl"
     },
@@ -90,7 +89,7 @@
     // },
     "tray": {
         // "icon-size": 21,
-        "spacing": 10,
+        "spacing": 10
         // "icons": {
         //   "blueman": "bluetooth",
         //   "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
@@ -119,7 +118,17 @@
     "backlight": {
         // "device": "acpi_video1",
         "format": "{percent}% {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", ""]
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
     "battery": {
         "states": {
@@ -134,7 +143,13 @@
         "format-alt": "{time} {icon}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
     // "power-profiles-daemon": {
     //   "format": "{icon}",
@@ -173,7 +188,11 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click-right": "pwvucontrol"
     },
