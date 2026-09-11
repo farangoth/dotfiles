@@ -90,5 +90,12 @@ jobs:
       - name: Load config into a detached session
         run: |
           set -e
-          tmux -f tmux/.config/tmux/tmux.conf new-session -d -s ci-check
+          # `new-session -f <conf>` swallows config parse errors -- it exits 0
+          # even when a line fails (e.g. an unknown option value), since tmux
+          # only reports that on an interactive attach. `source-file` against
+          # an already-running session does propagate a nonzero exit and
+          # print the offending line, so start bare and source the real
+          # config as a second step to actually catch parse errors here.
+          tmux -f /dev/null new-session -d -s ci-check
+          tmux source-file tmux/.config/tmux/tmux.conf
           tmux kill-server
