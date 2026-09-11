@@ -33,8 +33,8 @@ fi
 
 tmux new-session -d -s "$name" -c "$dir" -n dev
 tmux send-keys -t "$name:dev" 'nvim' Enter
-tmux split-window -h -t "$name:dev" -c "$dir"
+tmux split-window -h -p 30 -t "$name:dev" -c "$dir"
 tmux send-keys -t "$name:dev" 'claude' Enter
 tmux split-window -v -t "$name:dev" -c "$dir"
-tmux select-pane -t "$name:dev.0"
+tmux select-pane -t "$name:dev.{top-left}"
 attach_client "$name"
