@@ -12,6 +12,8 @@ stow --delete <package> # remove symlinks
 stow --restow <package> # re-link (useful after adding files)
 ```
 
+`install.sh` (repo root) wraps this: detects which of the three machines (desktop/pi/macos) it's running on and stows/`brew bundle`s the right set, or takes an explicit `./install.sh desktop|pi|macos`.
+
 **CI** (`.github/workflows/ci.yml`): on every push to `main` and every PR, runs shellcheck on the rofi scripts and `foot-theme`, luacheck on the nvim Lua config (see `.luacheckrc`), a syntax check of `river/init`, a JSONC sanity check of waybar's config, and a `stow -n` dry-run of every package to catch symlink conflicts before they hit `$HOME`. There's no CD — a dotfiles repo isn't deployed anywhere; `stow` is run by hand on whichever machine you're setting up.
 
 ## Wayland Desktop Stack
