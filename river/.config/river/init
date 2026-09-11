@@ -35,11 +35,13 @@ RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 # Absolute path, not a bare command name -- river spawns this outside a
 # login shell, so PATH may not include ~/.local/bin the way zsh's does.
 TOGGLE_MAIN_TERM = f"{os.path.expanduser('~')}/.local/bin/toggle-main-term"
-# Tag 256 (bit 8) is above the Mod+1..8-reachable range (bits 0-7) and
-# outside Mod+0's "all tags" bitmask below, so it's a hidden slot only
-# TOGGLE_MAIN_TERM's `riverctl set-focused-tags` ever switches to --
-# the same dedicated-tag idiom the firefox rule below uses for tag 4.
-MAIN_TERM_TAG = 256
+# Tag 5 -- a normal, keyboard-reachable tag (also switchable directly via
+# Mod+5), unlike the hidden tag-above-8 approach used for a while here.
+# Mod+Return still adds its own value on top of plain Mod+5: it spawns the
+# window if it isn't running yet, and merges tag 5 into the current view
+# via `toggle-focused-tags` instead of replacing it outright (see
+# TOGGLE_MAIN_TERM below).
+MAIN_TERM_TAG = 1 << (5 - 1)
 
 PADDING = 8
 XCURSOR_THEME = "catppuccin-mocha-light-cursors"
@@ -208,9 +210,9 @@ riverctl("rule-add", "-app-id", "com.saivert.pwvucontrol", "float")
 riverctl("rule-add", "-app-id", "firefox", "tags", "4")
 riverctl("rule-add", "-app-id", "main", "tags", str(MAIN_TERM_TAG))
 # `dev` (zsh) spawns its window with this app-id specifically so it always
-# lands on a normal, visible tag rather than inheriting whatever's
-# currently focused -- which, launched from inside the main terminal,
-# would otherwise be the hidden tag above (see MAIN_TERM_TAG).
+# lands on tag 1 rather than inheriting whatever's currently focused --
+# which, launched from inside the main terminal, would otherwise be tag 5
+# (see MAIN_TERM_TAG), mixing dev sessions into the main terminal's tag.
 riverctl("rule-add", "-app-id", "dev-term", "tags", "1")
 riverctl("default-attach-mode", "below")
 
