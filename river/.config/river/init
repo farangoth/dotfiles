@@ -206,7 +206,7 @@ riverctl("rule-add", "-app-id", "term-float", "float")
 riverctl("rule-add", "-app-id", "term-float", "dimensions", "800", "600")
 riverctl("rule-add", "-app-id", "com.saivert.pwvucontrol", "float")
 riverctl("rule-add", "-app-id", "firefox", "tags", "4")
-riverctl("rule-add", "-app-id", "term-main", "tags", str(MAIN_TERM_TAG))
+riverctl("rule-add", "-app-id", "main", "tags", str(MAIN_TERM_TAG))
 riverctl("default-attach-mode", "below")
 
 
