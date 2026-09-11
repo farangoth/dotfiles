@@ -35,7 +35,7 @@ function git_prompt_segment() {
   (( ${#lines} > 1 )) && flags+="*"
   [[ "$branch_line" == *ahead* ]] && flags+="+"
   [[ "$branch_line" == *behind* ]] && flags+="-"
-  echo "%{$fg[yellow]%}<${ref}${flags:+ $flags} >%{$reset_color%} "
+  echo "%{$fg[yellow]%}< ${ref}${flags:+ $flags} >%{$reset_color%} "
 }
 PROMPT='%{$fg[green]%}%~%{$reset_color%} $(ruby_prompt_info) $(git_prompt_segment)%{$reset_color%}%B$%b '
 
