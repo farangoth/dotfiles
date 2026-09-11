@@ -100,9 +100,9 @@ export FZF_ALT_C_OPTS="--height=100% --preview='eza --tree --level=2 --color=alw
 
 # ---- eza (ls replacement) ----
 alias ls="eza --icons=never --group-directories-first"
-alias ll="eza --icons=auto --group-directories-first --git -l"
-alias la="eza --icons=auto --group-directories-first --git -la"
-alias lt="eza --icons=auto --group-directories-first --git --tree --level=2"
+alias ll="eza --icons=never --group-directories-first --git -l"
+alias la="eza --icons=never --group-directories-first --git -la"
+alias lt="eza --icons=never --group-directories-first --git --tree --level=2"
 
 # ---- native zsh completion settings fzf-tab expects ----
 zstyle ':completion:*' menu no                          # let fzf-tab take over, don't fight it with the default menu
