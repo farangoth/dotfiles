@@ -10,8 +10,25 @@ set -euo pipefail
 dir="${1:-$PWD}"
 name="dev-$(basename "$dir")"
 
+# Every interactive shell auto-attaches to a `main` tmux session on login
+# (see zsh/.zshrc), so $TMUX is normally already set by the time `dev` runs
+# -- attaching a second client from inside an existing one is exactly the
+# nesting tmux refuses by default ("sessions should be nested with care").
+# switch-client changes what the *current* client is looking at instead of
+# opening a new nested one, which is what's wanted here; plain attach still
+# covers running this from outside tmux entirely (e.g. a fresh SSH login
+# before the auto-attach guard's shell has started tmux).
+attach_client() {
+    if [ -n "${TMUX:-}" ]; then
+        tmux switch-client -t "$1"
+    else
+        exec tmux attach -t "$1"
+    fi
+}
+
 if tmux has-session -t "$name" 2>/dev/null; then
-    exec tmux attach -t "$name"
+    attach_client "$name"
+    exit 0
 fi
 
 tmux new-session -d -s "$name" -c "$dir" -n dev
@@ -20,4 +37,4 @@ tmux split-window -h -t "$name:dev" -c "$dir"
 tmux send-keys -t "$name:dev" 'claude' Enter
 tmux split-window -v -t "$name:dev" -c "$dir"
 tmux select-pane -t "$name:dev.0"
-exec tmux attach -t "$name"
+attach_client "$name"
