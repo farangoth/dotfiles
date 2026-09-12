@@ -179,12 +179,17 @@ ssh() {
 chpwd() { [[ -t 1 ]] && printf '\033]2;%s\033\\' "$PWD"; }
 
 # ---- zoxide (smarter cd) ----
-eval "$(zoxide init zsh)"
-alias cd="z" 
-alias cdi="zi"
+# Guarded like tmux-ssh/foot-theme above -- without it, a machine missing
+# zoxide would break plain `cd` for the whole session (the alias below
+# shadows it unconditionally), not just zoxide's own features.
+if (( $+commands[zoxide] )); then
+    eval "$(zoxide init zsh)"
+    alias cd="z"
+    alias cdi="zi"
+fi
 
 # ---- fzf (fuzzy finder) ----
-source <(fzf --zsh)
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 # Catppuccin Mocha, matching foot/tmux/rofi/waybar
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline \
