@@ -1,6 +1,11 @@
 nvim-pack-lock.json
 __pycache__/
 
+# personal wallpaper image -- not repo content (was a 2.2MB committed
+# binary); river/init reads this from disk at startup if present, but the
+# repo ships none. Drop your own wallpaper.png here after stowing `river`.
+river/.config/river/wallpaper.png
+
 # never committed; sourced from $HOME directly, not part of any stow
 # package, but this is cheap defense-in-depth
 .env_secrets

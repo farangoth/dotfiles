@@ -14,7 +14,7 @@ See [`CLAUDE.md`](./CLAUDE.md) for the detailed breakdown of every package and h
 | `nvim` | Neovim config (native `vim.pack`, Neovim 0.12+) — shared by the desktop and macOS |
 | `tmux` | Tmux config — shared by the desktop and macOS |
 | `zsh` | Full oh-my-zsh setup for the desktop |
-| `raspi` | Headless Pi profile — dependency-free nvim, trimmed zsh. **Alternative to `nvim`/`zsh`, additive with `tmux`** |
+| `raspi` | Headless Pi profile — dependency-free nvim, trimmed zsh, its own plugin-free tmux config. **Alternative to `nvim`/`zsh`/`tmux`** |
 | `macos` | Work laptop profile — zsh adapted for macOS, iTerm2 Catppuccin profiles. **Alternative to `zsh`, additive with `nvim`/`tmux`** |
 
 Theme is [Catppuccin](https://github.com/catppuccin) throughout: **Mocha** on the desktop and macOS, switching to **Frappe** for the duration of any SSH session as a "you're on a remote box" signal.
@@ -40,7 +40,7 @@ stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
 
 **Raspberry Pi (headless, SSH-only):**
 ```sh
-stow raspi tmux
+stow raspi
 ```
 
 **macOS (work laptop):**
@@ -55,7 +55,7 @@ Doing it by hand also skips `install.sh`'s tmux plugin bootstrap (clones [TPM](h
 
 Re-run with `stow --restow <package>` after adding files to a package, or `stow --delete <package>` to unlink.
 
-`raspi` and `zsh` target the same `~/.zshrc` and are **alternatives** — never stow both on the same machine (`stow` will refuse). Same for `raspi` and `nvim` on `~/.config/nvim`.
+`raspi` and `zsh` target the same `~/.zshrc` and are **alternatives** — never stow both on the same machine (`stow` will refuse). Same for `raspi` and `nvim` on `~/.config/nvim`, and `raspi` and `tmux` on `~/.config/tmux/tmux.conf` (`raspi` ships its own plugin-free tmux config).
 
 ## CI
 
