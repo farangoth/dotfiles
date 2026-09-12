@@ -14,7 +14,7 @@ export EDITOR="nvim"
 # sets when you connect with agent forwarding (ssh -A).
 
 zstyle ':omz:update' mode disabled
-ZSH_THEME="robbyrussell"  # oh-my-zsh's stock default -- zero extra assets
+ZSH_THEME="macovsky"  # oh-my-zsh's stock default -- zero extra assets
                           # to install, so it's never the thing missing on
                           # a fresh box. Swap back to "macovsky" if it's
                           # already set up here too.
