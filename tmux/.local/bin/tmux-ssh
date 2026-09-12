@@ -67,6 +67,27 @@ if tmux has-session -t "$name" 2>/dev/null; then
     exit 0
 fi
 
+# A fresh *local* session (the numbered-fallback case, n > 1) is still
+# just a second client into whatever's on the far end -- and every
+# managed machine's zshrc (zsh, macos, raspi) auto-attaches any plain
+# interactive login to that machine's own single `main` tmux session, so
+# a second `ssh host` collapses right back into the same remote session
+# the first connection is already in, defeating the point of asking for
+# an independent one. Only fixable when there's no explicit remote
+# command to preserve (`$# -eq 1`, just the bare destination) -- ssh only
+# allocates a pty without `-t`, and only sources login-shell startup
+# files (zshrc, and its auto-attach) for a plain interactive login, not
+# for `ssh host command`, so routing the *fallback* connection through an
+# explicit `tmux new-session` command bypasses the remote auto-attach
+# entirely and lands on its own fresh, independent remote session --
+# mirroring Mod+Shift+Return's `foot tmux new-session` doing the same
+# thing locally. Left alone (n == 1, or a non-bare invocation) still
+# takes the normal path into the remote's `main`.
+ssh_args=("$@")
+if (( n > 1 )) && [[ $# -eq 1 ]]; then
+    ssh_args=(-t "$1" tmux new-session)
+fi
+
 # Quote each argument individually so the reconstructed command line stays
 # correct regardless of spaces or shell metacharacters in any of them.
 # TMUX_SSH_ACTIVE is exported as its own statement (not a `VAR=val ssh`
@@ -75,7 +96,7 @@ fi
 # rules -- this pane exists solely to run this one connection, so there's
 # nothing else in it for a persisted export to leak into.
 cmd="export TMUX_SSH_ACTIVE=1; ssh"
-for arg in "$@"; do
+for arg in "${ssh_args[@]}"; do
     cmd+=" $(printf '%q' "$arg")"
 done
 
