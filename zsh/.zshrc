@@ -65,18 +65,24 @@ ssh() {
     # guard that second call would try to wrap itself in yet another
     # nested tmux-ssh session instead of just connecting.
     #
-    # Only wraps ssh when the CURRENT session is `main` or one of tmux's
-    # own numbered default sessions ("0", "1", ... -- what you get from a
-    # plain `tmux new-session` with no -s, e.g. Mod+Shift+Return) -- both
-    # are generic, ambient shells with nothing else going on. Any other
-    # *named* session (dev-<dir>, claude, ...) is already a deliberately
-    # scoped workspace; ssh typed there should behave like any other
-    # command inside it -- plain inline ssh below -- instead of spinning
-    # up yet another persistent session on top of it.
+    # Only wraps ssh when the CURRENT session is `main`, one of tmux's own
+    # numbered default sessions ("0", "1", ... -- what you get from a
+    # plain `tmux new-session` with no -s, e.g. Mod+Shift+Return), or
+    # itself a tmux-ssh session (`ssh-<target>[-N]`) -- all three are
+    # either generic/ambient shells or already part of the ssh-session
+    # family, so nesting another `ssh` call there should still get
+    # tmux-ssh's own session management (e.g. splitting a new pane inside
+    # `ssh-raspi` and typing `ssh raspi` again should open an independent
+    # `ssh-raspi-2`, not silently join the exact remote session that pane
+    # split off from). Any other *named* session (dev-<dir>, claude, ...)
+    # is a deliberately scoped workspace unrelated to ssh; ssh typed there
+    # should behave like any other command inside it -- plain inline ssh
+    # below -- instead of spinning up yet another persistent session on
+    # top of it.
     if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
         local current_session=""
         [[ -n "$TMUX" ]] && current_session=$(tmux display-message -p '#S' 2>/dev/null)
-        if [[ -z "$TMUX" || "$current_session" == "main" || "$current_session" =~ '^[0-9]+$' ]]; then
+        if [[ -z "$TMUX" || "$current_session" == "main" || "$current_session" =~ '^[0-9]+$' || "$current_session" =~ '^ssh-' ]]; then
             if [[ "$current_session" == "main" ]]; then
                 # Typing `ssh host` while attached to `main` (the common
                 # case) would otherwise have tmux-ssh switch-client
