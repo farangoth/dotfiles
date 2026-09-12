@@ -101,9 +101,24 @@ ssh() {
     # (so it still gets the theme-switch/title logic below), and without
     # the guard that second call would try to wrap itself in yet another
     # nested tmux-ssh session instead of just connecting.
+    #
+    # Only wraps ssh when the CURRENT session is `main` or one of tmux's
+    # own numbered default sessions ("0", "1", ... -- what you get from a
+    # plain `tmux new-session` with no -s) -- both are generic, ambient
+    # shells with nothing else going on. Any other *named* session
+    # (dev-<dir>, ...) is already a deliberately scoped workspace; ssh
+    # typed there should behave like any other command inside it -- plain
+    # inline ssh below -- instead of spinning up yet another persistent
+    # session on top of it (matches desktop's zsh/.zshrc).
     if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
-        tmux-ssh "$@"
-        return 0
+        local current_session=""
+        [[ -n "$TMUX" ]] && current_session=$(tmux display-message -p '#S' 2>/dev/null)
+        if [[ -z "$TMUX" || "$current_session" == "main" || "$current_session" =~ '^[0-9]+$' ]]; then
+            tmux-ssh "$@"
+            return 0
+        fi
+        # else: some other named session -- fall through to plain inline
+        # ssh below, same as if tmux-ssh weren't installed at all.
     fi
     if [[ -t 1 && "$TERM_PROGRAM" == "iTerm.app" ]]; then
         local target="${@[-1]:-ssh}"  # heuristic: usually the last arg is

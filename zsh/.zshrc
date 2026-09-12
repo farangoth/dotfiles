@@ -64,23 +64,39 @@ ssh() {
     # still gets the theme-switch/title logic below), and without the
     # guard that second call would try to wrap itself in yet another
     # nested tmux-ssh session instead of just connecting.
+    #
+    # Only wraps ssh when the CURRENT session is `main` or one of tmux's
+    # own numbered default sessions ("0", "1", ... -- what you get from a
+    # plain `tmux new-session` with no -s, e.g. Mod+Shift+Return) -- both
+    # are generic, ambient shells with nothing else going on. Any other
+    # *named* session (dev-<dir>, claude, ...) is already a deliberately
+    # scoped workspace; ssh typed there should behave like any other
+    # command inside it -- plain inline ssh below -- instead of spinning
+    # up yet another persistent session on top of it.
     if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
-        if [[ -n "$TMUX" && "$(tmux display-message -p '#S')" == "main" ]]; then
-            # Typing `ssh host` while attached to `main` (the common case)
-            # would otherwise have tmux-ssh switch-client main's own
-            # client away from it, leaving `main` attached to no client
-            # at all and breaking Mod+Return's "always shows main"
-            # contract (see toggle-main-term/river's Mod+Return section)
-            # -- the exact hijack `dev()` below avoids for the same
-            # reason. A fresh window sidesteps it: it gets its own tmux
-            # client, leaving main's window untouched. Subshell-
-            # backgrounded (same job-control-message-suppression trick as
-            # `dev()`) rather than `&` directly.
-            ( foot --app-id=ssh-term tmux-ssh "$@" & ) 2>/dev/null
-        else
-            tmux-ssh "$@"
+        local current_session=""
+        [[ -n "$TMUX" ]] && current_session=$(tmux display-message -p '#S' 2>/dev/null)
+        if [[ -z "$TMUX" || "$current_session" == "main" || "$current_session" =~ '^[0-9]+$' ]]; then
+            if [[ "$current_session" == "main" ]]; then
+                # Typing `ssh host` while attached to `main` (the common
+                # case) would otherwise have tmux-ssh switch-client
+                # main's own client away from it, leaving `main` attached
+                # to no client at all and breaking Mod+Return's "always
+                # shows main" contract (see toggle-main-term/river's
+                # Mod+Return section) -- the exact hijack `dev()` below
+                # avoids for the same reason. A fresh window sidesteps
+                # it: it gets its own tmux client, leaving main's window
+                # untouched. Subshell-backgrounded (same job-control-
+                # message-suppression trick as `dev()`) rather than `&`
+                # directly.
+                ( foot --app-id=ssh-term tmux-ssh "$@" & ) 2>/dev/null
+            else
+                tmux-ssh "$@"
+            fi
+            return 0
         fi
-        return 0
+        # else: some other named session -- fall through to plain inline
+        # ssh below, same as if tmux-ssh weren't installed at all.
     fi
     if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
         local target="${@[-1]:-ssh}"
