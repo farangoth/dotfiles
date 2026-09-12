@@ -26,7 +26,6 @@ Snacks.setup({
     input = { enabled = true },
     scope = { enabled = true },
     gh = { enabled = true },
-    -- lazygit = { enabled = true }
     zen = {
         toggles = {
             line_number = false,
