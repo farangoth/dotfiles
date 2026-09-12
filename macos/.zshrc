@@ -89,6 +89,22 @@ alias neovim="nvim"
 # actually flips (and that allow-passthrough is enough inside tmux) before
 # relying on it.
 ssh() {
+    # Route through tmux-ssh (tmux/.local/bin/tmux-ssh, shared with the
+    # desktop package) for a dedicated, reattachable tmux session per
+    # target instead of running inline -- mirrors the tmux-dev
+    # session-per-context pattern (dev() below just calls tmux-dev
+    # directly too, with no new-window spawn -- macOS has no
+    # Mod+Return-style "always shows main" window contract to protect the
+    # way desktop's zsh/.zshrc does, so there's nothing to guard against
+    # here). TMUX_SSH_ACTIVE guards against recursion: tmux-ssh's spawned
+    # pane calls this same function again to make the actual connection
+    # (so it still gets the theme-switch/title logic below), and without
+    # the guard that second call would try to wrap itself in yet another
+    # nested tmux-ssh session instead of just connecting.
+    if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
+        tmux-ssh "$@"
+        return 0
+    fi
     if [[ -t 1 && "$TERM_PROGRAM" == "iTerm.app" ]]; then
         local target="${@[-1]:-ssh}"  # heuristic: usually the last arg is
                                        # the host, but `ssh host cmd args`

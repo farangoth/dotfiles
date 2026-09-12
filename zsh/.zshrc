@@ -56,6 +56,32 @@ function _git_prompt_maybe_fetch() {
 
 # -- conditional theme on ssh --
 ssh() {
+    # Route through tmux-ssh (tmux/.local/bin/tmux-ssh) for a dedicated,
+    # reattachable tmux session per target instead of running inline --
+    # mirrors the tmux-dev/tmux-claude session-per-context pattern.
+    # TMUX_SSH_ACTIVE guards against recursion: tmux-ssh's spawned pane
+    # calls this same function again to make the actual connection (so it
+    # still gets the theme-switch/title logic below), and without the
+    # guard that second call would try to wrap itself in yet another
+    # nested tmux-ssh session instead of just connecting.
+    if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
+        if [[ -n "$TMUX" && "$(tmux display-message -p '#S')" == "main" ]]; then
+            # Typing `ssh host` while attached to `main` (the common case)
+            # would otherwise have tmux-ssh switch-client main's own
+            # client away from it, leaving `main` attached to no client
+            # at all and breaking Mod+Return's "always shows main"
+            # contract (see toggle-main-term/river's Mod+Return section)
+            # -- the exact hijack `dev()` below avoids for the same
+            # reason. A fresh window sidesteps it: it gets its own tmux
+            # client, leaving main's window untouched. Subshell-
+            # backgrounded (same job-control-message-suppression trick as
+            # `dev()`) rather than `&` directly.
+            ( foot --app-id=ssh-term tmux-ssh "$@" & ) 2>/dev/null
+        else
+            tmux-ssh "$@"
+        fi
+        return 0
+    fi
     if [[ -t 1 ]] && (( $+commands[foot-theme] )); then
         local target="${@[-1]:-ssh}"
         printf '\033]2;SSH: %s\033\\' "$target"
