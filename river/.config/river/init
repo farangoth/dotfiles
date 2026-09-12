@@ -26,6 +26,7 @@ def spawn_unique(command: str):
 
 
 # parameters & aliases
+TERM = "foot"
 MOD = "Super"
 FILEBROWSER = "thunar"
 WEBBROWSER = "firefox"
@@ -165,6 +166,7 @@ riverctl(
 # Reveal the main tmux terminal if it's already open somewhere, else spawn
 # it -- see toggle-main-term and MAIN_TERM_TAG above.
 riverctl("map", "normal", MOD, "Return", "spawn", TOGGLE_MAIN_TERM)
+riverctl("map", "normal", f"{MOD}+Shift", "Return", "spawn", f"{TERM} tmux new-session")
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
 
 # screenshots (piped to clipboard; cliphist picks them up automatically)
