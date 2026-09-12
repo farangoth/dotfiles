@@ -55,7 +55,7 @@ done
 # inside a tmux client (the common case -- every interactive shell
 # auto-attaches to `main` on login), plain attach otherwise.
 attach_client() {
-    if [ -n "${TMUX:-}" ]; then
+    if [[ -n "${TMUX:-}" ]]; then
         tmux switch-client -t "$1"
     else
         exec tmux attach -t "$1"

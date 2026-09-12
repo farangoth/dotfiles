@@ -65,7 +65,11 @@ function _git_prompt_maybe_fetch() {
   _git_prompt_last_fetch[$toplevel]=$now
   ( git fetch --quiet </dev/null &>/dev/null & ) 2>/dev/null
 }
-add-zsh-hook precmd _git_prompt_maybe_fetch
+# Disabled -- caused problems on the desktop zshrc (see zsh/.zshrc), and
+# that fix was never ported here, leaving this the only zshrc still
+# forking a background `git fetch` on every prompt render. Kept as
+# reference/for a future re-enable rather than deleted outright.
+# add-zsh-hook precmd _git_prompt_maybe_fetch
 
 alias neovim="nvim"
 
@@ -203,12 +207,18 @@ ssh() {
 chpwd() { [[ -t 1 ]] && printf '\033]2;%s\033\\' "$PWD"; }
 
 # ---- zoxide (smarter cd) ----
-eval "$(zoxide init zsh)"
-alias cd="z"          # keep `cd` muscle memory, backed by zoxide's ranking
-alias cdi="zi"         # interactive pick via fzf when there are multiple matches
+# Guarded like tmux-ssh above -- without it, a machine missing zoxide (e.g.
+# before Brewfile's been run) would break plain `cd` for the whole session
+# (the alias below shadows it unconditionally), not just zoxide's own
+# features.
+if (( $+commands[zoxide] )); then
+    eval "$(zoxide init zsh)"
+    alias cd="z"          # keep `cd` muscle memory, backed by zoxide's ranking
+    alias cdi="zi"         # interactive pick via fzf when there are multiple matches
+fi
 
 # ---- fzf (fuzzy finder) ----
-source <(fzf --zsh)
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 # Catppuccin Mocha, matching tmux and the iTerm2 "Default" profile
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline \

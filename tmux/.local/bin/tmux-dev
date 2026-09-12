@@ -19,7 +19,7 @@ name="dev-$(basename "$dir")"
 # covers running this from outside tmux entirely (e.g. a fresh SSH login
 # before the auto-attach guard's shell has started tmux).
 attach_client() {
-    if [ -n "${TMUX:-}" ]; then
+    if [[ -n "${TMUX:-}" ]]; then
         tmux switch-client -t "$1"
     else
         exec tmux attach -t "$1"
