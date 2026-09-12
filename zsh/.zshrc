@@ -150,9 +150,9 @@ alias neovim="nvim"
 # Explicitly app-id'd and pinned to tag 1 (river/init's dev-term rule) --
 # an UNtagged window instead inherits whatever tags are currently focused
 # on the output it opens on, and `dev` is normally typed from inside the
-# main terminal, which lives on the hidden tag 256 (see river/init). That
-# would land the new window on tag 256 too, right back in the same
-# always-visible slot Mod+Return is supposed to keep dedicated to `main`.
+# main terminal, which lives on tag 5 (see river/init). That would land
+# the new window there too, mixing dev sessions into the tag the main
+# terminal otherwise has to itself.
 # Subshell-backgrounded (same job-control-message-suppression trick as
 # the git-fetch hook above) rather than `&` directly, so no `[1] <pid>` /
 # `[1]+ Done` noise lands in the calling shell.

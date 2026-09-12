@@ -13,6 +13,20 @@ plugins=(
 [[ -f "$HOME/.env_secrets" ]] && source "$HOME/.env_secrets"
 source "$ZSH/oh-my-zsh.sh"
 
+function git_prompt_segment() {
+  local ref
+  ref=$(git symbolic-ref --short HEAD 2>/dev/null) || ref=$(git rev-parse --short HEAD 2>/dev/null) || return
+  local status_text lines branch_line flags=""
+  status_text=$(git status --porcelain --branch 2>/dev/null)
+  lines=("${(@f)status_text}")
+  branch_line="${lines[1]}"
+  (( ${#lines} > 1 )) && flags+="*"
+  [[ "$branch_line" == *ahead* ]] && flags+="+"
+  [[ "$branch_line" == *behind* ]] && flags+="-"
+  echo "%{$fg[yellow]%}< ${ref}${flags:+ $flags} >%{$reset_color%} "
+}
+PROMPT='%{$fg[red]%}%n@%m:%{$reset_color%}%{$fg[green]%}%~%{$reset_color%} $(git_prompt_segment)%{$fg[red]%}$%{$reset_color%} '
+
 alias neovim="nvim"
 
 cc() { tmux-claude "${1:-$PWD}"; }
