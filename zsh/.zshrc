@@ -52,7 +52,7 @@ function _git_prompt_maybe_fetch() {
   _git_prompt_last_fetch[$toplevel]=$now
   ( git fetch --quiet </dev/null &>/dev/null & ) 2>/dev/null
 }
-add-zsh-hook precmd _git_prompt_maybe_fetch
+# add-zsh-hook precmd _git_prompt_maybe_fetch
 
 # -- conditional theme on ssh --
 ssh() {
