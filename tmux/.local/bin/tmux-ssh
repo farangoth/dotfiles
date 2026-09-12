@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Dedicated, reattachable tmux session per ssh target -- mirrors
+# tmux-dev/tmux-claude's session-per-context pattern, but for `ssh`
+# connections instead of dev/claude work. Idempotent: reconnecting to a
+# target you're already "in" (or just detached from) reattaches the same
+# session instead of opening a second one.
+#
+# Invoked by the `ssh()` zsh function (zsh/.zshrc, macos/.zshrc), not run
+# directly -- see there for the app-id/window-spawn decision that avoids
+# hijacking the `main` terminal on desktop. The command sent into the new
+# pane sets TMUX_SSH_ACTIVE=1 before calling `ssh` again, which the
+# function checks to skip straight to the real connection instead of
+# re-wrapping itself and spawning a *second*, nested tmux-ssh session for
+# the same target.
+#
+# Usage: tmux-ssh <ssh-args...>
+set -euo pipefail
+
+# Same last-argument heuristic ssh() already uses for its title/window-
+# rename signals ("ssh host" -> host, but "ssh host cmd args" -> the last
+# word of the remote command instead) -- consistent, not perfect, but
+# matches what the rest of this repo already accepts as good enough for a
+# display label.
+if [[ $# -gt 0 ]]; then
+    target="${*: -1}"
+else
+    target="ssh"
+fi
+
+# Session names can't safely carry tmux's own target-syntax separators
+# (`:` for session:window, `.` for window.pane) or arbitrary bytes a
+# hostname/IPv6 literal/user@host string could contain -- collapse
+# anything that isn't alnum/dash/underscore to a single underscore.
+safe_target=$(printf '%s' "$target" | tr -c 'A-Za-z0-9_-' '_')
+name="ssh-$safe_target"
+
+# Mirrors tmux-dev/tmux-claude's attach_client: switch-client if already
+# inside a tmux client (the common case -- every interactive shell
+# auto-attaches to `main` on login), plain attach otherwise.
+attach_client() {
+    if [ -n "${TMUX:-}" ]; then
+        tmux switch-client -t "$1"
+    else
+        exec tmux attach -t "$1"
+    fi
+}
+
+if tmux has-session -t "$name" 2>/dev/null; then
+    attach_client "$name"
+    exit 0
+fi
+
+# Quote each argument individually so the reconstructed command line stays
+# correct regardless of spaces or shell metacharacters in any of them.
+# TMUX_SSH_ACTIVE is exported as its own statement (not a `VAR=val ssh`
+# prefix) so it's unambiguously set for the rest of this pane's shell,
+# rather than depending on zsh's prefix-assignment-to-a-function scoping
+# rules -- this pane exists solely to run this one connection, so there's
+# nothing else in it for a persisted export to leak into.
+cmd="export TMUX_SSH_ACTIVE=1; ssh"
+for arg in "$@"; do
+    cmd+=" $(printf '%q' "$arg")"
+done
+
+tmux new-session -d -s "$name" -n ssh
+tmux send-keys -t "$name:ssh" "$cmd" Enter
+attach_client "$name"

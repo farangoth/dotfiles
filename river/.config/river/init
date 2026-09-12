@@ -214,6 +214,10 @@ riverctl("rule-add", "-app-id", "main", "tags", str(MAIN_TERM_TAG))
 # which, launched from inside the main terminal, would otherwise be tag 5
 # (see MAIN_TERM_TAG), mixing dev sessions into the main terminal's tag.
 riverctl("rule-add", "-app-id", "dev-term", "tags", "1")
+# `ssh` (zsh) spawns its window with this app-id for the same reason,
+# only when typed from inside `main` specifically (see zsh/.zshrc) -- its
+# own tag (2), not tag 1, so ssh sessions don't mix into dev's tag either.
+riverctl("rule-add", "-app-id", "ssh-term", "tags", "2")
 riverctl("default-attach-mode", "below")
 
 
