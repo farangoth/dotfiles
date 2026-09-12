@@ -17,10 +17,22 @@
 # `list-clients` exits 0 with empty output when the session exists but
 # has no attached client, and exits 1 (message on stderr) when the
 # session doesn't exist at all yet -- both cases correctly fall through
-# to spawning here. Spawning a plain `foot --app-id=main` is enough to
-# get the session attached: zsh's own tmux auto-attach
+# to spawning here. Spawning `foot --app-id=main` is enough to get the
+# session attached: zsh's own tmux auto-attach
 # (`exec tmux new-session -A -s main`) does the actual attach-or-create,
 # so this script doesn't need to duplicate that logic.
+#
+# The spawn is wrapped in `setsid ... &` rather than a bare `foot &` --
+# river runs this script itself as a spawned child (via a keybind exec),
+# and a bare backgrounded `foot` stays in that same process/session
+# group, which risked it being torn down along with the launching
+# script once river considers the keybind handled, silently swallowing
+# the window. `setsid` detaches it into its own session, immune to that
+# cleanup -- the same hardening `tmux-dev`/`dev()` get for free from
+# their subshell-backgrounding, which this script wasn't using. Output
+# is redirected to /dev/null since nothing here is meant to read it
+# back, and `set -e` never catches a backgrounded command's exit status
+# anyway, so leaving stray fds open served no purpose.
 #
 # First spawn: `set-focused-tags` switches straight to it, same as
 # launching any other app. Already open: `toggle-focused-tags` instead --
@@ -40,6 +52,6 @@ TAG=$((1 << (5 - 1))) # tag 5
 if tmux list-clients -t "$SESSION" 2>/dev/null | grep -q .; then
     riverctl toggle-focused-tags "$TAG"
 else
-    foot --app-id="$SESSION" &
+    setsid foot --app-id="$SESSION" >/dev/null 2>&1 &
     riverctl set-focused-tags "$TAG"
 fi
