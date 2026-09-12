@@ -1,6 +1,13 @@
 @theme "catppuccin"
 configuration {
-modes: "combi,run,ssh,app-mode,power-mode";
+/* `modi` (not `modes` -- not a real rofi property, silently ignored, which
+   left app-mode/power-mode only reachable via rofi's separate "any
+   executable in scripts/ is invocable by filename" auto-discovery
+   convention, not through this combi launcher) registers custom script
+   modes as `name:path`, matching rofi-script(5)'s documented syntax --
+   `combi-modes` below only needs the bare names once they're registered
+   here. */
+modi: "combi,run,ssh,app-mode:~/.config/rofi/scripts/app-mode.sh,power-mode:~/.config/rofi/scripts/power-mode.sh";
 combi-modes: "app-mode,power-mode,drun,run";
 font: "VictorMono Nerd Font 12";
 scrollbar: false;

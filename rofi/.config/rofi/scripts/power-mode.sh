@@ -22,7 +22,8 @@ CMDS=(
     ["shutdown"]="systemctl power-off"
     )
   
-if [[ -z "$*" ]]; then
+# `(( $# == 0 ))`, not `[[ -z "$*" ]]` -- see power-grid.sh for why.
+if (( $# == 0 )); then
     echo -en "\0prompt\x1fpower\n"
     echo -en "\0markup-rows\x1ftrue\n"
     for entry in "${ORDER[@]}"; do

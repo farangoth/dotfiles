@@ -10,7 +10,7 @@ See [`CLAUDE.md`](./CLAUDE.md) for the detailed breakdown of every package and h
 
 | Package | What it is |
 |---|---|
-| `river`, `waybar`, `mako`, `rofi`, `kanshi`, `swayidle`, `swaylock`, `foot`, `kitty` | Arch desktop: window manager, bar, notifications, launcher, display/idle/lock, terminals |
+| `river`, `waybar`, `mako`, `rofi`, `kanshi`, `swayidle`, `swaylock`, `foot` | Arch desktop: window manager, bar, notifications, launcher, display/idle/lock, terminal |
 | `nvim` | Neovim config (native `vim.pack`, Neovim 0.12+) — shared by the desktop and macOS |
 | `tmux` | Tmux config — shared by the desktop and macOS |
 | `zsh` | Full oh-my-zsh setup for the desktop |
@@ -35,12 +35,12 @@ What each profile actually runs, if you'd rather do it by hand (or `install.sh` 
 
 **Arch desktop:**
 ```sh
-stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
+stow river waybar mako rofi kanshi swayidle swaylock foot nvim tmux zsh
 ```
 
 **Raspberry Pi (headless, SSH-only):**
 ```sh
-stow raspi tmux
+stow raspi
 ```
 
 **macOS (work laptop):**
