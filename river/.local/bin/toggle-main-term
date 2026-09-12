@@ -5,12 +5,22 @@
 # synthetic identifier -- one string to keep track of instead of two, and
 # it generalizes cleanly if this reveal-or-spawn pattern is ever reused
 # for another named session. river/init pins that app-id to tag 5 (also
-# directly reachable via plain Mod+5) via its own rule. riverctl has no
-# "does a window with this app-id exist" query, so pgrep against the
-# running process list is the best available proxy. Spawning a plain
-# `foot --app-id=main` is enough to get the session attached: zsh's own
-# tmux auto-attach (`exec tmux new-session -A -s main`) does the actual
-# attach-or-create, so this script doesn't need to duplicate that logic.
+# directly reachable via plain Mod+5) via its own rule.
+#
+# Existence check is `tmux list-clients -t main`, not a pgrep on foot's
+# own argv (what this used before) -- checking tmux's own bookkeeping of
+# who's actually attached is the authoritative answer to "is a window
+# already showing main", whereas matching `--app-id=main` against the
+# process list is an indirect proxy that depends on foot's exact argv
+# shape and can silently fail to match, which was spawning a duplicate
+# foot window on every press instead of revealing the existing one.
+# `list-clients` exits 0 with empty output when the session exists but
+# has no attached client, and exits 1 (message on stderr) when the
+# session doesn't exist at all yet -- both cases correctly fall through
+# to spawning here. Spawning a plain `foot --app-id=main` is enough to
+# get the session attached: zsh's own tmux auto-attach
+# (`exec tmux new-session -A -s main`) does the actual attach-or-create,
+# so this script doesn't need to duplicate that logic.
 #
 # First spawn: `set-focused-tags` switches straight to it, same as
 # launching any other app. Already open: `toggle-focused-tags` instead --
@@ -27,7 +37,7 @@ set -euo pipefail
 SESSION="main"
 TAG=$((1 << (5 - 1))) # tag 5
 
-if pgrep -f "app-id=$SESSION" >/dev/null; then
+if tmux list-clients -t "$SESSION" 2>/dev/null | grep -q .; then
     riverctl toggle-focused-tags "$TAG"
 else
     foot --app-id="$SESSION" &
