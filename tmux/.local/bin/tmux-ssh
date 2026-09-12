@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Dedicated, reattachable tmux session per ssh target -- mirrors
 # tmux-dev/tmux-claude's session-per-context pattern, but for `ssh`
-# connections instead of dev/claude work. Idempotent: reconnecting to a
-# target you're already "in" (or just detached from) reattaches the same
-# session instead of opening a second one.
+# connections instead of dev/claude work. Reconnecting to a target you'd
+# detached from reattaches that same session rather than opening a new
+# one -- but reconnecting to a target you're *already viewing somewhere*
+# opens a fresh, additional session instead of stealing/interrupting that
+# view, since that's a genuinely new connection you're making on purpose
+# (e.g. a second pane of work on the same host), not a reattach.
 #
 # Invoked by the `ssh()` zsh function (zsh/.zshrc, macos/.zshrc), not run
 # directly -- see there for the app-id/window-spawn decision that avoids
@@ -32,7 +35,21 @@ fi
 # hostname/IPv6 literal/user@host string could contain -- collapse
 # anything that isn't alnum/dash/underscore to a single underscore.
 safe_target=$(printf '%s' "$target" | tr -c 'A-Za-z0-9_-' '_')
-name="ssh-$safe_target"
+base_name="ssh-$safe_target"
+
+# Walk ssh-<target>, ssh-<target>-2, ssh-<target>-3, ... stopping at the
+# first name that's either free (no session at all -- create fresh below)
+# or already exists but has no attached client (a stale/detached session
+# from a previous connection -- reattach to it, so those don't pile up
+# unbounded). A name that exists AND has an attached client means someone
+# is actively looking at that exact session right now, so it's skipped in
+# favor of the next candidate rather than reattached-into.
+name="$base_name"
+n=1
+while tmux has-session -t "$name" 2>/dev/null && tmux list-clients -t "$name" 2>/dev/null | grep -q .; do
+    n=$((n + 1))
+    name="${base_name}-${n}"
+done
 
 # Mirrors tmux-dev/tmux-claude's attach_client: switch-client if already
 # inside a tmux client (the common case -- every interactive shell
