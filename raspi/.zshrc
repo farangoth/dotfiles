@@ -25,7 +25,7 @@ function git_prompt_segment() {
   [[ "$branch_line" == *behind* ]] && flags+="-"
   echo "%{$fg[yellow]%}< ${ref}${flags:+ $flags} >%{$reset_color%} "
 }
-PROMPT='%{$fg[red]%}%n@%m:%{$reset_color%}%{$fg[green]%}%~%{$reset_color%} $(git_prompt_segment)%{$fg[red]%}$%{$reset_color%} '
+PROMPT='%{$fg[red]%}%n@%m:%{$reset_color%}%{$fg[green]%}%~%{$reset_color%} $(git_prompt_segment)%{$reset_color%}$ '
 
 alias neovim="nvim"
 
