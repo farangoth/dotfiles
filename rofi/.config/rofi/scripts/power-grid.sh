@@ -23,7 +23,11 @@ CMDS=(
     ["shutdown"]="systemctl power-off"
     )
   
-if [[ -z "$*" ]]; then
+# `(( $# == 0 ))`, not `[[ -z "$*" ]]` -- the latter can't distinguish "no
+# arguments" from "one argument that happens to be an empty string", which
+# rofi passes back on some selection paths; that collapse re-rendered the
+# menu instead of dispatching the command.
+if (( $# == 0 )); then
     echo -en "\0markup-rows\x1ftrue\n"
     for entry in "${ORDER[@]}"; do
         echo -en "${ICONS[$entry]}\n"

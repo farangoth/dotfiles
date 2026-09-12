@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Wraps a `wpctl` volume/mute call from river's mediakey bindings with a
+# mako toast reporting the result, per
+# https://github.com/emersion/mako/wiki/Volume-change-notification --
+# mako's `progress-color` (mako/.config/mako/config) is otherwise unused,
+# since nothing sends the `value` hint it renders a bar for.
+#
+# `x-canonical-private-synchronous` makes each new toast replace the
+# previous one instead of stacking a fresh notification on every keypress
+# -- sink (speaker) and source (mic) get their own id so raising the
+# volume mid-mic-mute-toggle doesn't clobber the other's toast.
+#
+# Usage: notify-volume <wpctl-subcommand-and-args...>
+#   e.g. notify-volume set-volume @DEFAULT_SINK@ 5%+
+set -euo pipefail
+
+wpctl "$@"
+
+if [[ "$*" == *SOURCE* ]]; then
+    NODE="@DEFAULT_SOURCE@"
+    SYNC_ID="mic"
+    ICON_MUTED="󰍭"
+    ICON_LEVEL="󰍬"
+    LABEL="Mic"
+else
+    NODE="@DEFAULT_SINK@"
+    SYNC_ID="volume"
+    ICON_MUTED="󰝟"
+    ICON_LEVEL="󰕾"
+    LABEL="Volume"
+fi
+
+# `wpctl get-volume` prints e.g. "Volume: 0.45" or "Volume: 0.45 [MUTED]" --
+# pull out the first float field and scale it to a 0-100 percentage.
+STATUS=$(wpctl get-volume "$NODE")
+LEVEL=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9.]+$/) { printf "%d", $i * 100; exit } }' <<<"$STATUS")
+
+if [[ "$STATUS" == *MUTED* ]]; then
+    notify-send -h "string:x-canonical-private-synchronous:$SYNC_ID" -h "int:value:$LEVEL" "$ICON_MUTED $LABEL muted"
+else
+    notify-send -h "string:x-canonical-private-synchronous:$SYNC_ID" -h "int:value:$LEVEL" "$ICON_LEVEL $LABEL: ${LEVEL}%"
+fi

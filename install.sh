@@ -88,7 +88,7 @@ case "$profile" in
 desktop)
     echo "==> Desktop (Arch/river) profile"
     require_stow
-    stow river waybar mako rofi kanshi swayidle swaylock foot kitty nvim tmux zsh
+    stow river waybar mako rofi kanshi swayidle swaylock foot nvim tmux zsh
     ensure_zsh_login_shell
     setup_tmux_plugins
     ;;

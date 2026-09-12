@@ -30,12 +30,13 @@ TERM = "foot"
 MOD = "Super"
 FILEBROWSER = "thunar"
 WEBBROWSER = "firefox"
-VOLUME_MIXER = "wpctl"
 
 RIVER_CONFIG_FOLDER = f"{os.path.expanduser('~')}/.config/river"
 # Absolute path, not a bare command name -- river spawns this outside a
 # login shell, so PATH may not include ~/.local/bin the way zsh's does.
 TOGGLE_MAIN_TERM = f"{os.path.expanduser('~')}/.local/bin/toggle-main-term"
+# Same reasoning as TOGGLE_MAIN_TERM above -- absolute path for river's spawn.
+NOTIFY_VOLUME = f"{os.path.expanduser('~')}/.local/bin/notify-volume"
 # Tag 5 -- a normal, keyboard-reachable tag (also switchable directly via
 # Mod+5), unlike the hidden tag-above-8 approach used for a while here.
 # Mod+Return still adds its own value on top of plain Mod+5: it spawns the
@@ -129,14 +130,17 @@ riverctl(
     "--ratio +0.05",
 )
 
-# mediakeys
+# mediakeys -- routed through notify-volume (river/.local/bin/notify-volume)
+# rather than calling wpctl directly, so each press also surfaces a mako
+# toast with the resulting level (mako's own progress-color was otherwise
+# unused -- see mako/.config/mako/config).
 riverctl(
     "map",
     "normal",
     "None",
     "XF86AudioLowerVolume",
     "spawn",
-    f"{VOLUME_MIXER} set-volume @DEFAULT_SINK@ 5%-",
+    f"{NOTIFY_VOLUME} set-volume @DEFAULT_SINK@ 5%-",
 )
 riverctl(
     "map",
@@ -144,7 +148,7 @@ riverctl(
     "None",
     "XF86AudioRaiseVolume",
     "spawn",
-    f"{VOLUME_MIXER} set-volume @DEFAULT_SINK@ 5%+",
+    f"{NOTIFY_VOLUME} set-volume @DEFAULT_SINK@ 5%+",
 )
 riverctl(
     "map",
@@ -152,7 +156,7 @@ riverctl(
     "None",
     "XF86AudioMute",
     "spawn",
-    f"{VOLUME_MIXER} set-mute @DEFAULT_SINK@ toggle",
+    f"{NOTIFY_VOLUME} set-mute @DEFAULT_SINK@ toggle",
 )
 riverctl(
     "map",
@@ -160,7 +164,7 @@ riverctl(
     "None",
     "XF86AudioMicMute",
     "spawn",
-    f"{VOLUME_MIXER} set-mute @DEFAULT_SOURCE@ toggle",
+    f"{NOTIFY_VOLUME} set-mute @DEFAULT_SOURCE@ toggle",
 )
 # apps
 # Reveal the main tmux terminal if it's already open somewhere, else spawn

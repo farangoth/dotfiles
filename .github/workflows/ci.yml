@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run shellcheck
-        run: shellcheck rofi/.config/rofi/scripts/*.sh foot/.local/bin/foot-theme tmux/.local/bin/tmux-dev tmux/.local/bin/tmux-ssh raspi/.local/bin/tmux-claude install.sh
+        run: shellcheck rofi/.config/rofi/scripts/*.sh foot/.local/bin/foot-theme tmux/.local/bin/tmux-dev tmux/.local/bin/tmux-ssh raspi/.local/bin/tmux-claude river/.local/bin/toggle-main-term river/.local/bin/notify-volume install.sh
 
   python:
     name: Python syntax (river/init)
