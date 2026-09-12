@@ -106,10 +106,13 @@ ssh() {
     # own numbered default sessions ("0", "1", ... -- what you get from a
     # plain `tmux new-session` with no -s) -- both are generic, ambient
     # shells with nothing else going on. Any other *named* session
-    # (dev-<dir>, ...) is already a deliberately scoped workspace; ssh
-    # typed there should behave like any other command inside it -- plain
-    # inline ssh below -- instead of spinning up yet another persistent
-    # session on top of it (matches desktop's zsh/.zshrc).
+    # (dev-<dir>, an existing ssh-<target> tmux-ssh session, ...) is
+    # already a deliberately scoped workspace; ssh typed there should
+    # behave like any other command inside it -- plain inline ssh below
+    # -- instead of spinning up yet another persistent local session on
+    # top of it (matches desktop's zsh/.zshrc). A same-host reconnection
+    # from inside an ssh-<target> session still gets a narrower, purely
+    # remote-side fix further down -- see the ssh_args bypass below.
     if [[ -z "${TMUX_SSH_ACTIVE:-}" && -t 1 ]] && (( $+commands[tmux-ssh] )); then
         local current_session=""
         [[ -n "$TMUX" ]] && current_session=$(tmux display-message -p '#S' 2>/dev/null)
@@ -120,6 +123,45 @@ ssh() {
         # else: some other named session -- fall through to plain inline
         # ssh below, same as if tmux-ssh weren't installed at all.
     fi
+
+    # ssh_args is what actually gets executed below; it starts as a copy
+    # of "$@" and is only ever rewritten by the same-host bypass right
+    # below, never by anything upstream -- "$@" itself is left alone so
+    # the title/window-rename logic further down still sees the real,
+    # user-typed target rather than whatever ssh_args gets rewritten to.
+    local ssh_args=("$@")
+
+    # Reconnecting to the SAME host from within its own ssh-<target>
+    # tmux-ssh session (a second pane/window inside `ssh-raspi`, dialing
+    # `raspi` again) must NOT raise a second local tmux-ssh session --
+    # that's the local-session behavior this repo deliberately reverted
+    # (see ssh-tmux-revert-nested-pane, and desktop's zsh/.zshrc for the
+    # full writeup). It still needs the *remote* half of the fix
+    # tmux-ssh's own numbered-fallback case uses, though: a bare `ssh
+    # raspi` from inside `ssh-raspi` would otherwise land right back in
+    # the SAME remote `main` session (every managed machine auto-attaches
+    # any plain interactive login to it) -- exactly the collision this
+    # feature exists to avoid, just without a second local session to get
+    # there. Scoped narrowly: only a bare, single-arg invocation (no
+    # explicit remote command to preserve) whose sanitized target matches
+    # the CURRENT session's own target (stripping a trailing
+    # numbered-fallback suffix, ssh-raspi-2 -> raspi) gets rewritten to
+    # `-t <target> tmux new-session` -- like tmux-ssh's own rewrite,
+    # giving ssh an explicit remote command means the remote shell never
+    # sources its startup files (so its `main` auto-attach never fires),
+    # landing on a fresh, independent remote session instead.
+    if [[ $# -eq 1 && -n "$TMUX" ]]; then
+        local nested_session=""
+        nested_session=$(tmux display-message -p '#S' 2>/dev/null)
+        if [[ "$nested_session" =~ '^ssh-(.+)$' ]]; then
+            local nested_target="${match[1]}"
+            [[ "$nested_target" =~ '^(.+)-[0-9]+$' ]] && nested_target="${match[1]}"
+            local dial_target
+            dial_target=$(printf '%s' "$1" | tr -c 'A-Za-z0-9_-' '_')
+            [[ "$nested_target" == "$dial_target" ]] && ssh_args=(-t "$1" tmux new-session)
+        fi
+    fi
+
     if [[ -t 1 && "$TERM_PROGRAM" == "iTerm.app" ]]; then
         local target="${@[-1]:-ssh}"  # heuristic: usually the last arg is
                                        # the host, but `ssh host cmd args`
@@ -133,14 +175,14 @@ ssh() {
         # the running command as normal; if you'd manually renamed this
         # window yourself before connecting, that manual name is lost.
         [[ -n "$TMUX" ]] && tmux rename-window "ssh:$target"
-        command ssh "$@"
+        command ssh "${ssh_args[@]}"
         local exit_code=$?
         printf '\033]50;SetProfile=Default\a'
         printf '\033]2;\033\\'
         [[ -n "$TMUX" ]] && tmux set-window-option automatic-rename on
         return $exit_code
     fi
-    command ssh "$@"
+    command ssh "${ssh_args[@]}"
 }
 
 # -- report cwd via the window title, for whoever's ssh'd into this box --
