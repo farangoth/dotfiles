@@ -21,7 +21,7 @@ name="claude"
 # instead of opening a new nested one; plain attach still covers running
 # this from outside tmux entirely.
 attach_client() {
-    if [ -n "${TMUX:-}" ]; then
+    if [[ -n "${TMUX:-}" ]]; then
         tmux switch-client -t "$1"
     else
         exec tmux attach -t "$1"
