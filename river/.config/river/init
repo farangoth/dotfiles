@@ -170,15 +170,16 @@ riverctl("map", "normal", f"{MOD}+Shift", "Return", "spawn", f"{TERM} tmux new-s
 riverctl("map", "normal", MOD, "E", "spawn", FILEBROWSER)
 
 # screenshots (piped to clipboard; cliphist picks them up automatically)
-riverctl("map", "normal", "None", "Print", "spawn", "grim - | wl-copy")
-riverctl(
-    "map",
-    "normal",
-    f"{MOD}+Shift",
-    "S",
-    "spawn",
-    'grim -g "$(slurp)" - | wl-copy',
-)
+# Absolute path, not a bare command name -- same reason as TOGGLE_MAIN_TERM
+# above: river spawns this outside a login shell, so PATH may not include
+# ~/.local/bin. It's a real script rather than an inline pipeline string
+# because spawn() execs command.split() with no shell -- a pipe (grim | tee
+# | wl-copy) and a per-shot timestamp can't survive that; see the script's
+# own header for why the timestamp specifically has to be generated there
+# and not here.
+SCREENSHOT = f"{os.path.expanduser('~')}/.local/bin/screenshot"
+riverctl("map", "normal", f"{MOD}+Shift", "S", "spawn", SCREENSHOT)
+
 # rofi
 riverctl("map", "normal", MOD, "Space", "spawn", "rofi -show")
 riverctl(

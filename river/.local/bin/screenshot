@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Mod+Shift+S: full-screen screenshot, saved to disk and copied to the
+# clipboard. Lives here (rather than as an inline command string in
+# river/init) because it's a pipeline (grim | tee | wl-copy) -- river's
+# spawn() execs the command list.split() with no shell, so pipes/quoting
+# can't survive being passed inline; a real script sidesteps that the same
+# way toggle-main-term does.
+#
+# The timestamp must be generated here, at keypress time -- river/init is a
+# Python script that runs once at River startup/reload, so a timestamp
+# embedded there would be frozen at that moment and every screenshot taken
+# between reloads would silently overwrite the same file.
+set -euo pipefail
+
+FOLDER="$HOME/pictures/screenshots"
+mkdir -p "$FOLDER"
+
+grim - | tee "$FOLDER/$(date -u +%Y%m%d-%H%M%S).png" | wl-copy
