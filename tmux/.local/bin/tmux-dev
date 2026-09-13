@@ -8,7 +8,24 @@
 set -euo pipefail
 
 dir="${1:-$PWD}"
-name="dev-$(basename "$dir")"
+# Resolve to an absolute, canonical path before taking a basename -- a bare
+# "." (dev . from inside a project) would otherwise basename to a literal
+# "." and name the session "dev-.", indistinguishable across every project
+# `dev .` is run from. Runs in a command substitution, so it doesn't change
+# this script's own cwd.
+dir="$(cd "$dir" && pwd)"
+
+# Name after the git repo's toplevel directory when inside one, not the
+# (possibly deeper) directory dev was actually invoked from -- `dev .` from
+# a subdirectory of a checkout should land in the same session as `dev .`
+# from its root, not fork a second one named after the subdirectory. Falls
+# back to the resolved directory's own basename outside of any repo.
+git_toplevel=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null) || true
+if [[ -n "$git_toplevel" ]]; then
+    name="dev-$(basename "$git_toplevel")"
+else
+    name="dev-$(basename "$dir")"
+fi
 
 # Every interactive shell auto-attaches to a `main` tmux session on login
 # (see zsh/.zshrc), so $TMUX is normally already set by the time `dev` runs
