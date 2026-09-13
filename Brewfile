@@ -1,4 +1,4 @@
-# Bootstrap: brew bundle --file=macos/Brewfile
+# Bootstrap: brew bundle --file=Brewfile
 # Installs everything the stowed configs (nvim, tmux, zsh) expect on PATH.
 # oh-my-zsh isn't brew-installable -- run its own installer separately.
 
