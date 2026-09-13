@@ -69,7 +69,7 @@ spawn_unique(
 )
 
 spawn_unique("waybar")
-spawn_unique(f"swaybg -i {RIVER_CONFIG_FOLDER}/wallpaper.png")
+spawn_unique("swaybg -i $HOME/pictures/wallpaper.png")
 spawn_unique("swayidle -w")
 spawn_unique("mako")
 spawn_unique("kanshi")
