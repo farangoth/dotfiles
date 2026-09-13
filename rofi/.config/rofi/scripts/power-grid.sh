@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 set -e
 set -u
@@ -25,6 +25,12 @@ CMDS=(
   
 if [[ -z "$*" ]]; then
     echo -en "\0markup-rows\x1ftrue\n"
+    # Already dispatches by matching $1 against the known ICONS values
+    # (never executes extracted text), but reject custom-typed entries
+    # outright too -- consistent with power-mode.sh/app-mode.sh, and
+    # keeps a future edit to this dispatch from silently losing that
+    # safety property.
+    echo -en "\0no-custom\x1ftrue\n"
     for entry in "${ORDER[@]}"; do
         echo -en "${ICONS[$entry]}\n"
     done
