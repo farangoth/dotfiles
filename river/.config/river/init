@@ -69,7 +69,7 @@ spawn_unique(
 )
 
 spawn_unique("waybar")
-spawn_unique("swaybg -i $HOME/pictures/wallpaper.png")
+spawn_unique(f"swaybg -i {os.path.expanduser('~')}/pictures/wallpaper.png")
 spawn_unique("swayidle -w")
 spawn_unique("mako")
 spawn_unique("kanshi")
