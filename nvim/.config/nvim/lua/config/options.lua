@@ -82,12 +82,11 @@ vim.o.autoread = true
 vim.o.autowrite = true
 
 -- undo
+-- `undodir` is left at its built-in default (under stdpath("state"),
+-- auto-created) rather than hardcoded to ~/.vim/undodir -- that path
+-- ignores XDG_STATE_HOME/a non-default HOME and needlessly reimplements
+-- what undofile=true already gets for free.
 vim.o.undofile = true
 vim.o.undolevels = 10000
-local undodir = vim.fn.expand("~/.vim/undodir")
-if vim.fn.isdirectory(undodir) == 0 then
-    vim.fn.mkdir(undodir, "p")
-end
-vim.o.undodir = undodir
 
 vim.g.autoformat = true

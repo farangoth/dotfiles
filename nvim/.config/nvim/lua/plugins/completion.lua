@@ -17,16 +17,6 @@ require("blink.cmp").setup({
     },
     keymap = {
         preset = "super-tab",
-        -- ["<C-k>"] = {
-        --     "show_signature",
-        --     "hide_signature",
-        --     "fallback"
-        -- },
-        -- ["<C-K>"] = {
-        --     "show_documentation",
-        --     "hide_documentation",
-        --     "fallback"
-        -- }
     },
     completion = {
         documentation = {
