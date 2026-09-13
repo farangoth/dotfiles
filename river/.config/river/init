@@ -92,11 +92,25 @@ riverctl("input", TOUCHPAD, "natural-scroll", "enabled")
 # were silently no-ops -- riverctl rejects the unknown property but nothing
 # in this script checks subprocess return codes -- so the internal keyboard
 # was never actually getting "gb" + caps:escape. The real, global command:
-riverctl("keyboard-layout", "-options", "caps:escape", "gb")
+#
+# compose:menu dedicates the (otherwise unused) Menu/Application key as
+# the XKB compose (Multi_key) trigger -- a prerequisite for keyd's
+# literal-Unicode macros (used for the IQUNIX MG75's accented-letter
+# dead-key layer, see its keyd config) to resolve correctly instead of
+# emitting garbage: keyd's macro for a non-ASCII character works by
+# synthesizing a Multi_key-prefixed keypress sequence, which only means
+# anything if some real key in the active layout is actually bound to
+# Multi_key. compose:caps was deliberately avoided -- it would collide
+# with caps:escape on the same physical key, removing Escape-on-CapsLock
+# globally for both keyboards. The IQUNIX's own CapsLock is instead
+# redirected to Menu via keyd, device-scoped and below this xkb layer,
+# so the ThinkPad's caps:escape is untouched.
+riverctl("keyboard-layout", "-options", "caps:escape,compose:menu", "gb")
 
 # No riverctl mechanism exists for a different layout/variant on a specific
 # keyboard (e.g. the IQUNIX MG75's "mac" variant) -- `keyboard-layout` takes
-# no device-id. That needs a lower-level tool (e.g. keyd) outside river.
+# no device-id. That needs a lower-level tool (keyd, outside river) --
+# see /etc/keyd/iqunix-mg75.conf (not stowed -- lives outside $HOME).
 
 # --- 3. Keymaps ---
 # river control
