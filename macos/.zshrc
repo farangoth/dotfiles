@@ -12,6 +12,17 @@ export EDITOR="nvim"
 # it here would clobber that, the same class of bug the raspi zshrc already
 # avoids for `ssh -A` agent forwarding.
 
+# Captured once, here, before anything else has a chance to `cd` --
+# every pane tmux-dev creates starts with the project root as its cwd
+# (tmux-dev's own `-c "$dir"`), so $PWD at this exact point in a fresh
+# dev-<repo> pane's shell startup already *is* that root. See the `cd`
+# override further down, which sends a bare `cd` back here instead of
+# $HOME while inside one of these sessions.
+typeset -g _DEV_ROOT=""
+if [[ -n "$TMUX" ]] && [[ "$(tmux display-message -p '#S' 2>/dev/null)" == dev-* ]]; then
+    _DEV_ROOT="$PWD"
+fi
+
 zstyle ':omz:update' mode reminder
 ZSH_THEME="macovsky"
 
@@ -207,15 +218,27 @@ ssh() {
 chpwd() { [[ -t 1 ]] && printf '\033]2;%s\033\\' "$PWD"; }
 
 # ---- zoxide (smarter cd) ----
-# Guarded like tmux-ssh above -- without it, a machine missing zoxide (e.g.
-# before Brewfile's been run) would break plain `cd` for the whole session
-# (the alias below shadows it unconditionally), not just zoxide's own
-# features.
 if (( $+commands[zoxide] )); then
     eval "$(zoxide init zsh)"
-    alias cd="z"          # keep `cd` muscle memory, backed by zoxide's ranking
     alias cdi="zi"         # interactive pick via fzf when there are multiple matches
 fi
+
+# `cd` is a function rather than a plain alias to `z` -- it needs to check
+# _DEV_ROOT first (a bare `cd` inside a dev-<repo> tmux-dev session goes
+# back to the project root instead of $HOME -- see the capture up top),
+# and it needs to still work as plain `cd` when zoxide isn't installed
+# (e.g. before Brewfile's been run). Guarded like tmux-ssh above -- without
+# the $+functions[z] check, a machine missing zoxide would break plain
+# `cd` for the whole session, not just zoxide's own features.
+cd() {
+    if [[ $# -eq 0 && -n "$_DEV_ROOT" ]]; then
+        builtin cd "$_DEV_ROOT"
+    elif (( $+functions[z] )); then
+        z "$@"
+    else
+        builtin cd "$@"
+    fi
+}
 
 # ---- fzf (fuzzy finder) ----
 (( $+commands[fzf] )) && source <(fzf --zsh)
