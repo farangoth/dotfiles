@@ -16,6 +16,7 @@ require("mason-lspconfig").setup({
         "taplo",
         "cssls",
         "html",
+        "gopls",
     }
 })
 
