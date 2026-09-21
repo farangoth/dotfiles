@@ -2,7 +2,7 @@ vim.pack.add({
 	"https://github.com/nvim-treesitter/nvim-treesitter"
 })
 
-local parsers = {"lua", "python", "bash", "c", "css", "csv", "gitignore", "html", "htmldjango", "json", "kitty", "latex", "markdown", "toml", "vim", "yaml", "zsh"}
+local parsers = {"lua", "python", "bash", "c", "css", "csv", "gitignore", "go", "html", "htmldjango", "json", "kitty", "latex", "markdown", "toml", "vim", "yaml", "zsh"}
 
 require("nvim-treesitter").install(parsers)
 
