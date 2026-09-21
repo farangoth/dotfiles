@@ -2,14 +2,17 @@ vim.pack.add({
     "https://github.com/stevearc/conform.nvim",
 })
 
--- Formatter binaries (stylua, shfmt) aren't managed by mason-lspconfig
--- (that's LSP servers only) -- install with `:MasonInstall stylua shfmt`
--- or via the system package manager.
+-- Formatter binaries (stylua, shfmt, goimports) aren't managed by
+-- mason-lspconfig (that's LSP servers only) -- install with
+-- `:MasonInstall stylua shfmt goimports` or via the system package
+-- manager. goimports (not plain gofmt) also manages import lines, which
+-- gofmt alone doesn't touch.
 require("conform").setup({
     formatters_by_ft = {
         lua = { "stylua" },
         sh = { "shfmt" },
         bash = { "shfmt" },
+        go = { "goimports" },
     },
     format_on_save = function()
         if not vim.g.autoformat then
