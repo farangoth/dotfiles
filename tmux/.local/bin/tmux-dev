@@ -48,10 +48,21 @@ if tmux has-session -t "$name" 2>/dev/null; then
     exit 0
 fi
 
+# Activate a project venv (matching the `.venv` name the zsh uv/python
+# plugins use, see zsh/.zshrc's PYTHON_AUTO_VRUN) in the nvim and claude
+# panes before launching those programs -- each pane is a fresh shell with
+# no chpwd of its own to trigger the plugins' auto-activation, and nvim in
+# particular needs the venv active before it starts to pick up the right
+# Python interpreter for LSP.
+venv_activate=""
+if [[ -f "$dir/.venv/bin/activate" ]]; then
+    venv_activate="source .venv/bin/activate && "
+fi
+
 tmux new-session -d -s "$name" -c "$dir" -n dev
-tmux send-keys -t "$name:dev" 'nvim' Enter
+tmux send-keys -t "$name:dev" "${venv_activate}nvim" Enter
 tmux split-window -h -p 20 -t "$name:dev" -c "$dir"
-tmux send-keys -t "$name:dev" 'claude' Enter
+tmux send-keys -t "$name:dev" "${venv_activate}claude" Enter
 tmux split-window -v -t "$name:dev" -c "$dir"
 tmux select-pane -t "$name:dev.{top-left}"
 attach_client "$name"
